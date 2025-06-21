@@ -1,1 +1,1045 @@
- 
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能物流报价计算器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.3);
+        }
+
+        .weight-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e1e5e9;
+            outline: none;
+            appearance: none;
+        }
+
+        .weight-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        .weight-display {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .weight-range-tips {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .result-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .result-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-value {
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .comparison-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #e9ecef;
+            position: relative;
+        }
+
+        .comparison-item.recommended {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: 15px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .badge.recommended {
+            background: #28a745;
+        }
+
+        .badge.second {
+            background: #ffc107;
+        }
+
+        .badge.other {
+            background: #6c757d;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: #28a745;
+        }
+
+        .toast.error {
+            background: #dc3545;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚚 智能物流报价计算器</h1>
+            <div class="subtitle">精准报价 • 智能比价 • 实时计算</div>
+        </header>
+
+        <div class="main-content">
+            <!-- 单个查询 -->
+            <div class="card">
+                <h2 class="card-title">📦 单个查询</h2>
+                
+                <div class="form-group">
+                    <label for="company">物流公司</label>
+                    <select id="company" class="form-control">
+                        <option value="">请选择物流公司</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="service">服务类型</label>
+                    <select id="service" class="form-control">
+                        <option value="">请选择服务类型</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="productType">产品类型</label>
+                    <select id="productType" class="form-control">
+                        <option value="">请选择产品类型</option>
+                        <option value="普货">普货</option>
+                        <option value="服装">服装</option>
+                        <option value="化妆品">化妆品</option>
+                        <option value="带电产品">带电产品</option>
+                        <option value="仿牌">仿牌</option>
+                        <option value="高仿">高仿</option>
+                        <option value="液体">液体</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="country">目的国家</label>
+                    <select id="country" class="form-control">
+                        <option value="">请选择目的国家</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="weightSlider">包裹重量 <span id="weightDisplay" class="weight-display">1.0kg</span></label>
+                    <input type="range" id="weightSlider" class="weight-slider" min="0.1" max="30" step="0.1" value="1.0">
+                    <div class="weight-range-tips">
+                        <span>0.1kg</span>
+                        <span>30kg</span>
+                    </div>
+                </div>
+
+                <button id="calculateBtn" class="btn btn-primary">
+                    💰 立即计算
+                </button>
+            </div>
+
+            <!-- 智能比价 -->
+            <div class="card">
+                <h2 class="card-title">📊 智能比价</h2>
+                
+                <div class="form-group">
+                    <label for="compareCountry">目的国家</label>
+                    <select id="compareCountry" class="form-control">
+                        <option value="">选择国家进行比价</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="compareWeight">重量(kg)</label>
+                    <input type="number" id="compareWeight" class="form-control" 
+                           placeholder="输入重量" min="0.1" max="30" step="0.1" value="1.0">
+                </div>
+
+                <div class="form-group">
+                    <label for="compareProductType">产品类型(可选)</label>
+                    <select id="compareProductType" class="form-control">
+                        <option value="">所有类型</option>
+                        <option value="普货">普货</option>
+                        <option value="服装">服装</option>
+                        <option value="化妆品">化妆品</option>
+                        <option value="带电产品">带电产品</option>
+                        <option value="仿牌">仿牌</option>
+                        <option value="高仿">高仿</option>
+                    </select>
+                </div>
+
+                <button id="compareBtn" class="btn btn-secondary">
+                    🔍 开始比价
+                </button>
+            </div>
+        </div>
+
+        <!-- 单个查询结果 -->
+        <div id="singleResult" class="result-section"></div>
+
+        <!-- 比价结果 -->
+        <div id="compareResults" class="result-section"></div>
+
+        <!-- 加载动画 -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <div>正在计算中...</div>
+        </div>
+    </div>
+
+    <script>
+        // 物流数据库类
+        class LogisticsDatabase {
+            constructor() {
+                this.companies = new Map();
+                this.initializeData();
+            }
+
+            initializeData() {
+                // 华翰物流
+                this.addCompany('华翰物流', {
+                    services: {
+                        '华速通-标准': {
+                            countries: {
+                                '美国': {
+                                    code: 'HSBT',
+                                    timeframe: '7-10工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.3, perKg: 45, handling: 20 },
+                                        { min: 0.301, max: 1, perKg: 42, handling: 18 },
+                                        { min: 1.001, max: 30, perKg: 40, handling: 15 }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // 万邦物流
+                this.addCompany('万邦物流', {
+                    services: {
+                        '服装专线': {
+                            countries: {
+                                '美国': {
+                                    code: 'FZZX',
+                                    timeframe: '9-12工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.1, perKg: 102, handling: 24 },
+                                        { min: 0.101, max: 0.2, perKg: 100, handling: 22 },
+                                        { min: 0.201, max: 0.3, perKg: 92, handling: 20 },
+                                        { min: 0.301, max: 0.45, perKg: 91, handling: 20 },
+                                        { min: 0.451, max: 0.7, perKg: 86, handling: 20 },
+                                        { min: 0.701, max: 3, perKg: 86, handling: 13 },
+                                        { min: 3.001, max: 30, perKg: 82, handling: 13 }
+                                    ]
+                                },
+                                '英国': {
+                                    code: 'UKFZZX',
+                                    timeframe: '7-10工作日',
+                                    weightLimit: 20,
+                                    priceRanges: [
+                                        { min: 0, max: 0.3, perKg: 33, handling: 16 },
+                                        { min: 0.301, max: 2, perKg: 36, handling: 16 },
+                                        { min: 2.001, max: 20, perKg: 40, handling: 16 }
+                                    ]
+                                }
+                            }
+                        },
+                        '化妆品专线': {
+                            countries: {
+                                '美国': {
+                                    code: 'HZPZX',
+                                    timeframe: '9-12工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.1, perKg: 113, handling: 24 },
+                                        { min: 0.101, max: 0.2, perKg: 111, handling: 22 },
+                                        { min: 0.201, max: 0.3, perKg: 105, handling: 20 },
+                                        { min: 0.301, max: 0.45, perKg: 103, handling: 20 },
+                                        { min: 0.451, max: 0.7, perKg: 97, handling: 20 },
+                                        { min: 0.701, max: 2, perKg: 91, handling: 13 },
+                                        { min: 2.001, max: 30, perKg: 89, handling: 13 }
+                                    ]
+                                }
+                            }
+                        },
+                        '专线挂号带电': {
+                            countries: {
+                                '美国': {
+                                    code: 'ZXGHDD',
+                                    timeframe: '9-12工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.1, perKg: 110, handling: 24 },
+                                        { min: 0.101, max: 0.2, perKg: 108, handling: 22 },
+                                        { min: 0.201, max: 0.3, perKg: 102, handling: 20 },
+                                        { min: 0.301, max: 0.45, perKg: 100, handling: 20 },
+                                        { min: 0.451, max: 0.7, perKg: 94, handling: 20 },
+                                        { min: 0.701, max: 2, perKg: 88, handling: 13 },
+                                        { min: 2.001, max: 30, perKg: 86, handling: 13 }
+                                    ]
+                                }
+                            }
+                        },
+                        '专线挂号普货': {
+                            countries: {
+                                '美国': {
+                                    code: 'ZXGHPH',
+                                    timeframe: '9-12工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.1, perKg: 95, handling: 24 },
+                                        { min: 0.101, max: 0.2, perKg: 93, handling: 22 },
+                                        { min: 0.201, max: 0.3, perKg: 87, handling: 20 },
+                                        { min: 0.301, max: 0.45, perKg: 85, handling: 20 },
+                                        { min: 0.451, max: 0.7, perKg: 79, handling: 20 },
+                                        { min: 0.701, max: 2, perKg: 73, handling: 13 },
+                                        { min: 2.001, max: 30, perKg: 71, handling: 13 }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // 燕文物流
+                this.addCompany('燕文物流', {
+                    services: {
+                        '燕文专线追踪': {
+                            countries: {
+                                '美国': {
+                                    code: 'YWZXZZ',
+                                    timeframe: '8-12工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.3, perKg: 52, handling: 18 },
+                                        { min: 0.301, max: 1, perKg: 48, handling: 15 },
+                                        { min: 1.001, max: 30, perKg: 45, handling: 12 }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // 云途物流
+                this.addCompany('云途物流', {
+                    services: {
+                        '服装专线': {
+                            countries: {
+                                '美国': {
+                                    code: 'YTFZZX',
+                                    timeframe: '9-14工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.3, perKg: 48, handling: 20 },
+                                        { min: 0.301, max: 1, perKg: 45, handling: 18 },
+                                        { min: 1.001, max: 30, perKg: 42, handling: 15 }
+                                    ]
+                                }
+                            }
+                        },
+                        '化妆品专线': {
+                            countries: {
+                                '美国': {
+                                    code: 'YTHZPZX',
+                                    timeframe: '9-14工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.3, perKg: 58, handling: 22 },
+                                        { min: 0.301, max: 1, perKg: 55, handling: 20 },
+                                        { min: 1.001, max: 30, perKg: 52, handling: 18 }
+                                    ]
+                                }
+                            }
+                        },
+                        '云途大货18000专线': {
+                            countries: {
+                                '美国': {
+                                    code: 'YTDH18000',
+                                    timeframe: '12-18工作日',
+                                    weightLimit: 50,
+                                    priceRanges: [
+                                        { min: 0, max: 1, perKg: 38, handling: 25 },
+                                        { min: 1.001, max: 5, perKg: 35, handling: 20 },
+                                        { min: 5.001, max: 50, perKg: 32, handling: 15 }
+                                    ]
+                                }
+                            }
+                        },
+                        '专线挂号标快带电': {
+                            countries: {
+                                '美国': {
+                                    code: 'ZXGHBKDD',
+                                    timeframe: '8-12工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.3, perKg: 65, handling: 25 },
+                                        { min: 0.301, max: 1, perKg: 62, handling: 22 },
+                                        { min: 1.001, max: 30, perKg: 58, handling: 20 }
+                                    ]
+                                }
+                            }
+                        },
+                        '专线挂号标快普货': {
+                            countries: {
+                                '美国': {
+                                    code: 'ZXGHBKPH',
+                                    timeframe: '8-12工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.3, perKg: 55, handling: 22 },
+                                        { min: 0.301, max: 1, perKg: 52, handling: 20 },
+                                        { min: 1.001, max: 30, perKg: 48, handling: 18 }
+                                    ]
+                                }
+                            }
+                        },
+                        '专线挂号特惠带电': {
+                            countries: {
+                                '美国': {
+                                    code: 'ZXGHTHDD',
+                                    timeframe: '10-16工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.3, perKg: 52, handling: 20 },
+                                        { min: 0.301, max: 1, perKg: 48, handling: 18 },
+                                        { min: 1.001, max: 30, perKg: 45, handling: 15 }
+                                    ]
+                                }
+                            }
+                        },
+                        '专线挂号特惠普货': {
+                            countries: {
+                                '美国': {
+                                    code: 'ZXGHTHPH',
+                                    timeframe: '10-16工作日',
+                                    weightLimit: 30,
+                                    priceRanges: [
+                                        { min: 0, max: 0.3, perKg: 45, handling: 18 },
+                                        { min: 0.301, max: 1, perKg: 42, handling: 16 },
+                                        { min: 1.001, max: 30, perKg: 38, handling: 14 }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            addCompany(name, data) {
+                this.companies.set(name, data);
+            }
+
+            getCompanies() {
+                return Array.from(this.companies.keys());
+            }
+
+            getServices(company) {
+                const companyData = this.companies.get(company);
+                return companyData ? Object.keys(companyData.services) : [];
+            }
+
+            getCountries(company, service) {
+                const companyData = this.companies.get(company);
+                if (!companyData || !companyData.services[service]) return [];
+                return Object.keys(companyData.services[service].countries);
+            }
+
+            getCountryData(company, service, country) {
+                const companyData = this.companies.get(company);
+                if (!companyData || !companyData.services[service]) return null;
+                return companyData.services[service].countries[country] || null;
+            }
+
+            calculateShipping(company, service, country, weight) {
+                const countryData = this.getCountryData(company, service, country);
+                if (!countryData) {
+                    return { error: '未找到对应的物流服务数据' };
+                }
+
+                const priceRanges = countryData.priceRanges;
+                if (!priceRanges) {
+                    return { error: '未找到价格数据' };
+                }
+
+                const matchedRange = priceRanges.find(range => {
+                    return weight > range.min && weight <= range.max;
+                });
+
+                if (!matchedRange) {
+                    return { error: '重量超出服务范围' };
+                }
+
+                const shippingCost = weight * matchedRange.perKg;
+                const handlingFee = matchedRange.handling;
+                const totalCost = shippingCost + handlingFee;
+
+                return {
+                    success: true,
+                    company,
+                    service,
+                    country,
+                    weight,
+                    weightRange: `${matchedRange.min}KG < W ≤ ${matchedRange.max}KG`,
+                    perKgRate: matchedRange.perKg,
+                    shippingCost: Math.round(shippingCost * 100) / 100,
+                    handlingFee,
+                    totalCost: Math.round(totalCost * 100) / 100,
+                    timeframe: countryData.timeframe,
+                    formula: `${weight}kg × ${matchedRange.perKg}元/kg + ${handlingFee}元 = ${totalCost}元`
+                };
+            }
+
+            compareAllPrices(country, weight, productType = null) {
+                const results = [];
+
+                for (const [companyName, companyData] of this.companies) {
+                    for (const [serviceName, serviceData] of Object.entries(companyData.services)) {
+                        if (productType && !this.isServiceSuitableForProduct(serviceName, productType)) {
+                            continue;
+                        }
+
+                        if (serviceData.countries[country]) {
+                            const result = this.calculateShipping(companyName, serviceName, country, weight);
+                            if (result.success) {
+                                results.push(result);
+                            }
+                        }
+                    }
+                }
+
+                results.sort((a, b) => a.totalCost - b.totalCost);
+                return results;
+            }
+
+            isServiceSuitableForProduct(serviceName, productType) {
+                const serviceProductMap = {
+                    '服装专线': ['服装', '普货'],
+                    '化妆品专线': ['化妆品', '液体'],
+                    '专线挂号带电': ['带电产品', '普货'],
+                    '专线挂号普货': ['普货'],
+                    '专线挂号标快带电': ['带电产品'],
+                    '专线挂号标快普货': ['普货'],
+                    '专线挂号特惠带电': ['带电产品'],
+                    '专线挂号特惠普货': ['普货'],
+                    '燕文专线追踪': ['普货', '带电产品'],
+                    '华速通-标准': ['普货'],
+                    '云途大货18000专线': ['普货']
+                };
+
+                const suitableProducts = serviceProductMap[serviceName] || [];
+                return suitableProducts.includes(productType);
+            }
+
+            getAllCountries() {
+                const allCountries = new Set();
+                for (const [companyName, companyData] of this.companies) {
+                    for (const [serviceName, serviceData] of Object.entries(companyData.services)) {
+                        Object.keys(serviceData.countries).forEach(country => allCountries.add(country));
+                    }
+                }
+                return Array.from(allCountries).sort();
+            }
+        }
+
+        // 全局变量
+        const database = new LogisticsDatabase();
+        const elements = {
+            company: document.getElementById('company'),
+            service: document.getElementById('service'),
+            productType: document.getElementById('productType'),
+            country: document.getElementById('country'),
+            weightSlider: document.getElementById('weightSlider'),
+            weightDisplay: document.getElementById('weightDisplay'),
+            calculateBtn: document.getElementById('calculateBtn'),
+            singleResult: document.getElementById('singleResult'),
+            
+            compareCountry: document.getElementById('compareCountry'),
+            compareWeight: document.getElementById('compareWeight'),
+            compareProductType: document.getElementById('compareProductType'),
+            compareBtn: document.getElementById('compareBtn'),
+            compareResults: document.getElementById('compareResults'),
+            
+            loading: document.getElementById('loading')
+        };
+
+        // 初始化
+        function init() {
+            loadCompanies();
+            loadCountriesForCompare();
+            bindEvents();
+            updateWeightDisplay();
+        }
+
+        function loadCompanies() {
+            const companies = database.getCompanies();
+            companies.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company;
+                option.textContent = company;
+                elements.company.appendChild(option);
+            });
+        }
+
+        function loadCountriesForCompare() {
+            const countries = database.getAllCountries();
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                elements.compareCountry.appendChild(option);
+            });
+        }
+
+        function bindEvents() {
+            elements.company.addEventListener('change', onCompanyChange);
+            elements.service.addEventListener('change', onServiceChange);
+            elements.weightSlider.addEventListener('input', updateWeightDisplay);
+            elements.calculateBtn.addEventListener('click', onCalculate);
+            elements.compareBtn.addEventListener('click', onCompare);
+        }
+
+        function onCompanyChange() {
+            const company = elements.company.value;
+            
+            elements.service.innerHTML = '<option value="">请选择服务类型</option>';
+            elements.country.innerHTML = '<option value="">请选择目的国家</option>';
+            
+            if (company) {
+                const services = database.getServices(company);
+                services.forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service;
+                    option.textContent = service;
+                    elements.service.appendChild(option);
+                });
+            }
+        }
+
+        function onServiceChange() {
+            const company = elements.company.value;
+            const service = elements.service.value;
+            
+            elements.country.innerHTML = '<option value="">请选择目的国家</option>';
+            
+            if (company && service) {
+                const countries = database.getCountries(company, service);
+                countries.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country;
+                    option.textContent = country;
+                    elements.country.appendChild(option);
+                });
+            }
+        }
+
+        function updateWeightDisplay() {
+            const weight = elements.weightSlider.value;
+            elements.weightDisplay.textContent = weight + 'kg';
+        }
+
+        function onCalculate() {
+            const company = elements.company.value;
+            const service = elements.service.value;
+            const country = elements.country.value;
+            const weight = parseFloat(elements.weightSlider.value);
+
+            if (!company || !service || !country) {
+                showToast('请填写完整信息', 'error');
+                return;
+            }
+
+            showLoading(true);
+            
+            setTimeout(() => {
+                const result = database.calculateShipping(company, service, country, weight);
+                showLoading(false);
+                
+                if (result.success) {
+                    displaySingleResult(result);
+                    showToast('计算完成！', 'success');
+                } else {
+                    showToast('计算失败: ' + result.error, 'error');
+                }
+            }, 500);
+        }
+
+        function displaySingleResult(result) {
+            const html = `
+                <div class="result-title">💰 报价结果</div>
+                <div class="result-item">
+                    <span>物流公司:</span>
+                    <span class="result-value">${result.company}</span>
+                </div>
+                <div class="result-item">
+                    <span>服务类型:</span>
+                    <span class="result-value">${result.service}</span>
+                </div>
+                <div class="result-item">
+                    <span>目的国家:</span>
+                    <span class="result-value">${result.country}</span>
+                </div>
+                <div class="result-item">
+                    <span>包裹重量:</span>
+                    <span class="result-value">${result.weight}kg</span>
+                </div>
+                <div class="result-item">
+                    <span>公斤费率:</span>
+                    <span class="result-value">¥${result.perKgRate}/kg</span>
+                </div>
+                <div class="result-item">
+                    <span>操作费:</span>
+                    <span class="result-value">¥${result.handlingFee}</span>
+                </div>
+                <div class="result-item">
+                    <span>运费:</span>
+                    <span class="result-value">¥${result.shippingCost}</span>
+                </div>
+                <div class="result-item" style="border-top: 2px solid #28a745; padding-top: 12px; margin-top: 8px;">
+                    <span><strong>总费用:</strong></span>
+                    <span class="result-value" style="font-size: 1.2em; color: #28a745;"><strong>¥${result.totalCost}</strong></span>
+                </div>
+                <div class="result-item">
+                    <span>预计时效:</span>
+                    <span class="result-value">${result.timeframe}</span>
+                </div>
+                <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 14px; color: #666;">
+                    计算公式: ${result.formula}
+                </div>
+            `;
+            
+            elements.singleResult.innerHTML = html;
+            elements.singleResult.style.display = 'block';
+        }
+
+        function onCompare() {
+            const country = elements.compareCountry.value;
+            const weight = parseFloat(elements.compareWeight.value);
+            const productType = elements.compareProductType.value;
+
+            if (!country || !weight || weight <= 0) {
+                showToast('请选择国家并输入有效重量', 'error');
+                return;
+            }
+
+            showLoading(true);
+            
+            setTimeout(() => {
+                const results = database.compareAllPrices(country, weight, productType);
+                showLoading(false);
+                
+                if (results.length > 0) {
+                    displayCompareResults(results, country, weight, productType);
+                    showToast(`比价完成！找到${results.length}个选项`, 'success');
+                } else {
+                    showToast('未找到匹配的物流服务', 'error');
+                    elements.compareResults.style.display = 'none';
+                }
+            }, 800);
+        }
+
+        function displayCompareResults(results, country, weight, productType) {
+            let html = `
+                <div class="result-title">📊 智能比价结果</div>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
+                    <strong>查询条件:</strong> ${country} • ${weight}kg ${productType ? '• ' + productType : ''}
+                </div>
+                <div style="margin-bottom: 15px; padding: 10px; background: #e8f5e8; border-radius: 6px; font-size: 14px; color: #2e7d2e;">
+                    💡 共找到 <strong>${results.length}</strong> 个选项，已按价格从低到高排序
+                </div>
+            `;
+
+            results.forEach((result, index) => {
+                const isRecommended = index === 0;
+                const isSecond = index === 1;
+                const badgeClass = isRecommended ? 'recommended' : (isSecond ? 'second' : 'other');
+                const badgeText = isRecommended ? '🏆 推荐' : (isSecond ? '🥈 次选' : `#${index + 1}`);
+
+                html += `
+                    <div class="comparison-item ${isRecommended ? 'recommended' : ''}">
+                        <div class="badge ${badgeClass}">${badgeText}</div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr auto; gap: 15px; margin-bottom: 15px;">
+                            <div>
+                                <div style="font-weight: bold; color: #333; margin-bottom: 5px;">${result.company}</div>
+                                <div style="color: #666; font-size: 14px;">${result.service}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 24px; font-weight: bold; color: ${isRecommended ? '#28a745' : '#333'};">
+                                    ¥${result.totalCost}
+                                </div>
+                                <div style="color: #666; font-size: 12px;">总费用</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 12px; border-radius: 8px; font-size: 14px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px;">
+                                <div>公斤费: ¥${result.perKgRate}/kg</div>
+                                <div>操作费: ¥${result.handlingFee}</div>
+                            </div>
+                            <div style="font-style: italic; color: #666; font-size: 12px;">
+                                ${weight}kg × ¥${result.perKgRate} + ¥${result.handlingFee} = ¥${result.totalCost}
+                            </div>
+                            <div style="margin-top: 8px; color: #666; font-size: 12px;">
+                                预计时效: ${result.timeframe}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            elements.compareResults.innerHTML = html;
+            elements.compareResults.style.display = 'block';
+        }
+
+        function showLoading(show) {
+            elements.loading.style.display = show ? 'block' : 'none';
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html> 
