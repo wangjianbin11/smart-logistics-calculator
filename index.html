@@ -3,130 +3,1255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智能物流报价机器人</title>
-    <link rel="stylesheet" href="styles/popup.css">
+    <title>智能物流报价机器人 - 专业版</title>
+    <meta name="description" content="智能物流报价机器人，支持万邦、云途、华翰、燕文等物流公司，一键智能比价，汇率换算">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .header .features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            font-size: 14px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .exchange-rate-section {
+            background: linear-gradient(135deg, #e8f4fd 0%, #f0f8ff 100%);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #e1ecf4;
+        }
+
+        .rate-display {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #2c5aa0;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .rate-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .rate-input label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .rate-input input {
+            width: 80px;
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+            background: #fff;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-control:hover {
+            border-color: #bbb;
+        }
+
+        .form-tips {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            padding: 5px 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+        }
+
+        .action-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+            display: none;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f3f4;
+        }
+
+        .result-title {
+            font-size: 1.5rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .result-actions .btn {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .quote-card {
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+            border-left: 4px solid #ddd;
+        }
+
+        .quote-card.best-option {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0fff0 100%);
+            border-left-color: var(--success-color);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+        }
+
+        .quote-card:hover {
+            transform: translateX(5px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .quote-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rank-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .best-badge {
+            background: var(--success-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .price-display {
+            text-align: right;
+        }
+
+        .main-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--success-color);
+        }
+
+        .usd-price {
+            font-size: 1rem;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .quote-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .loading-section {
+            text-align: center;
+            padding: 50px;
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: var(--success-color);
+        }
+
+        .toast.error {
+            background: var(--danger-color);
+        }
+
+        .toast.warning {
+            background: var(--warning-color);
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            background: rgba(0,0,0,0.1);
+            border-radius: var(--border-radius);
+            margin-top: 40px;
+        }
+
+        .version-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header .features {
+                gap: 10px;
+            }
+
+            .feature-item {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .quote-details {
+                grid-template-columns: 1fr;
+            }
+
+            .quote-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+
+        /* 动画效果 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <!-- 头部 -->
-        <header class="header">
-            <div class="logo">
-                <img src="icons/icon48.png" alt="Logo" class="logo-img">
-                <h1>智能物流报价</h1>
-            </div>
-            <div class="header-actions">
-                <button id="settingsBtn" class="btn-icon" title="设置">⚙️</button>
+        <header class="header fade-in">
+            <h1>
+                🚚 智能物流报价机器人
+            </h1>
+            <div class="subtitle">精准报价 • 智能比价 • 实时计算 • 全球服务</div>
+            <div class="features">
+                <div class="feature-item">✅ 万邦物流</div>
+                <div class="feature-item">✅ 云途物流</div>
+                <div class="feature-item">✅ 华翰物流</div>
+                <div class="feature-item">✅ 燕文物流</div>
+                <div class="feature-item">🌍 32个国家</div>
+                <div class="feature-item">💱 汇率换算</div>
             </div>
         </header>
 
         <!-- 汇率设置区域 -->
-        <div class="exchange-rate-section">
-            <div class="rate-display">
-                <span id="currentRate">当前汇率: 1 USD = 7 RMB</span>
-            </div>
+        <div class="exchange-rate-section fade-in">
+            <div class="rate-display" id="currentRate">当前汇率: 1 USD = 7 RMB</div>
             <div class="rate-input">
                 <label for="exchangeRate">汇率设置:</label>
                 <input type="number" id="exchangeRate" min="1" max="20" step="0.1" value="7" title="人民币对美金汇率">
             </div>
         </div>
 
-        <!-- 主要表单 -->
-        <form class="calculator-form">
-            <!-- 基本信息 -->
-            <div class="form-section">
-                <h3>📋 基本信息</h3>
-                
-                <div class="form-group">
-                    <label for="country">目的地国家</label>
-                    <select id="country" required>
-                        <option value="">选择目的地国家</option>
-                    </select>
-                </div>
+        <!-- 主要功能区域 -->
+        <div class="main-content">
+            <!-- 单个查询 -->
+            <div class="card slide-in">
+                <div class="form-section">
+                    <h3>🔍 单个查询</h3>
+                    
+                    <div class="form-group">
+                        <label for="country">目的地国家</label>
+                        <select id="country" class="form-control" required>
+                            <option value="">选择目的地国家</option>
+                        </select>
+                    </div>
 
-                <div class="form-group" id="zoneGroup" style="display: none;">
-                    <label for="zone">分区选择</label>
-                    <select id="zone">
-                        <option value="">选择分区</option>
-                    </select>
-                </div>
+                    <div class="form-group" id="zoneGroup" style="display: none;">
+                        <label for="zone">分区选择</label>
+                        <select id="zone" class="form-control">
+                            <option value="">选择分区</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="weight">重量 (kg)</label>
-                    <input type="number" id="weight" min="0.01" step="0.01" placeholder="请输入重量" required>
-                    <div id="weightTips" class="form-tips"></div>
-                </div>
-            </div>
+                    <div class="form-group">
+                        <label for="weight">重量 (kg)</label>
+                        <input type="number" id="weight" class="form-control" min="0.01" step="0.01" placeholder="请输入重量" required>
+                        <div id="weightTips" class="form-tips"></div>
+                    </div>
 
-            <!-- 单独查询 -->
-            <div class="form-section">
-                <h3>🔍 单独查询</h3>
-                
-                <div class="form-group">
-                    <label for="company">物流公司</label>
-                    <select id="company">
-                        <option value="">选择物流公司</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="company">物流公司</label>
+                        <select id="company" class="form-control">
+                            <option value="">选择物流公司</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="service">服务类型</label>
-                    <select id="service">
-                        <option value="">选择服务类型</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="service">服务类型</label>
+                        <select id="service" class="form-control">
+                            <option value="">选择服务类型</option>
+                        </select>
+                    </div>
 
-                <button type="button" id="calculateBtn" class="btn btn-primary">
-                    💰 计算报价
-                </button>
+                    <button type="button" id="calculateBtn" class="btn btn-primary">
+                        💰 计算报价
+                    </button>
+                </div>
             </div>
 
             <!-- 智能比价 -->
-            <div class="form-section">
-                <h3>🎯 智能比价</h3>
-                <p class="section-desc">自动比较所有物流公司，找到最优方案</p>
-                
-                <button type="button" id="compareBtn" class="btn btn-success">
-                    🚀 智能比价
-                </button>
+            <div class="card slide-in">
+                <div class="form-section">
+                    <h3>🎯 智能比价</h3>
+                    <p style="color: #666; margin-bottom: 20px; font-size: 14px;">
+                        自动比较所有物流公司，找到最优方案，显示人民币和美金双币价格
+                    </p>
+                    
+                    <div class="form-group">
+                        <label for="compareCountry">目的地国家</label>
+                        <select id="compareCountry" class="form-control">
+                            <option value="">选择国家进行比价</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="compareZoneGroup" style="display: none;">
+                        <label for="compareZone">分区选择</label>
+                        <select id="compareZone" class="form-control">
+                            <option value="">选择分区</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="compareWeight">重量 (kg)</label>
+                        <input type="number" id="compareWeight" class="form-control" min="0.01" step="0.01" placeholder="输入重量进行比价">
+                    </div>
+
+                    <button type="button" id="compareBtn" class="btn btn-success">
+                        🚀 智能比价
+                    </button>
+                </div>
             </div>
-        </form>
+        </div>
 
         <!-- 功能按钮区域 -->
-        <div class="action-section">
+        <div class="action-section slide-in">
             <div class="action-buttons">
                 <button id="historyBtn" class="btn btn-secondary">
                     📊 查看历史
                 </button>
-                <button id="clearHistoryBtn" class="btn btn-warning">
+                <button id="clearHistoryBtn" class="btn btn-secondary">
                     🗑️ 清空历史
                 </button>
-                <button id="exportHistoryBtn" class="btn btn-info">
+                <button id="exportHistoryBtn" class="btn btn-secondary">
                     📤 导出历史
                 </button>
             </div>
         </div>
 
+        <!-- 加载状态 -->
+        <div id="loadingSection" class="loading-section">
+            <div class="loading-spinner"></div>
+            <div id="loadingText">正在计算中...</div>
+        </div>
+
         <!-- 结果显示区域 -->
         <div id="results" class="results-section"></div>
-        
-        <!-- 比价操作区域 -->
-        <div id="comparisonActions" class="comparison-actions" style="display: none;"></div>
-        
-        <!-- 历史记录区域 -->
-        <div id="historyResults" class="history-section" style="display: none;"></div>
 
-        <!-- 状态栏 -->
+        <!-- 页脚 -->
         <footer class="footer">
-            <div class="status-info">
-                <span class="version">v2.0.0</span>
-                <span class="update-time">数据更新: 2025-06-20</span>
+            <div class="version-info">
+                <span>版本: v2.0.0</span>
+                <span>数据更新: 2025-06-21</span>
+                <span>支持: 32个国家</span>
+                <span>物流公司: 4家</span>
             </div>
         </footer>
     </div>
 
-    <!-- 加载脚本 -->
+    <!-- 引入最新的脚本 -->
     <script src="scripts/enhanced-database.js"></script>
     <script src="scripts/enhanced-calculator.js"></script>
-    <script src="scripts/enhanced-popup.js"></script>
+    
+    <script>
+        // 全局变量
+        let database, calculator;
+        let exchangeRate = 7;
+
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupEventListeners();
+            loadInterface();
+        });
+
+        // 初始化应用
+        function initializeApp() {
+            try {
+                if (typeof logisticsDB === 'undefined' || typeof LogisticsCalculator === 'undefined') {
+                    showError('数据库加载失败，请刷新页面重试');
+                    return;
+                }
+                
+                database = logisticsDB;
+                calculator = new LogisticsCalculator(database);
+                calculator.setExchangeRate(exchangeRate);
+                
+                console.log('应用初始化成功');
+            } catch (error) {
+                console.error('初始化失败:', error);
+                showError('应用初始化失败: ' + error.message);
+            }
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 基本计算
+            document.getElementById('calculateBtn').addEventListener('click', calculateSingle);
+            
+            // 智能比价
+            document.getElementById('compareBtn').addEventListener('click', performComparison);
+            
+            // 历史记录
+            document.getElementById('historyBtn').addEventListener('click', showHistory);
+            document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
+            document.getElementById('exportHistoryBtn').addEventListener('click', exportHistory);
+            
+            // 汇率设置
+            document.getElementById('exchangeRate').addEventListener('change', updateExchangeRate);
+            
+            // 联动选择
+            document.getElementById('country').addEventListener('change', updateZoneOptions);
+            document.getElementById('compareCountry').addEventListener('change', updateCompareZoneOptions);
+            document.getElementById('company').addEventListener('change', updateServiceOptions);
+            
+            // 重量提示
+            document.getElementById('weight').addEventListener('input', showWeightTips);
+            document.getElementById('compareWeight').addEventListener('input', showWeightTips);
+        }
+
+        // 加载界面数据
+        function loadInterface() {
+            loadCountryOptions();
+            loadCompanyOptions();
+            updateExchangeDisplay();
+        }
+
+        // 加载国家选项
+        function loadCountryOptions() {
+            const countries = database.getAllCountries();
+            const countrySelect = document.getElementById('country');
+            const compareCountrySelect = document.getElementById('compareCountry');
+            
+            countries.forEach(country => {
+                const option1 = document.createElement('option');
+                option1.value = country;
+                option1.textContent = country;
+                countrySelect.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = country;
+                option2.textContent = country;
+                compareCountrySelect.appendChild(option2);
+            });
+        }
+
+        // 加载物流公司选项
+        function loadCompanyOptions() {
+            const companies = database.getCompanies();
+            const companySelect = document.getElementById('company');
+            
+            companies.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company;
+                option.textContent = company;
+                companySelect.appendChild(option);
+            });
+        }
+
+        // 更新分区选项
+        function updateZoneOptions() {
+            const country = document.getElementById('country').value;
+            const zoneGroup = document.getElementById('zoneGroup');
+            const zoneSelect = document.getElementById('zone');
+            
+            if (country && database.needsZone(country)) {
+                const zones = database.getCountryZones(country);
+                zoneSelect.innerHTML = '<option value="">选择分区</option>';
+                zones.forEach(zone => {
+                    const option = document.createElement('option');
+                    option.value = zone;
+                    option.textContent = zone;
+                    zoneSelect.appendChild(option);
+                });
+                zoneGroup.style.display = 'block';
+            } else {
+                zoneGroup.style.display = 'none';
+            }
+        }
+
+        // 更新比价分区选项
+        function updateCompareZoneOptions() {
+            const country = document.getElementById('compareCountry').value;
+            const zoneGroup = document.getElementById('compareZoneGroup');
+            const zoneSelect = document.getElementById('compareZone');
+            
+            if (country && database.needsZone(country)) {
+                const zones = database.getCountryZones(country);
+                zoneSelect.innerHTML = '<option value="">选择分区</option>';
+                zones.forEach(zone => {
+                    const option = document.createElement('option');
+                    option.value = zone;
+                    option.textContent = zone;
+                    zoneSelect.appendChild(option);
+                });
+                zoneGroup.style.display = 'block';
+            } else {
+                zoneGroup.style.display = 'none';
+            }
+        }
+
+        // 更新服务选项
+        function updateServiceOptions() {
+            const company = document.getElementById('company').value;
+            const serviceSelect = document.getElementById('service');
+            
+            if (company) {
+                const services = database.getServices(company);
+                serviceSelect.innerHTML = '<option value="">选择服务类型</option>';
+                services.forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service;
+                    option.textContent = service;
+                    serviceSelect.appendChild(option);
+                });
+            }
+        }
+
+        // 更新汇率
+        function updateExchangeRate() {
+            const rate = parseFloat(document.getElementById('exchangeRate').value);
+            if (rate > 0) {
+                exchangeRate = rate;
+                calculator.setExchangeRate(rate);
+                updateExchangeDisplay();
+                saveSettings();
+            }
+        }
+
+        // 更新汇率显示
+        function updateExchangeDisplay() {
+            document.getElementById('currentRate').textContent = \`当前汇率: 1 USD = \${exchangeRate} RMB\`;
+        }
+
+        // 显示重量提示
+        function showWeightTips() {
+            const weight = parseFloat(document.getElementById('weight').value || document.getElementById('compareWeight').value);
+            const tipsDiv = document.getElementById('weightTips');
+            
+            if (weight && tipsDiv) {
+                let tips = '';
+                if (weight < 0.05) {
+                    tips = '�� 大部分物流公司最小计费重量为50g';
+                } else if (weight > 30) {
+                    tips = '⚠️ 重量较大，请确认物流公司的重量限制';
+                } else if (weight <= 2) {
+                    tips = '📦 小包裹，适合多数物流服务';
+                } else {
+                    tips = '📦 标准重量，所有服务可用';
+                }
+                
+                tipsDiv.textContent = tips;
+                tipsDiv.style.display = 'block';
+            }
+        }
+
+        // 单个计算
+        function calculateSingle() {
+            const company = document.getElementById('company').value;
+            const service = document.getElementById('service').value;
+            const country = document.getElementById('country').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const zone = document.getElementById('zone').value || null;
+
+            if (!company || !service || !country || !weight || weight <= 0) {
+                showToast('请填写完整的计算信息', 'error');
+                return;
+            }
+
+            showLoading('正在计算报价...');
+
+            setTimeout(() => {
+                try {
+                    const result = calculator.calculateSingleQuote(company, service, country, weight, zone);
+                    hideLoading();
+                    
+                    if (result.error) {
+                        showToast(result.error, 'error');
+                    } else {
+                        displaySingleResult(result);
+                        showToast('计算完成！', 'success');
+                    }
+                } catch (error) {
+                    hideLoading();
+                    showToast('计算失败: ' + error.message, 'error');
+                }
+            }, 800);
+        }
+
+        // 智能比价
+        function performComparison() {
+            const country = document.getElementById('compareCountry').value;
+            const weight = parseFloat(document.getElementById('compareWeight').value);
+            const zone = document.getElementById('compareZone').value || null;
+
+            if (!country || !weight || weight <= 0) {
+                showToast('请选择国家并输入有效重量', 'error');
+                return;
+            }
+
+            showLoading('正在智能比价，分析所有物流方案...');
+
+            setTimeout(() => {
+                try {
+                    const comparisonData = calculator.compareAllQuotes(country, weight, zone);
+                    hideLoading();
+                    
+                    if (comparisonData.results.length === 0) {
+                        showToast(\`暂无\${country}的可用物流方案\`, 'warning');
+                        return;
+                    }
+
+                    // 保存到历史记录
+                    calculator.saveComparisonToHistory(comparisonData);
+                    
+                    // 显示比价结果
+                    displayComparisonResults(comparisonData);
+                    showToast(\`比价完成！找到\${comparisonData.results.length}个方案\`, 'success');
+                } catch (error) {
+                    hideLoading();
+                    showToast('比价失败: ' + error.message, 'error');
+                }
+            }, 1200);
+        }
+
+        // 显示单个结果
+        function displaySingleResult(result) {
+            const resultsDiv = document.getElementById('results');
+            
+            const html = \`
+                <div class="result-header">
+                    <div class="result-title">📦 报价结果</div>
+                    <div class="result-actions">
+                        <button onclick="clearResults()" class="btn btn-secondary">清除结果</button>
+                    </div>
+                </div>
+                
+                <div class="quote-card">
+                    <div class="quote-header">
+                        <div class="company-info">
+                            <strong style="font-size: 1.2rem;">\${result.company}</strong>
+                            <span style="color: #666; margin-left: 10px;">\${result.service}</span>
+                        </div>
+                        <div class="price-display">
+                            <div class="main-price">¥\${result.totalCost}</div>
+                            <div class="usd-price">$\${result.totalCostUSD}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="quote-details">
+                        <div class="detail-item">
+                            <span class="detail-label">目的地:</span>
+                            <span class="detail-value">\${result.country}\${result.zone ? \` (\${result.zone})\` : ''}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">重量:</span>
+                            <span class="detail-value">\${result.weight}kg</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">运费:</span>
+                            <span class="detail-value">¥\${result.shippingCost} ($\${result.shippingCostUSD})</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">操作费:</span>
+                            <span class="detail-value">¥\${result.handlingFee} ($\${result.handlingFeeUSD})</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">时效:</span>
+                            <span class="detail-value">\${result.timeframe}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">重量限制:</span>
+                            <span class="detail-value">\${result.weightLimit}kg</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px; font-size: 14px; color: #666;">
+                        💱 汇率: 1 USD = \${result.exchangeRate} RMB
+                    </div>
+                </div>
+            \`;
+            
+            resultsDiv.innerHTML = html;
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 显示比价结果
+        function displayComparisonResults(comparisonData) {
+            const report = calculator.generateComparisonReport(comparisonData);
+            const resultsDiv = document.getElementById('results');
+            
+            const html = \`
+                <div class="result-header">
+                    <div class="result-title">🏆 智能比价结果</div>
+                    <div class="result-actions">
+                        <button onclick="exportCurrentComparison()" class="btn btn-secondary">导出结果</button>
+                        <button onclick="clearResults()" class="btn btn-secondary">清除结果</button>
+                    </div>
+                </div>
+                \${report.html}
+            \`;
+            
+            resultsDiv.innerHTML = html;
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+            
+            // 保存当前比价数据
+            window.currentComparison = comparisonData;
+        }
+
+        // 显示历史记录
+        function showHistory() {
+            const history = calculator.getComparisonHistory();
+            const resultsDiv = document.getElementById('results');
+            
+            if (history.length === 0) {
+                resultsDiv.innerHTML = \`
+                    <div class="result-header">
+                        <div class="result-title">📊 比价历史</div>
+                    </div>
+                    <div style="text-align: center; padding: 50px; color: #666;">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">📝</div>
+                        <div>暂无历史记录</div>
+                    </div>
+                \`;
+                resultsDiv.style.display = 'block';
+                return;
+            }
+
+            let html = \`
+                <div class="result-header">
+                    <div class="result-title">📊 比价历史记录 (\${history.length}条)</div>
+                    <div class="result-actions">
+                        <button onclick="exportHistory()" class="btn btn-secondary">导出CSV</button>
+                        <button onclick="clearHistory()" class="btn btn-secondary">清空记录</button>
+                    </div>
+                </div>
+            \`;
+
+            history.slice(0, 20).forEach(record => {
+                html += \`
+                    <div class="quote-card">
+                        <div class="quote-header">
+                            <div class="company-info">
+                                <strong>\${record.country}\${record.zone ? \` (\${record.zone})\` : ''}</strong>
+                                <span style="color: #666; margin-left: 10px;">\${record.weight}kg</span>
+                            </div>
+                            <div class="price-display">
+                                <div class="main-price">¥\${record.bestOption?.totalCost}</div>
+                                <div class="usd-price">$\${record.bestOption?.totalCostUSD}</div>
+                            </div>
+                        </div>
+                        <div class="quote-details">
+                            <div class="detail-item">
+                                <span class="detail-label">最优方案:</span>
+                                <span class="detail-value">\${record.bestOption?.company} \${record.bestOption?.service}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">查询时间:</span>
+                                <span class="detail-value">\${record.timestamp}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">可选方案:</span>
+                                <span class="detail-value">\${record.totalOptions}个</span>
+                            </div>
+                        </div>
+                    </div>
+                \`;
+            });
+
+            resultsDiv.innerHTML = html;
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 清空历史记录
+        function clearHistory() {
+            if (confirm('确定要清空所有历史记录吗？')) {
+                calculator.clearComparisonHistory();
+                showToast('历史记录已清空', 'success');
+                showHistory();
+            }
+        }
+
+        // 导出历史记录
+        function exportHistory() {
+            calculator.downloadHistoryCSV();
+            showToast('历史记录导出成功', 'success');
+        }
+
+        // 导出当前比价结果
+        function exportCurrentComparison() {
+            if (!window.currentComparison) {
+                showToast('没有当前比价结果可以导出', 'error');
+                return;
+            }
+
+            const data = window.currentComparison;
+            let csv = '排名,物流公司,服务类型,总费用(RMB),总费用(USD),运费(RMB),操作费(RMB),时效,重量限制,节省金额(RMB)\\n';
+            
+            data.results.forEach(result => {
+                csv += \`\${result.rank},\${result.company},\${result.service},\${result.totalCost},\${result.totalCostUSD},\`;
+                csv += \`\${result.shippingCost},\${result.handlingFee},\${result.timeframe},\${result.weightLimit}kg,\${result.savings}\\n\`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', \`比价结果_\${data.country}_\${data.weight}kg_\${new Date().toISOString().split('T')[0]}.csv\`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('比价结果导出成功', 'success');
+        }
+
+        // 清除结果
+        function clearResults() {
+            document.getElementById('results').style.display = 'none';
+        }
+
+        // 显示加载状态
+        function showLoading(message) {
+            document.getElementById('loadingText').textContent = message;
+            document.getElementById('loadingSection').style.display = 'block';
+        }
+
+        // 隐藏加载状态
+        function hideLoading() {
+            document.getElementById('loadingSection').style.display = 'none';
+        }
+
+        // 显示提示信息
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = \`toast \${type}\`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // 显示错误信息
+        function showError(message) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = \`
+                <div class="result-header">
+                    <div class="result-title">❌ 错误</div>
+                </div>
+                <div style="text-align: center; padding: 50px; color: #dc3545;">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">⚠️</div>
+                    <div>\${message}</div>
+                </div>
+            \`;
+            resultsDiv.style.display = 'block';
+        }
+
+        // 保存设置
+        function saveSettings() {
+            const settings = {
+                exchangeRate: exchangeRate
+            };
+            localStorage.setItem('logisticsSettings', JSON.stringify(settings));
+        }
+
+        // 加载设置
+        function loadSettings() {
+            const saved = localStorage.getItem('logisticsSettings');
+            if (saved) {
+                try {
+                    const settings = JSON.parse(saved);
+                    if (settings.exchangeRate) {
+                        exchangeRate = settings.exchangeRate;
+                        document.getElementById('exchangeRate').value = exchangeRate;
+                        updateExchangeDisplay();
+                        calculator.setExchangeRate(exchangeRate);
+                    }
+                } catch (e) {
+                    console.warn('加载设置失败:', e);
+                }
+            }
+        }
+
+        // 页面加载完成后加载设置
+        window.addEventListener('load', function() {
+            setTimeout(loadSettings, 1000);
+        });
+    </script>
 </body>
-</html> 
+</html>
