@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrome插件图标生成器</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .icon-preview {
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+        }
+        .icon-preview:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        canvas {
+            border-radius: 20%;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        .download-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .instructions {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚚 Chrome插件图标生成器</h1>
+        
+        <div class="preview-grid" id="iconPreviews"></div>
+        
+        <div class="download-section">
+            <button onclick="generateIcons()">🎨 生成所有图标</button>
+            <button onclick="downloadAll()" id="downloadBtn" style="display:none;">📥 下载全部图标</button>
+            <div id="status"></div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使用说明：</h3>
+            <ol>
+                <li><strong>生成图标</strong>：点击"生成所有图标"按钮</li>
+                <li><strong>下载图标</strong>：点击每个图标下方的下载按钮</li>
+                <li><strong>批量下载</strong>：点击"下载全部图标"一次性获取所有文件</li>
+                <li><strong>使用图标</strong>：将下载的PNG文件放入 icons/ 文件夹</li>
+                <li><strong>重新打包</strong>：重新运行打包脚本创建Chrome插件</li>
+            </ol>
+            <div class="success" style="margin-top: 15px;">
+                <strong>💡 提示：</strong>生成的图标会自动命名为 icon16.png, icon32.png, icon48.png, icon128.png，直接放入 icons/ 文件夹即可使用。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let generatedIcons = [];
+
+        function createTruckIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
+            
+            // 清除画布
+            ctx.clearRect(0, 0, size, size);
+            
+            // 绘制渐变背景
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            
+            // 绘制圆角矩形背景
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.roundRect(size * 0.1, size * 0.1, size * 0.8, size * 0.8, size * 0.15);
+            ctx.fill();
+            
+            // 绘制卡车图标
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.5}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🚚', size / 2, size / 2);
+        }
+
+        function generateIcons() {
+            const sizes = [
+                { size: 16, name: 'icon16.png', label: '16×16' },
+                { size: 32, name: 'icon32.png', label: '32×32' },
+                { size: 48, name: 'icon48.png', label: '48×48' },
+                { size: 128, name: 'icon128.png', label: '128×128' }
+            ];
+            
+            const container = document.getElementById('iconPreviews');
+            container.innerHTML = '';
+            generatedIcons = [];
+            
+            sizes.forEach(({ size, name, label }) => {
+                // 创建预览容器
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'icon-preview';
+                
+                // 创建canvas
+                const canvas = document.createElement('canvas');
+                createTruckIcon(canvas, size);
+                
+                // 创建下载链接
+                const downloadLink = document.createElement('a');
+                downloadLink.href = canvas.toDataURL('image/png');
+                downloadLink.download = name;
+                downloadLink.innerHTML = `
+                    <canvas width="${size}" height="${size}" style="width: ${Math.min(size, 64)}px; height: ${Math.min(size, 64)}px;"></canvas>
+                    <div style="margin-top: 10px; font-weight: bold;">${label}</div>
+                    <button style="margin-top: 10px; padding: 8px 16px; font-size: 14px; min-width: auto;">下载 ${name}</button>
+                `;
+                downloadLink.style.textDecoration = 'none';
+                downloadLink.style.color = 'inherit';
+                
+                // 复制canvas内容到显示canvas
+                const displayCanvas = downloadLink.querySelector('canvas');
+                const displayCtx = displayCanvas.getContext('2d');
+                displayCanvas.width = size;
+                displayCanvas.height = size;
+                createTruckIcon(displayCanvas, size);
+                
+                previewDiv.appendChild(downloadLink);
+                container.appendChild(previewDiv);
+                
+                // 保存到数组用于批量下载
+                generatedIcons.push({
+                    name: name,
+                    dataUrl: canvas.toDataURL('image/png')
+                });
+            });
+            
+            // 显示批量下载按钮
+            document.getElementById('downloadBtn').style.display = 'inline-block';
+            document.getElementById('status').innerHTML = '<div class="success">✅ 图标生成成功！点击图标下载或使用批量下载。</div>';
+        }
+
+        function downloadAll() {
+            generatedIcons.forEach(icon => {
+                const link = document.createElement('a');
+                link.href = icon.dataUrl;
+                link.download = icon.name;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+            
+            document.getElementById('status').innerHTML = '<div class="success">🎉 所有图标下载完成！请将PNG文件放入 icons/ 文件夹。</div>';
+        }
+
+        // 页面加载时自动生成预览
+        window.addEventListener('load', generateIcons);
+    </script>
+</body>
+</html> 

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物流报价机器人 - 测试验证</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 24px;
+        }
+        
+        .test-section {
+            margin-bottom: 32px;
+            padding: 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            background: #fafafa;
+        }
+        
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 16px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .test-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .test-item h3 {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .test-params {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .test-result {
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #4caf50;
+            background: #f1f8e9;
+            font-size: 13px;
+        }
+        
+        .test-result.error {
+            border-left-color: #f44336;
+            background: #fff5f5;
+            color: #c62828;
+        }
+        
+        .test-result.success {
+            color: #2e7d32;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 13px;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .comparison-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .best-price {
+            background: #e8f5e8 !important;
+            font-weight: 600;
+            color: #2e7d32;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        
+        .status-success {
+            background: #4caf50;
+        }
+        
+        .status-error {
+            background: #f44336;
+        }
+        
+        .status-loading {
+            background: #ff9800;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 8px 4px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .company-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .company-card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .company-card h4 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .service-count {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .service-list {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 物流报价机器人测试验证</h1>
+            <p>验证数据库完整性 • 测试计算精度 • 比价功能检查</p>
+        </div>
+        
+        <div class="content">
+            <!-- 数据库状态检查 -->
+            <div class="test-section">
+                <h2>📊 数据库状态检查</h2>
+                <div id="database-status">
+                    <span class="status-indicator status-loading"></span>
+                    正在加载数据库...
+                </div>
+                
+                <div class="company-summary" id="company-summary">
+                    <!-- 动态生成公司信息 -->
+                </div>
+            </div>
+            
+            <!-- 基础计算测试 -->
+            <div class="test-section">
+                <h2>🧮 基础计算测试</h2>
+                <p>验证您提供的计算示例：云途物流标准带电到加拿大，0.5kg = 0.5×108+25 = 79元</p>
+                
+                <div class="test-grid" id="basic-tests">
+                    <!-- 动态生成测试项 -->
+                </div>
+            </div>
+            
+            <!-- 重量区间测试 -->
+            <div class="test-section">
+                <h2>⚖️ 重量区间测试</h2>
+                <p>测试不同重量下的价格区间匹配</p>
+                
+                <div class="test-grid" id="weight-tests">
+                    <!-- 动态生成重量测试 -->
+                </div>
+            </div>
+            
+            <!-- 比价功能测试 -->
+            <div class="test-section">
+                <h2>🔍 比价功能测试</h2>
+                <p>测试美国1.0kg普货的全平台比价</p>
+                
+                <table class="comparison-table" id="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>物流公司</th>
+                            <th>服务类型</th>
+                            <th>总价格</th>
+                            <th>公斤费</th>
+                            <th>操作费</th>
+                            <th>时效</th>
+                            <th>计算公式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 动态生成比价结果 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 分区测试 -->
+            <div class="test-section">
+                <h2>🗺️ 分区系统测试</h2>
+                <p>测试澳大利亚各分区的价格计算</p>
+                
+                <div class="test-grid" id="zone-tests">
+                    <!-- 动态生成分区测试 -->
+                </div>
+            </div>
+            
+            <!-- 手动测试区域 -->
+            <div class="test-section">
+                <h2>🎯 手动测试区域</h2>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px;">
+                    <button onclick="runAllTests()">🔄 运行所有测试</button>
+                    <button onclick="testSpecificCase()">🎯 测试特定案例</button>
+                    <button onclick="testRandomCases()">🎲 随机测试</button>
+                    <button onclick="exportTestReport()">📋 导出测试报告</button>
+                </div>
+                
+                <div id="manual-test-results">
+                    <!-- 手动测试结果 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="scripts/enhanced-database.js"></script>
+    
+    <script>
+        // 测试管理器
+        class TestManager {
+            constructor() {
+                this.testResults = [];
+                this.database = null;
+                this.init();
+            }
+            
+            async init() {
+                // 等待数据库加载
+                await this.waitForDatabase();
+                this.database = window.logisticsDB;
+                
+                // 运行初始测试
+                this.checkDatabaseStatus();
+                this.runBasicTests();
+                this.runWeightTests();
+                this.runComparisonTest();
+                this.runZoneTests();
+            }
+            
+            async waitForDatabase() {
+                return new Promise((resolve) => {
+                    const checkDB = () => {
+                        if (window.logisticsDB) {
+                            resolve();
+                        } else {
+                            setTimeout(checkDB, 100);
+                        }
+                    };
+                    checkDB();
+                });
+            }
+            
+            // 检查数据库状态
+            checkDatabaseStatus() {
+                const statusDiv = document.getElementById('database-status');
+                const summaryDiv = document.getElementById('company-summary');
+                
+                if (!this.database) {
+                    statusDiv.innerHTML = '<span class="status-indicator status-error"></span>数据库加载失败';
+                    return;
+                }
+                
+                const companies = this.database.getCompanies();
+                statusDiv.innerHTML = `<span class="status-indicator status-success"></span>数据库加载成功 (${companies.length}家物流公司)`;
+                
+                // 生成公司摘要
+                let summaryHTML = '';
+                companies.forEach(company => {
+                    const services = this.database.getServices(company);
+                    let countryCount = 0;
+                    
+                    services.forEach(service => {
+                        countryCount += this.database.getCountries(company, service).length;
+                    });
+                    
+                    summaryHTML += `
+                        <div class="company-card">
+                            <h4>${company}</h4>
+                            <div class="service-count">${services.length}</div>
+                            <div class="service-list">
+                                ${services.join(' • ')}<br>
+                                <small>${countryCount}个目的地</small>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                summaryDiv.innerHTML = summaryHTML;
+            }
+            
+            // 基础计算测试
+            runBasicTests() {
+                const testsDiv = document.getElementById('basic-tests');
+                const testCases = [
+                    {
+                        name: '云途标准带电-加拿大验证',
+                        company: '云途物流',
+                        service: '标准带电',
+                        country: '加拿大',
+                        weight: 0.5,
+                        expected: 79,
+                        description: '验证用户提供的计算示例'
+                    },
+                    {
+                        name: '万邦服装专线-美国',
+                        company: '万邦物流',
+                        service: '服装专线',
+                        country: '美国',
+                        weight: 0.3,
+                        expected: null,
+                        description: '测试万邦服装专线计算'
+                    },
+                    {
+                        name: '华翰普货高仿-美国',
+                        company: '华翰物流',
+                        service: '普货高仿专线',
+                        country: '美国',
+                        weight: 0.15,
+                        expected: null,
+                        description: '测试华翰物流计算'
+                    }
+                ];
+                
+                let testsHTML = '';
+                testCases.forEach(testCase => {
+                    const result = this.database.calculateShipping(
+                        testCase.company,
+                        testCase.service,
+                        testCase.country,
+                        testCase.weight
+                    );
+                    
+                    let resultHTML = '';
+                    let isSuccess = false;
+                    
+                    if (result.success) {
+                        isSuccess = true;
+                        const isExpectedMatch = testCase.expected ? 
+                            Math.abs(result.totalCost - testCase.expected) < 0.01 : true;
+                        
+                        resultHTML = `
+                            <div class="test-result ${isExpectedMatch ? 'success' : 'error'}">
+                                <strong>✅ 计算成功</strong><br>
+                                总费用: ¥${result.totalCost}<br>
+                                公式: ${result.formula}<br>
+                                时效: ${result.timeframe}<br>
+                                重量段: ${result.weightRange}
+                                ${testCase.expected ? 
+                                    `<br><small>期望值: ¥${testCase.expected} ${isExpectedMatch ? '✅匹配' : '❌不匹配'}</small>` 
+                                    : ''
+                                }
+                            </div>
+                        `;
+                    } else {
+                        resultHTML = `
+                            <div class="test-result error">
+                                <strong>❌ 计算失败</strong><br>
+                                错误: ${result.error}
+                            </div>
+                        `;
+                    }
+                    
+                    testsHTML += `
+                        <div class="test-item">
+                            <h3>
+                                <span class="status-indicator ${isSuccess ? 'status-success' : 'status-error'}"></span>
+                                ${testCase.name}
+                            </h3>
+                            <div class="test-params">
+                                公司: ${testCase.company}<br>
+                                服务: ${testCase.service}<br>
+                                目的地: ${testCase.country}<br>
+                                重量: ${testCase.weight}kg
+                            </div>
+                            ${resultHTML}
+                        </div>
+                    `;
+                });
+                
+                testsDiv.innerHTML = testsHTML;
+            }
+            
+            // 重量区间测试
+            runWeightTests() {
+                const testsDiv = document.getElementById('weight-tests');
+                const weights = [0.1, 0.3, 0.5, 1.0, 2.0, 5.0];
+                
+                let testsHTML = '';
+                weights.forEach(weight => {
+                    const result = this.database.calculateShipping(
+                        '云途物流',
+                        '标准带电',
+                        '英国',
+                        weight
+                    );
+                    
+                    let resultHTML = '';
+                    if (result.success) {
+                        resultHTML = `
+                            <div class="test-result success">
+                                <strong>✅ ${weight}kg</strong><br>
+                                总费用: ¥${result.totalCost}<br>
+                                公斤费: ¥${result.perKgRate}/kg<br>
+                                操作费: ¥${result.handlingFee}<br>
+                                重量段: ${result.weightRange}
+                            </div>
+                        `;
+                    } else {
+                        resultHTML = `
+                            <div class="test-result error">
+                                <strong>❌ ${weight}kg</strong><br>
+                                ${result.error}
+                            </div>
+                        `;
+                    }
+                    
+                    testsHTML += `
+                        <div class="test-item">
+                            <h3>重量 ${weight}kg 测试</h3>
+                            ${resultHTML}
+                        </div>
+                    `;
+                });
+                
+                testsDiv.innerHTML = testsHTML;
+            }
+            
+            // 比价测试
+            runComparisonTest() {
+                const tableBody = document.querySelector('#comparison-table tbody');
+                const results = this.database.compareAllPrices('美国', 1.0, '普货');
+                
+                let tableHTML = '';
+                results.forEach((result, index) => {
+                    const isBest = index === 0;
+                    tableHTML += `
+                        <tr class="${isBest ? 'best-price' : ''}">
+                            <td>${index + 1}${isBest ? ' 🏆' : ''}</td>
+                            <td>${result.company}</td>
+                            <td>${result.service}</td>
+                            <td><strong>¥${result.totalCost}</strong></td>
+                            <td>¥${result.perKgRate}/kg</td>
+                            <td>¥${result.handlingFee}</td>
+                            <td>${result.timeframe}</td>
+                            <td><small>${result.formula}</small></td>
+                        </tr>
+                    `;
+                });
+                
+                if (results.length === 0) {
+                    tableHTML = '<tr><td colspan="8" style="text-align: center; color: #666;">未找到匹配的服务</td></tr>';
+                }
+                
+                tableBody.innerHTML = tableHTML;
+            }
+            
+            // 分区测试
+            runZoneTests() {
+                const testsDiv = document.getElementById('zone-tests');
+                const zones = ['1区', '2区', '3区', '4区'];
+                
+                let testsHTML = '';
+                zones.forEach(zone => {
+                    const result = this.database.calculateShipping(
+                        '万邦物流',
+                        '专线带电',
+                        '澳大利亚',
+                        1.0,
+                        zone
+                    );
+                    
+                    let resultHTML = '';
+                    if (result.success) {
+                        resultHTML = `
+                            <div class="test-result success">
+                                <strong>✅ 澳大利亚${zone}</strong><br>
+                                总费用: ¥${result.totalCost}<br>
+                                公式: ${result.formula}<br>
+                                时效: ${result.timeframe}
+                            </div>
+                        `;
+                    } else {
+                        resultHTML = `
+                            <div class="test-result error">
+                                <strong>❌ 澳大利亚${zone}</strong><br>
+                                ${result.error}
+                            </div>
+                        `;
+                    }
+                    
+                    testsHTML += `
+                        <div class="test-item">
+                            <h3>澳大利亚 ${zone}</h3>
+                            ${resultHTML}
+                        </div>
+                    `;
+                });
+                
+                testsDiv.innerHTML = testsHTML;
+            }
+        }
+        
+        // 全局测试函数
+        function runAllTests() {
+            location.reload();
+        }
+        
+        function testSpecificCase() {
+            const company = prompt('物流公司:');
+            const service = prompt('服务类型:');
+            const country = prompt('目的国家:');
+            const weight = parseFloat(prompt('重量(kg):'));
+            const zone = prompt('分区(可选):') || null;
+            
+            if (company && service && country && weight) {
+                const result = window.logisticsDB.calculateShipping(company, service, country, weight, zone);
+                const resultDiv = document.getElementById('manual-test-results');
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `
+                        <div class="test-result success">
+                            <h3>✅ 测试成功</h3>
+                            <p><strong>公司:</strong> ${result.company}</p>
+                            <p><strong>服务:</strong> ${result.service}</p>
+                            <p><strong>目的地:</strong> ${result.country}${result.zone ? ' ' + result.zone : ''}</p>
+                            <p><strong>重量:</strong> ${result.weight}kg</p>
+                            <p><strong>总费用:</strong> ¥${result.totalCost}</p>
+                            <p><strong>公式:</strong> ${result.formula}</p>
+                            <p><strong>时效:</strong> ${result.timeframe}</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="test-result error">
+                            <h3>❌ 测试失败</h3>
+                            <p>${result.error}</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        function testRandomCases() {
+            const companies = window.logisticsDB.getCompanies();
+            const weights = [0.1, 0.3, 0.5, 1.0, 2.0];
+            const resultsDiv = document.getElementById('manual-test-results');
+            
+            let html = '<h3>🎲 随机测试结果</h3>';
+            
+            for (let i = 0; i < 5; i++) {
+                const company = companies[Math.floor(Math.random() * companies.length)];
+                const services = window.logisticsDB.getServices(company);
+                const service = services[Math.floor(Math.random() * services.length)];
+                const countries = window.logisticsDB.getCountries(company, service);
+                const country = countries[Math.floor(Math.random() * countries.length)];
+                const weight = weights[Math.floor(Math.random() * weights.length)];
+                
+                const result = window.logisticsDB.calculateShipping(company, service, country, weight);
+                
+                html += `
+                    <div class="test-item" style="margin: 8px 0;">
+                        <strong>${company} - ${service} - ${country} - ${weight}kg</strong><br>
+                        ${result.success ? 
+                            `✅ ¥${result.totalCost} (${result.formula})` : 
+                            `❌ ${result.error}`
+                        }
+                    </div>
+                `;
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function exportTestReport() {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const report = {
+                timestamp: new Date().toISOString(),
+                database: {
+                    companies: window.logisticsDB.getCompanies().length,
+                    status: 'loaded'
+                },
+                tests: testManager.testResults
+            };
+            
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `logistics-test-report-${timestamp}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // 初始化测试管理器
+        let testManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            testManager = new TestManager();
+        });
+    </script>
+</body>
+</html>

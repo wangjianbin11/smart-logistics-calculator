@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>报价机器人 - 设置</title>
+    <link rel="stylesheet" href="styles/options.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>智能报价机器人设置</h1>
+            <nav class="tabs">
+                <button class="tab-btn active" data-tab="logistics">物流渠道</button>
+                <button class="tab-btn" data-tab="destinations">目的地</button>
+                <button class="tab-btn" data-tab="profit">利润设置</button>
+                <button class="tab-btn" data-tab="history">历史记录</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- 物流渠道管理 -->
+            <div id="logistics" class="tab-content active">
+                <div class="section-header">
+                    <h2>物流渠道管理</h2>
+                    <div class="header-actions">
+                        <button id="importWanboBtn" class="import-btn">🚀 导入万邦物流数据</button>
+                        <button id="importExcelBtn" class="import-btn">📂 导入Excel数据</button>
+                        <button id="addLogisticsBtn" class="add-btn">+ 添加渠道</button>
+                    </div>
+                </div>
+                
+                <!-- 数据导入状态 -->
+                <div id="importStatus" class="import-status hidden">
+                    <div class="status-content">
+                        <div class="status-icon">⏳</div>
+                        <div class="status-text">正在处理数据...</div>
+                        <div class="status-progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 数据统计 -->
+                <div id="dataStats" class="data-stats hidden">
+                    <h3>数据统计</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">国家数量:</span>
+                            <span class="stat-value" id="countryCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">服务数量:</span>
+                            <span class="stat-value" id="serviceCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">重量段:</span>
+                            <span class="stat-value" id="tierCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">最后更新:</span>
+                            <span class="stat-value" id="lastUpdate">--</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="logisticsTable">
+                        <thead>
+                            <tr>
+                                <th>渠道名称</th>
+                                <th>每公斤费用</th>
+                                <th>最低费用</th>
+                                <th>交付时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 目的地管理 -->
+            <div id="destinations" class="tab-content">
+                <div class="section-header">
+                    <h2>目的地管理</h2>
+                    <button id="addDestinationBtn" class="add-btn">+ 添加目的地</button>
+                </div>
+                
+                <div class="table-container">
+                    <table id="destinationsTable">
+                        <thead>
+                            <tr>
+                                <th>目的地</th>
+                                <th>关税率 (%)</th>
+                                <th>货币</th>
+                                <th>汇率</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 利润设置 -->
+            <div id="profit" class="tab-content">
+                <div class="section-header">
+                    <h2>利润设置</h2>
+                    <button id="saveProfitBtn" class="save-btn">保存设置</button>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="profitRate">利润率 (%):</label>
+                        <input type="number" id="profitRate" step="0.1" min="0" max="100">
+                        <small>基于总成本的百分比</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="markupRate">加价率 (%):</label>
+                        <input type="number" id="markupRate" step="0.1" min="0" max="100">
+                        <small>额外的加价百分比</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="minProfit">最低利润 (¥):</label>
+                        <input type="number" id="minProfit" step="1" min="0">
+                        <small>无论百分比计算结果如何，保证的最低利润额</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 历史记录 -->
+            <div id="history" class="tab-content">
+                <div class="section-header">
+                    <h2>报价历史</h2>
+                    <div class="history-controls">
+                        <button id="exportHistoryBtn" class="export-btn">导出历史</button>
+                        <button id="clearHistoryBtn" class="clear-btn">清除历史</button>
+                    </div>
+                </div>
+                
+                <div class="history-container">
+                    <div class="history-filters">
+                        <input type="text" id="searchHistory" placeholder="搜索产品名称...">
+                        <select id="filterPeriod">
+                            <option value="all">所有时间</option>
+                            <option value="7">最近7天</option>
+                            <option value="30">最近30天</option>
+                            <option value="90">最近90天</option>
+                        </select>
+                    </div>
+                    
+                    <div id="historyList" class="history-list"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 模态对话框 -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">编辑项目</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="modalForm">
+                    <!-- 动态内容将在这里生成 -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cancel-btn">取消</button>
+                <button type="submit" form="modalForm" class="confirm-btn">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 隐藏的文件上传控件 -->
+    <input type="file" id="excelFileInput" accept=".csv,.xlsx,.xls" style="display: none;">
+    
+    <script src="scripts/database.js"></script>
+    <script src="scripts/calculator.js"></script>
+    <script src="scripts/wanbo-data-importer.js"></script>
+    <script src="scripts/options.js"></script>
+</body>
+</html> 

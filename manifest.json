@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "智能物流报价机器人",
+  "version": "1.0.0",
+  "description": "专业的物流费用计算工具，支持万邦、云途、华翰、燕文四大物流公司，提供精确报价和智能比价功能。",
+  "author": "物流报价团队",
+  
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "智能物流报价机器人",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "options_page": "options.html",
+  
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  
+  "homepage_url": "https://github.com/your-username/logistics-quote-bot",
+  
+  "short_name": "物流报价",
+  
+  "offline_enabled": true
+} 

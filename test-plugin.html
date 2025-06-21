@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物流报价机器人 - 功能测试</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5; 
+        }
+        .test-container { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        .test-section { 
+            margin-bottom: 30px; 
+            padding: 15px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+        }
+        .test-title { 
+            color: #333; 
+            font-size: 18px; 
+            margin-bottom: 10px; 
+            font-weight: bold; 
+        }
+        .test-result { 
+            background: #f8f9fa; 
+            padding: 10px; 
+            border-radius: 5px; 
+            margin-top: 10px; 
+            font-family: monospace; 
+            white-space: pre-wrap; 
+        }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+        }
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+        }
+        .button { 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            padding: 8px 16px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            margin: 5px; 
+        }
+        .button:hover { 
+            background: #0056b3; 
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 物流报价机器人 - 功能测试</h1>
+        
+        <div class="test-section">
+            <div class="test-title">📦 数据库初始化测试</div>
+            <button class="button" onclick="testDatabaseInit()">测试数据库初始化</button>
+            <div id="databaseTest" class="test-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🏢 物流公司获取测试</div>
+            <button class="button" onclick="testGetCompanies()">获取物流公司列表</button>
+            <div id="companiesTest" class="test-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🚛 服务获取测试</div>
+            <button class="button" onclick="testGetServices()">获取万邦物流服务</button>
+            <button class="button" onclick="testGetServicesYuntu()">获取云途物流服务</button>
+            <div id="servicesTest" class="test-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🌍 国家获取测试</div>
+            <button class="button" onclick="testGetCountries()">获取万邦物流服装专线国家</button>
+            <div id="countriesTest" class="test-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">💰 价格计算测试</div>
+            <button class="button" onclick="testCalculation1()">万邦物流服装专线到美国0.5kg</button>
+            <button class="button" onclick="testCalculation2()">华翰物流普货高仿专线到美国0.5kg</button>
+            <button class="button" onclick="testCalculation3()">云途物流标准带电到英国1kg</button>
+            <div id="calculationTest" class="test-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">📊 比价功能测试</div>
+            <button class="button" onclick="testComparison()">比价：美国，0.5kg，普货类型</button>
+            <div id="comparisonTest" class="test-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🔍 智能筛选测试</div>
+            <button class="button" onclick="testProductFilter()">测试产品类型筛选</button>
+            <div id="filterTest" class="test-result"></div>
+        </div>
+    </div>
+
+    <script src="scripts/enhanced-database.js"></script>
+    <script>
+        let database = null;
+        
+        function testDatabaseInit() {
+            const result = document.getElementById('databaseTest');
+            try {
+                if (typeof LogisticsDatabase === 'undefined') {
+                    result.textContent = '❌ 错误: LogisticsDatabase类未定义';
+                    result.className = 'test-result error';
+                    return;
+                }
+                
+                database = new LogisticsDatabase();
+                result.textContent = '✅ 成功: 数据库初始化完成';
+                result.className = 'test-result success';
+            } catch (error) {
+                result.textContent = `❌ 错误: ${error.message}`;
+                result.className = 'test-result error';
+            }
+        }
+        
+        function testGetCompanies() {
+            const result = document.getElementById('companiesTest');
+            try {
+                if (!database) {
+                    result.textContent = '❌ 错误: 请先初始化数据库';
+                    result.className = 'test-result error';
+                    return;
+                }
+                
+                const companies = database.getCompanies();
+                result.textContent = `✅ 成功: 获取到 ${companies.length} 家物流公司\n公司列表: ${companies.join(', ')}`;
+                result.className = 'test-result success';
+            } catch (error) {
+                result.textContent = `❌ 错误: ${error.message}`;
+                result.className = 'test-result error';
+            }
+        }
+        
+        function testGetServices() {
+            const result = document.getElementById('servicesTest');
+            try {
+                if (!database) {
+                    result.textContent = '❌ 错误: 请先初始化数据库';
+                    result.className = 'test-result error';
+                    return;
+                }
+                
+                const services = database.getServices('万邦物流');
+                result.textContent = `✅ 成功: 万邦物流有 ${services.length} 个服务\n服务列表: ${services.join(', ')}`;
+                result.className = 'test-result success';
+            } catch (error) {
+                result.textContent = `❌ 错误: ${error.message}`;
+                result.className = 'test-result error';
+            }
+        }
+        
+        function testGetServicesYuntu() {
+            const result = document.getElementById('servicesTest');
+            try {
+                if (!database) {
+                    result.textContent = '❌ 错误: 请先初始化数据库';
+                    result.className = 'test-result error';
+                    return;
+                }
+                
+                const services = database.getServices('云途物流');
+                result.textContent = `✅ 成功: 云途物流有 ${services.length} 个服务\n服务列表: ${services.join(', ')}`;
+                result.className = 'test-result success';
+            } catch (error) {
+                result.textContent = `❌ 错误: ${error.message}`;
+                result.className = 'test-result error';
+            }
+        }
+        
+        function testGetCountries() {
+            const result = document.getElementById('countriesTest');
+            try {
+                if (!database) {
+                    result.textContent = '❌ 错误: 请先初始化数据库';
+                    result.className = 'test-result error';
+                    return;
+                }
+                
+                const countries = database.getCountries('万邦物流', '服装专线');
+                result.textContent = `✅ 成功: 万邦物流服装专线支持 ${countries.length} 个国家\n国家列表: ${countries.join(', ')}`;
+                result.className = 'test-result success';
+            } catch (error) {
+                result.textContent = `❌ 错误: ${error.message}`;
+                result.className = 'test-result error';
+            }
+        }
+        
+        function testCalculation1() {
+            const result = document.getElementById('calculationTest');
+            try {
+                if (!database) {
+                    result.textContent = '❌ 错误: 请先初始化数据库';
+                    result.className = 'test-result error';
+                    return;
+                }
+                
+                const calc = database.calculateShipping('万邦物流', '服装专线', '美国', 0.5);
+                if (calc.success) {
+                    result.textContent = `✅ 成功: 万邦物流服装专线到美国0.5kg\n` +
+                        `公斤费: ¥${calc.perKgRate}/kg\n` +
+                        `操作费: ¥${calc.handlingFee}\n` +
+                        `总费用: ¥${calc.totalCost}\n` +
+                        `计算公式: 0.5kg × ¥${calc.perKgRate} + ¥${calc.handlingFee} = ¥${calc.totalCost}`;
+                    result.className = 'test-result success';
+                } else {
+                    result.textContent = `❌ 计算失败: ${calc.error}`;
+                    result.className = 'test-result error';
+                }
+            } catch (error) {
+                result.textContent = `❌ 错误: ${error.message}`;
+                result.className = 'test-result error';
+            }
+        }
+        
+        function testCalculation2() {
+            const result = document.getElementById('calculationTest');
+            try {
+                if (!database) {
+                    result.textContent = '❌ 错误: 请先初始化数据库';
+                    result.className = 'test-result error';
+                    return;
+                }
+                
+                const calc = database.calculateShipping('华翰物流', '普货高仿专线', '美国', 0.5);
+                if (calc.success) {
+                    result.textContent = `✅ 成功: 华翰物流普货高仿专线到美国0.5kg\n` +
+                        `公斤费: ¥${calc.perKgRate}/kg\n` +
+                        `操作费: ¥${calc.handlingFee}\n` +
+                        `总费用: ¥${calc.totalCost}\n` +
+                        `计算公式: 0.5kg × ¥${calc.perKgRate} + ¥${calc.handlingFee} = ¥${calc.totalCost}`;
+                    result.className = 'test-result success';
+                } else {
+                    result.textContent = `❌ 计算失败: ${calc.error}`;
+                    result.className = 'test-result error';
+                }
+            } catch (error) {
+                result.textContent = `❌ 错误: ${error.message}`;
+                result.className = 'test-result error';
+            }
+        }
+        
+        function testCalculation3() {
+            const result = document.getElementById('calculationTest');
+            try {
+                if (!database) {
+                    result.textContent = '❌ 错误: 请先初始化数据库';
+                    result.className = 'test-result error';
+                    return;
+                }
+                
+                const calc = database.calculateShipping('云途物流', '标准带电', '英国', 1.0);
+                if (calc.success) {
+                    result.textContent = `✅ 成功: 云途物流标准带电到英国1kg\n` +
+                        `公斤费: ¥${calc.perKgRate}/kg\n` +
+                        `操作费: ¥${calc.handlingFee}\n` +
+                        `总费用: ¥${calc.totalCost}\n` +
+                        `计算公式: 1kg × ¥${calc.perKgRate} + ¥${calc.handlingFee} = ¥${calc.totalCost}`;
+                    result.className = 'test-result success';
+                } else {
+                    result.textContent = `❌ 计算失败: ${calc.error}`;
+                    result.className = 'test-result error';
+                }
+            } catch (error) {
+                result.textContent = `❌ 错误: ${error.message}`;
+                result.className = 'test-result error';
+            }
+        }
+        
+        function testComparison() {
+            const result = document.getElementById('comparisonTest');
+            try {
+                if (!database) {
+                    result.textContent = '❌ 错误: 请先初始化数据库';
+                    result.className = 'test-result error';
+                    return;
+                }
+                
+                const comparisons = database.compareAllPrices('美国', 0.5, '普货');
+                result.textContent = `✅ 成功: 找到 ${comparisons.length} 个比价选项\n\n`;
+                
+                comparisons.forEach((comp, index) => {
+                    result.textContent += `${index + 1}. ${comp.company} - ${comp.service}\n` +
+                        `   总费用: ¥${comp.totalCost} (公斤费: ¥${comp.perKgRate}/kg, 操作费: ¥${comp.handlingFee})\n\n`;
+                });
+                
+                result.className = 'test-result success';
+            } catch (error) {
+                result.textContent = `❌ 错误: ${error.message}`;
+                result.className = 'test-result error';
+            }
+        }
+        
+        function testProductFilter() {
+            const result = document.getElementById('filterTest');
+            try {
+                if (!database) {
+                    result.textContent = '❌ 错误: 请先初始化数据库';
+                    result.className = 'test-result error';
+                    return;
+                }
+                
+                // 测试产品类型筛选
+                const testCases = [
+                    ['普货', '普货高仿专线'],
+                    ['服装', '服装专线'],
+                    ['化妆品', '化妆品专线'],
+                    ['带电产品', '标准带电'],
+                    ['仿牌', '普货高仿专线']
+                ];
+                
+                let output = '✅ 产品类型筛选测试:\n\n';
+                
+                testCases.forEach(([productType, serviceName]) => {
+                    const isMatch = database.isServiceSuitableForProduct(serviceName, productType);
+                    output += `产品类型: "${productType}" | 服务: "${serviceName}" | 匹配: ${isMatch ? '✅' : '❌'}\n`;
+                });
+                
+                result.textContent = output;
+                result.className = 'test-result success';
+            } catch (error) {
+                result.textContent = `❌ 错误: ${error.message}`;
+                result.className = 'test-result error';
+            }
+        }
+        
+        // 页面加载时自动初始化数据库
+        window.onload = function() {
+            testDatabaseInit();
+        };
+    </script>
+</body>
+</html> 

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能物流报价机器人</title>
+    <link rel="stylesheet" href="styles/popup.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="logo">
+                <img src="icons/icon48.png" alt="Logo" class="logo-img">
+                <h1>智能物流报价</h1>
+            </div>
+            <div class="header-actions">
+                <button id="settingsBtn" class="btn-icon" title="设置">⚙️</button>
+            </div>
+        </header>
+
+        <!-- 汇率设置区域 -->
+        <div class="exchange-rate-section">
+            <div class="rate-display">
+                <span id="currentRate">当前汇率: 1 USD = 7 RMB</span>
+            </div>
+            <div class="rate-input">
+                <label for="exchangeRate">汇率设置:</label>
+                <input type="number" id="exchangeRate" min="1" max="20" step="0.1" value="7" title="人民币对美金汇率">
+            </div>
+        </div>
+
+        <!-- 主要表单 -->
+        <form class="calculator-form">
+            <!-- 基本信息 -->
+            <div class="form-section">
+                <h3>📋 基本信息</h3>
+                
+                <div class="form-group">
+                    <label for="country">目的地国家</label>
+                    <select id="country" required>
+                        <option value="">选择目的地国家</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="zoneGroup" style="display: none;">
+                    <label for="zone">分区选择</label>
+                    <select id="zone">
+                        <option value="">选择分区</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="weight">重量 (kg)</label>
+                    <input type="number" id="weight" min="0.01" step="0.01" placeholder="请输入重量" required>
+                    <div id="weightTips" class="form-tips"></div>
+                </div>
+            </div>
+
+            <!-- 单独查询 -->
+            <div class="form-section">
+                <h3>🔍 单独查询</h3>
+                
+                <div class="form-group">
+                    <label for="company">物流公司</label>
+                    <select id="company">
+                        <option value="">选择物流公司</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="service">服务类型</label>
+                    <select id="service">
+                        <option value="">选择服务类型</option>
+                    </select>
+                </div>
+
+                <button type="button" id="calculateBtn" class="btn btn-primary">
+                    💰 计算报价
+                </button>
+            </div>
+
+            <!-- 智能比价 -->
+            <div class="form-section">
+                <h3>🎯 智能比价</h3>
+                <p class="section-desc">自动比较所有物流公司，找到最优方案</p>
+                
+                <button type="button" id="compareBtn" class="btn btn-success">
+                    🚀 智能比价
+                </button>
+            </div>
+        </form>
+
+        <!-- 功能按钮区域 -->
+        <div class="action-section">
+            <div class="action-buttons">
+                <button id="historyBtn" class="btn btn-secondary">
+                    📊 查看历史
+                </button>
+                <button id="clearHistoryBtn" class="btn btn-warning">
+                    🗑️ 清空历史
+                </button>
+                <button id="exportHistoryBtn" class="btn btn-info">
+                    📤 导出历史
+                </button>
+            </div>
+        </div>
+
+        <!-- 结果显示区域 -->
+        <div id="results" class="results-section"></div>
+        
+        <!-- 比价操作区域 -->
+        <div id="comparisonActions" class="comparison-actions" style="display: none;"></div>
+        
+        <!-- 历史记录区域 -->
+        <div id="historyResults" class="history-section" style="display: none;"></div>
+
+        <!-- 状态栏 -->
+        <footer class="footer">
+            <div class="status-info">
+                <span class="version">v2.0.0</span>
+                <span class="update-time">数据更新: 2025-06-20</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="scripts/enhanced-database.js"></script>
+    <script src="scripts/enhanced-calculator.js"></script>
+    <script src="scripts/enhanced-popup.js"></script>
+</body>
+</html> 

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>生成插件图标</title>
+</head>
+<body>
+    <h3>智能报价机器人图标</h3>
+    
+    <!-- 16x16 图标 -->
+    <canvas id="icon16" width="16" height="16" style="border: 1px solid #ccc; margin: 5px;"></canvas>
+    <br>
+    
+    <!-- 32x32 图标 -->
+    <canvas id="icon32" width="32" height="32" style="border: 1px solid #ccc; margin: 5px;"></canvas>
+    <br>
+    
+    <!-- 48x48 图标 -->
+    <canvas id="icon48" width="48" height="48" style="border: 1px solid #ccc; margin: 5px;"></canvas>
+    <br>
+    
+    <!-- 128x128 图标 -->
+    <canvas id="icon128" width="128" height="128" style="border: 1px solid #ccc; margin: 5px;"></canvas>
+    <br>
+    
+    <button onclick="downloadIcons()">下载图标</button>
+    
+    <script>
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            
+            // 背景渐变
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // 绘制简单的计算器图标
+            ctx.fillStyle = 'white';
+            
+            // 计算比例
+            const scale = size / 48;
+            
+            // 绘制显示屏
+            ctx.fillRect(8 * scale, 6 * scale, 32 * scale, 8 * scale);
+            
+            // 绘制按钮
+            const buttonSize = 6 * scale;
+            const gap = 2 * scale;
+            
+            for(let row = 0; row < 3; row++) {
+                for(let col = 0; col < 3; col++) {
+                    const x = 8 * scale + col * (buttonSize + gap);
+                    const y = 20 * scale + row * (buttonSize + gap);
+                    ctx.fillRect(x, y, buttonSize, buttonSize);
+                }
+            }
+            
+            // 绘制等号按钮
+            ctx.fillRect(32 * scale, 32 * scale, buttonSize, buttonSize * 2 + gap);
+        }
+        
+        // 绘制所有尺寸的图标
+        drawIcon(document.getElementById('icon16'), 16);
+        drawIcon(document.getElementById('icon32'), 32);
+        drawIcon(document.getElementById('icon48'), 48);
+        drawIcon(document.getElementById('icon128'), 128);
+        
+        function downloadIcons() {
+            ['16', '32', '48', '128'].forEach(size => {
+                const canvas = document.getElementById('icon' + size);
+                const link = document.createElement('a');
+                link.download = 'icon' + size + '.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html> 
