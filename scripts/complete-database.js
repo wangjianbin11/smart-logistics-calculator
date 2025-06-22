@@ -2948,7 +2948,7 @@ class CompleteLogisticsDatabase {
         return companyData.services[service][country] || null;
     }
 
-    calculateShipping(company, service, country, weight, zone = null, dimensions = null) {
+    calculateShipping(company, service, country, weight, zone = null, dimensions = null, includeServiceFee = false) {
         const countryData = this.getCountryData(company, service, country);
         if (!countryData) return null;
 
@@ -2986,6 +2986,22 @@ class CompleteLogisticsDatabase {
                 result.volumetricWeight = volumetricWeight;
                 result.finalWeight = finalWeight;
                 result.weightType = weightType;
+                
+                // 添加服务费支持
+                const serviceFeeUSD = 1.2;
+                const serviceFeeRMB = serviceFeeUSD * this.exchangeRate;
+                
+                if (includeServiceFee) {
+                    result.serviceFeeUSD = serviceFeeUSD;
+                    result.serviceFeeRMB = serviceFeeRMB;
+                    result.totalPrice += serviceFeeRMB;
+                    result.totalPriceUSD += serviceFeeUSD;
+                    result.includesServiceFee = true;
+                } else {
+                    result.serviceFeeUSD = 0;
+                    result.serviceFeeRMB = 0;
+                    result.includesServiceFee = false;
+                }
             }
 
             return result;
@@ -3062,7 +3078,7 @@ class CompleteLogisticsDatabase {
         };
     }
 
-    compareAllPrices(country, weight, zone = null) {
+    compareAllPrices(country, weight, zone = null, dimensions = null, includeServiceFee = false) {
         const results = [];
         
         for (const company of this.getCompanies()) {
@@ -3077,11 +3093,11 @@ class CompleteLogisticsDatabase {
 
                 if (countryData.zones) {
                     if (zone) {
-                        const result = this.calculateShipping(company, service, country, weight, zone);
+                        const result = this.calculateShipping(company, service, country, weight, zone, dimensions, includeServiceFee);
                         if (result) results.push(result);
                     } else {
                         for (const z of this.getZones(company, service, country)) {
-                            const result = this.calculateShipping(company, service, country, weight, z);
+                            const result = this.calculateShipping(company, service, country, weight, z, dimensions, includeServiceFee);
                             if (result) {
                                 result.zone = z;
                                 results.push(result);
@@ -3089,7 +3105,7 @@ class CompleteLogisticsDatabase {
                         }
                     }
                 } else {
-                    const result = this.calculateShipping(company, service, country, weight);
+                    const result = this.calculateShipping(company, service, country, weight, null, dimensions, includeServiceFee);
                     if (result) results.push(result);
                 }
             }

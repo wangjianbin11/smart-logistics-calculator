@@ -106,6 +106,11 @@
                     <label>包裹重量 (kg):</label>
                     <input type="number" id="weight" value="1" step="0.01" min="0.01">
                 </div>
+                <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="includeServiceFee" checked> 包含服务费 ($1.2 USD)
+                    </label>
+                </div>
             </div>
             <div>
                 <div class="dimension-inputs">
@@ -336,8 +341,9 @@
                 
                 const divisor = completeLogisticsDB.getVolumeDivisor('云途物流', service);
                 const dimensions = { length, width, height, divisor };
+                const includeServiceFee = document.getElementById('includeServiceFee').checked;
                 
-                const result = completeLogisticsDB.calculateShipping('云途物流', service, country, weight, null, dimensions);
+                const result = completeLogisticsDB.calculateShipping('云途物流', service, country, weight, null, dimensions, includeServiceFee);
                 
                 if (result) {
                     resultHtml += `
@@ -348,6 +354,7 @@
                             <p><strong>体积重量:</strong> ${result.volumetricWeight?.toFixed(3) || 'N/A'} kg</p>
                             <p><strong>计费重量:</strong> ${result.finalWeight?.toFixed(3) || weight.toFixed(3)} kg</p>
                             <p><strong>计费类型:</strong> ${result.weightType || '实际重量'}</p>
+                            <p><strong>服务费:</strong> ${result.includesServiceFee ? `¥${result.serviceFeeRMB?.toFixed(2)} ($${result.serviceFeeUSD?.toFixed(2)})` : '未包含'}</p>
                             <p><strong>总价:</strong> ¥${result.totalPrice?.toFixed(2) || 'N/A'}</p>
                             <p><strong>时效:</strong> ${result.timeframe || 'N/A'}</p>
                         </div>
