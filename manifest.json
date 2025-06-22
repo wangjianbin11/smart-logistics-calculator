@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "智能物流报价机器人",
-  "version": "1.0.0",
-  "description": "专业的物流费用计算工具，支持万邦、云途、华翰、燕文四大物流公司，提供精确报价和智能比价功能。",
+  "version": "2.1.0",
+  "description": "专业的物流费用计算工具，支持万邦、云途、华翰、燕文四大物流公司，提供精确报价和智能比价功能，包含完整的备注说明和历史记录管理。",
   "author": "物流报价团队",
   
   "permissions": [
@@ -12,7 +12,7 @@
   
   "action": {
     "default_popup": "popup.html",
-    "default_title": "智能物流报价机器人",
+    "default_title": "智能物流报价机器人 v2.1.0",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",

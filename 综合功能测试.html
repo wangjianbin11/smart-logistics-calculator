@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>综合功能测试</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px 10px 10px 0;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .results {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #e1e5e9;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .status.loading {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #bee5eb;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #495057;
+            font-size: 0.9em;
+        }
+
+        .test-result {
+            background: #f8f9fa;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .test-result.pass {
+            border-left: 4px solid #28a745;
+            background: #d4edda;
+        }
+
+        .test-result.fail {
+            border-left: 4px solid #dc3545;
+            background: #f8d7da;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 综合功能测试</h1>
+            <p>测试智能物流报价机器人的所有核心功能</p>
+        </div>
+
+        <div class="test-section">
+            <h2>🔬 核心功能测试</h2>
+            <button class="btn" onclick="testSmartComparison()">🎯 测试智能比价</button>
+            <button class="btn" onclick="testDatabaseIntegrity()">📊 测试数据库完整性</button>
+            <button class="btn" onclick="testCalculationAccuracy()">💰 测试计算准确性</button>
+            <button class="btn" onclick="runFullTest()">🚀 运行完整测试</button>
+        </div>
+
+        <div id="testResults" class="results" style="display: none;"></div>
+        <div id="testStatus"></div>
+    </div>
+
+    <script src="chrome-store-package/scripts/enhanced-database.js"></script>
+    <script src="chrome-store-package/scripts/enhanced-calculator.js"></script>
+
+    <script>
+        // 全局测试结果
+        let testResults = {
+            database: null,
+            calculation: null,
+            comparison: null,
+            overall: null
+        };
+
+        // 显示状态信息
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('testStatus');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+            
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                }, 5000);
+            }
+        }
+
+        // 显示测试结果
+        function displayResults() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.style.display = 'block';
+            
+            let html = '<h3>📋 测试报告</h3>';
+            
+            // 数据库测试结果
+            if (testResults.database) {
+                html += `
+                    <div class="test-result ${testResults.database.passed ? 'pass' : 'fail'}">
+                        <h4>📊 数据库完整性测试 ${testResults.database.passed ? '✅' : '❌'}</h4>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value">${testResults.database.stats.companies}</div>
+                                <div class="stat-label">物流公司</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${testResults.database.stats.countries}</div>
+                                <div class="stat-label">国家数量</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${testResults.database.stats.routes}</div>
+                                <div class="stat-label">路线总数</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${testResults.database.stats.totalPriceRanges}</div>
+                                <div class="stat-label">价格区间</div>
+                            </div>
+                        </div>
+                        ${testResults.database.issues.length > 0 ? 
+                            `<p><strong>发现问题:</strong> ${testResults.database.issues.length} 个</p>` : 
+                            '<p><strong>状态:</strong> 数据库完整无误</p>'
+                        }
+                    </div>
+                `;
+            }
+            
+            // 计算测试结果
+            if (testResults.calculation) {
+                html += `
+                    <div class="test-result ${testResults.calculation.passRate >= 75 ? 'pass' : 'fail'}">
+                        <h4>💰 计算准确性测试 ${testResults.calculation.passRate >= 75 ? '✅' : '❌'}</h4>
+                        <p><strong>通过率:</strong> ${testResults.calculation.passRate}% (${testResults.calculation.passed}/${testResults.calculation.total})</p>
+                        <div class="stats-grid">
+                            ${testResults.calculation.details.map(detail => 
+                                `<div class="stat-card">
+                                    <div class="stat-value">${detail.success ? '✅' : '❌'}</div>
+                                    <div class="stat-label">${detail.country} - ${detail.weight}kg</div>
+                                </div>`
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // 比价测试结果
+            if (testResults.comparison) {
+                html += `
+                    <div class="test-result ${testResults.comparison.success ? 'pass' : 'fail'}">
+                        <h4>🎯 智能比价测试 ${testResults.comparison.success ? '✅' : '❌'}</h4>
+                        <p><strong>找到报价:</strong> ${testResults.comparison.quotesCount} 个</p>
+                        ${testResults.comparison.success ? 
+                            `<p><strong>价格范围:</strong> ¥${testResults.comparison.minPrice} - ¥${testResults.comparison.maxPrice}</p>
+                             <p><strong>节省金额:</strong> ¥${testResults.comparison.savings}</p>` : 
+                            '<p><strong>状态:</strong> 未能成功执行比价</p>'
+                        }
+                    </div>
+                `;
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        // 测试智能比价功能
+        async function testSmartComparison() {
+            showStatus('正在测试智能比价功能...', 'loading');
+            
+            try {
+                const calculator = new EnhancedCalculator();
+                const result = await calculator.compareAllQuotes('美国', '', 1.5, 'clothes', 7.2);
+                
+                if (result.quotes && result.quotes.length > 0) {
+                    const minPrice = parseFloat(result.quotes[0].totalPrice);
+                    const maxPrice = parseFloat(result.quotes[result.quotes.length - 1].totalPrice);
+                    const savings = maxPrice - minPrice;
+                    
+                    testResults.comparison = {
+                        success: true,
+                        quotesCount: result.quotes.length,
+                        minPrice: minPrice.toFixed(2),
+                        maxPrice: maxPrice.toFixed(2),
+                        savings: savings.toFixed(2)
+                    };
+                    
+                    showStatus(`✅ 智能比价测试通过 - 找到 ${result.quotes.length} 个报价`, 'success');
+                } else {
+                    testResults.comparison = {
+                        success: false,
+                        quotesCount: 0
+                    };
+                    showStatus('⚠️ 智能比价测试 - 未找到报价', 'error');
+                }
+                
+            } catch (error) {
+                console.error('智能比价测试失败:', error);
+                testResults.comparison = {
+                    success: false,
+                    error: error.message
+                };
+                showStatus('❌ 智能比价测试失败: ' + error.message, 'error');
+            }
+            
+            displayResults();
+        }
+
+        // 测试数据库完整性
+        function testDatabaseIntegrity() {
+            showStatus('正在测试数据库完整性...', 'loading');
+            
+            try {
+                const calculator = new EnhancedCalculator();
+                const stats = calculator.getDatabaseStats();
+                const validation = calculator.validateDatabase();
+                
+                testResults.database = {
+                    passed: validation.isValid,
+                    stats: stats,
+                    issues: validation.issues || []
+                };
+                
+                showStatus(
+                    validation.isValid ? 
+                    '✅ 数据库完整性测试通过' : 
+                    `⚠️ 数据库存在 ${validation.issues.length} 个问题`, 
+                    validation.isValid ? 'success' : 'error'
+                );
+                
+            } catch (error) {
+                console.error('数据库测试失败:', error);
+                testResults.database = {
+                    passed: false,
+                    error: error.message
+                };
+                showStatus('❌ 数据库测试失败: ' + error.message, 'error');
+            }
+            
+            displayResults();
+        }
+
+        // 测试计算准确性
+        async function testCalculationAccuracy() {
+            showStatus('正在测试计算准确性...', 'loading');
+            
+            try {
+                const calculator = new EnhancedCalculator();
+                const testCases = [
+                    { country: '美国', weight: 1.0 },
+                    { country: '英国', weight: 0.5 },
+                    { country: '德国', weight: 2.0 },
+                    { country: '日本', weight: 1.5 },
+                    { country: '澳大利亚', weight: 1.2 },
+                    { country: '新加坡', weight: 0.8 }
+                ];
+                
+                let passed = 0;
+                let details = [];
+                
+                for (const testCase of testCases) {
+                    try {
+                        const result = await calculator.compareAllQuotes(testCase.country, '', testCase.weight, 'clothes', 7.2);
+                        const success = result.quotes && result.quotes.length > 0;
+                        
+                        if (success) passed++;
+                        
+                        details.push({
+                            country: testCase.country,
+                            weight: testCase.weight,
+                            success: success,
+                            quotesCount: success ? result.quotes.length : 0
+                        });
+                        
+                    } catch (error) {
+                        details.push({
+                            country: testCase.country,
+                            weight: testCase.weight,
+                            success: false,
+                            error: error.message
+                        });
+                    }
+                }
+                
+                const passRate = ((passed / testCases.length) * 100).toFixed(1);
+                
+                testResults.calculation = {
+                    passed: passed,
+                    total: testCases.length,
+                    passRate: parseFloat(passRate),
+                    details: details
+                };
+                
+                showStatus(`✅ 计算测试完成，通过率: ${passRate}%`, 'success');
+                
+            } catch (error) {
+                console.error('计算测试失败:', error);
+                testResults.calculation = {
+                    passed: 0,
+                    total: 0,
+                    passRate: 0,
+                    error: error.message
+                };
+                showStatus('❌ 计算测试失败: ' + error.message, 'error');
+            }
+            
+            displayResults();
+        }
+
+        // 运行完整测试
+        async function runFullTest() {
+            showStatus('正在运行完整功能测试...', 'loading');
+            
+            // 重置测试结果
+            testResults = {
+                database: null,
+                calculation: null,
+                comparison: null,
+                overall: null
+            };
+            
+            // 依次执行测试
+            testDatabaseIntegrity();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testCalculationAccuracy();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testSmartComparison();
+            
+            // 生成总体评估
+            const dbPassed = testResults.database && testResults.database.passed;
+            const calcPassed = testResults.calculation && testResults.calculation.passRate >= 75;
+            const compPassed = testResults.comparison && testResults.comparison.success;
+            
+            const overallScore = [dbPassed, calcPassed, compPassed].filter(Boolean).length;
+            
+            testResults.overall = {
+                score: overallScore,
+                total: 3,
+                passed: overallScore >= 2
+            };
+            
+            showStatus(
+                `🎉 完整测试完成 - 总分: ${overallScore}/3 ${overallScore >= 2 ? '(通过)' : '(需要改进)'}`, 
+                overallScore >= 2 ? 'success' : 'error'
+            );
+        }
+
+        // 页面加载时检查依赖
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                if (typeof logisticsData === 'undefined') {
+                    showStatus('❌ 数据库未加载，请检查文件路径', 'error');
+                } else if (typeof EnhancedCalculator === 'undefined') {
+                    showStatus('❌ 计算器未加载，请检查文件路径', 'error');
+                } else {
+                    showStatus('✅ 所有依赖已加载，可以开始测试', 'success');
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 
