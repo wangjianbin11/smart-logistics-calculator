@@ -282,6 +282,40 @@
                     <input type="number" id="weight" step="0.001" min="0.001" placeholder="请输入重量">
                 </div>
 
+                <!-- 体积重量计算（可选） -->
+                <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="useVolumetric"> 使用体积重量计算
+                    </label>
+                </div>
+                
+                <div id="volumetricInputs" style="display: none; padding: 15px; background: #f0f8ff; border-radius: 8px; margin: 10px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #333;">包裹尺寸计算</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                        <div>
+                            <label for="length">长 (cm):</label>
+                            <input type="number" id="length" step="0.1" min="0" placeholder="长度">
+                        </div>
+                        <div>
+                            <label for="width">宽 (cm):</label>
+                            <input type="number" id="width" step="0.1" min="0" placeholder="宽度">
+                        </div>
+                        <div>
+                            <label for="height">高 (cm):</label>
+                            <input type="number" id="height" step="0.1" min="0" placeholder="高度">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="divisor">体积重量除数:</label>
+                        <select id="divisor">
+                            <option value="6000">6000 (国际快递标准)</option>
+                            <option value="8000" selected>8000 (大部分渠道)</option>
+                            <option value="18000">18000 (云途大货18000专线)</option>
+                        </select>
+                    </div>
+                    <div id="volumetricResult" style="margin-top: 10px; padding: 8px; background: #e8f5e8; border-radius: 5px; font-size: 14px;"></div>
+                </div>
+
                                  <div class="input-group">
                      <label for="exchangeRate">美元汇率 (1 USD = ? RMB):</label>
                      <input type="number" id="exchangeRate" step="0.01" value="7.00" placeholder="当前汇率">
@@ -342,6 +376,60 @@
             document.getElementById('service').addEventListener('change', onServiceChange);
             document.getElementById('country').addEventListener('change', onCountryChange);
             document.getElementById('exchangeRate').addEventListener('input', updateExchangeRate);
+            document.getElementById('useVolumetric').addEventListener('change', toggleVolumetric);
+            document.getElementById('length').addEventListener('input', calculateVolumetric);
+            document.getElementById('width').addEventListener('input', calculateVolumetric);
+            document.getElementById('height').addEventListener('input', calculateVolumetric);
+            document.getElementById('divisor').addEventListener('change', calculateVolumetric);
+        }
+
+        // 切换体积重量计算显示
+        function toggleVolumetric() {
+            const useVolumetric = document.getElementById('useVolumetric').checked;
+            const volumetricInputs = document.getElementById('volumetricInputs');
+            volumetricInputs.style.display = useVolumetric ? 'block' : 'none';
+            
+            if (useVolumetric) {
+                // 根据当前选择的服务自动设置除数
+                autoSetDivisor();
+                calculateVolumetric();
+            }
+        }
+
+        // 自动设置体积重量除数
+        function autoSetDivisor() {
+            const company = document.getElementById('company').value;
+            const service = document.getElementById('service').value;
+            const divisorSelect = document.getElementById('divisor');
+            
+            if (company === '云途物流' && service === '云途大货18000专线') {
+                divisorSelect.value = '18000';
+            } else {
+                divisorSelect.value = '8000';
+            }
+        }
+
+        // 计算体积重量
+        function calculateVolumetric() {
+            const length = parseFloat(document.getElementById('length').value) || 0;
+            const width = parseFloat(document.getElementById('width').value) || 0;
+            const height = parseFloat(document.getElementById('height').value) || 0;
+            const divisor = parseFloat(document.getElementById('divisor').value) || 8000;
+            const actualWeight = parseFloat(document.getElementById('weight').value) || 0;
+            
+            if (length > 0 && width > 0 && height > 0) {
+                const volumetricWeight = (length * width * height) / divisor;
+                const finalWeight = Math.max(actualWeight, volumetricWeight);
+                const useVolumetric = volumetricWeight > actualWeight;
+                
+                document.getElementById('volumetricResult').innerHTML = `
+                    <strong>体积重量:</strong> ${volumetricWeight.toFixed(3)} kg<br>
+                    <strong>实际重量:</strong> ${actualWeight.toFixed(3)} kg<br>
+                    <strong>计费重量:</strong> ${finalWeight.toFixed(3)} kg (${useVolumetric ? '按体积重量' : '按实际重量'})
+                `;
+            } else {
+                document.getElementById('volumetricResult').innerHTML = '请输入完整的包裹尺寸';
+            }
         }
 
         // 公司选择变化
@@ -386,6 +474,12 @@
                     option.textContent = country;
                     countrySelect.appendChild(option);
                 });
+                
+                // 如果已经启用体积重量计算，自动设置除数
+                if (document.getElementById('useVolumetric').checked) {
+                    autoSetDivisor();
+                    calculateVolumetric();
+                }
             }
         }
 
@@ -434,7 +528,20 @@
             if (!validateInputs(company, service, country, weight)) return;
 
             try {
-                const result = db.calculateShipping(company, service, country, weight, zone || null);
+                // 获取体积重量信息
+                let dimensions = null;
+                if (document.getElementById('useVolumetric').checked) {
+                    const length = parseFloat(document.getElementById('length').value) || 0;
+                    const width = parseFloat(document.getElementById('width').value) || 0;
+                    const height = parseFloat(document.getElementById('height').value) || 0;
+                    const divisor = parseFloat(document.getElementById('divisor').value) || 8000;
+                    
+                    if (length > 0 && width > 0 && height > 0) {
+                        dimensions = { length, width, height, divisor };
+                    }
+                }
+
+                const result = db.calculateShipping(company, service, country, weight, zone || null, dimensions);
                 if (result) {
                     displaySingleResult(result);
                 } else {
@@ -516,7 +623,9 @@
                      </div>
                      <div class="result-details">
                          <div><strong>目的地:</strong> ${result.country}${result.zone ? ` (${result.zone})` : ''}</div>
-                         <div><strong>重量:</strong> ${result.weight}kg</div>
+                         <div><strong>实际重量:</strong> ${result.actualWeight || result.weight}kg</div>
+                         ${result.volumetricWeight ? `<div><strong>体积重量:</strong> ${result.volumetricWeight.toFixed(3)}kg</div>` : ''}
+                         <div><strong>计费重量:</strong> ${result.finalWeight || result.weight}kg ${result.weightType ? `(${result.weightType})` : ''}</div>
                          <div><strong>时效:</strong> ${result.timeframe || '未知'}</div>
                          <div><strong>重量限制:</strong> ${result.weightLimit ? result.weightLimit + 'kg' : '未知'}</div>
                          <div><strong>尺寸限制:</strong> ${result.sizeLimit || '未知'}</div>
@@ -560,7 +669,9 @@
                         </div>
                         <div class="result-details">
                             <div><strong>目的地:</strong> ${result.country}${result.zone ? ` (${result.zone})` : ''}</div>
-                            <div><strong>重量:</strong> ${result.weight}kg</div>
+                            <div><strong>实际重量:</strong> ${result.actualWeight || result.weight}kg</div>
+                            ${result.volumetricWeight ? `<div><strong>体积重量:</strong> ${result.volumetricWeight.toFixed(3)}kg</div>` : ''}
+                            <div><strong>计费重量:</strong> ${result.finalWeight || result.weight}kg ${result.weightType ? `(${result.weightType})` : ''}</div>
                             <div><strong>时效:</strong> ${result.timeframe || '未知'}</div>
                             <div><strong>重量限制:</strong> ${result.weightLimit ? result.weightLimit + 'kg' : '未知'}</div>
                             <div><strong>尺寸限制:</strong> ${result.sizeLimit || '未知'}</div>

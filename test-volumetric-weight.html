@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>体积重量功能测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group select,
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .test-result {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+        .error-result {
+            background: #ffeaea;
+            border-left-color: #dc3545;
+        }
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        .dimension-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>体积重量功能测试</h1>
+    
+    <div class="test-section">
+        <h2 class="test-title">1. 基础体积重量计算测试</h2>
+        <div class="test-grid">
+            <div>
+                <div class="input-group">
+                    <label>物流公司:</label>
+                    <select id="company" onchange="onCompanyChange()">
+                        <option value="">请选择物流公司</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>服务类型:</label>
+                    <select id="service" onchange="onServiceChange()">
+                        <option value="">请先选择物流公司</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>目的地国家:</label>
+                    <select id="country">
+                        <option value="">请先选择服务类型</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>包裹重量 (kg):</label>
+                    <input type="number" id="weight" value="1" step="0.01" min="0.01">
+                </div>
+            </div>
+            <div>
+                <div class="dimension-inputs">
+                    <div>
+                        <label>长度 (cm):</label>
+                        <input type="number" id="length" value="30" step="0.1" min="0.1">
+                    </div>
+                    <div>
+                        <label>宽度 (cm):</label>
+                        <input type="number" id="width" value="20" step="0.1" min="0.1">
+                    </div>
+                    <div>
+                        <label>高度 (cm):</label>
+                        <input type="number" id="height" value="15" step="0.1" min="0.1">
+                    </div>
+                    <div>
+                        <label>除数:</label>
+                        <select id="divisor">
+                            <option value="6000">6000</option>
+                            <option value="8000" selected>8000</option>
+                            <option value="18000">18000</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <button class="btn" onclick="testVolumetricCalculation()">测试体积重量计算</button>
+                    <button class="btn" onclick="testAutoDivisor()">测试自动除数设置</button>
+                </div>
+            </div>
+        </div>
+        <div id="basicTestResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">2. 云途物流渠道测试</h2>
+        <div class="test-grid">
+            <div>
+                <h3>普通渠道 (除数8000)</h3>
+                <button class="btn" onclick="testYuntuService('服装专线')">服装专线</button>
+                <button class="btn" onclick="testYuntuService('化妆品专线')">化妆品专线</button>
+                <button class="btn" onclick="testYuntuService('专线挂号标快普货')">标快普货</button>
+                <button class="btn" onclick="testYuntuService('专线挂号标快带电')">标快带电</button>
+                <button class="btn" onclick="testYuntuService('专线挂号特惠普货')">特惠普货</button>
+                <button class="btn" onclick="testYuntuService('专线挂号特惠带电')">特惠带电</button>
+            </div>
+            <div>
+                <h3>大货专线 (除数18000)</h3>
+                <button class="btn" onclick="testYuntuService('云途大货18000专线')">云途大货18000专线</button>
+                <h3>测试参数</h3>
+                <p>尺寸: 50cm × 40cm × 30cm<br>
+                实际重量: 2kg<br>
+                体积重量(8000): 7.5kg<br>
+                体积重量(18000): 3.33kg</p>
+            </div>
+        </div>
+        <div id="yuntuTestResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">3. 完整报价测试</h2>
+        <div class="test-grid">
+            <div>
+                <div class="input-group">
+                    <label>测试国家:</label>
+                    <select id="testCountry">
+                        <option value="美国">美国</option>
+                        <option value="英国">英国</option>
+                        <option value="德国">德国</option>
+                        <option value="澳大利亚">澳大利亚</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>测试重量 (kg):</label>
+                    <input type="number" id="testWeight" value="2" step="0.01" min="0.01">
+                </div>
+                <button class="btn" onclick="testFullCalculation()">完整报价测试</button>
+            </div>
+            <div>
+                <p><strong>测试说明:</strong><br>
+                使用固定尺寸 50×40×30cm，测试不同重量下的体积重量影响</p>
+            </div>
+        </div>
+        <div id="fullTestResult"></div>
+    </div>
+
+    <script src="scripts/complete-database.js"></script>
+    <script>
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            const companySelect = document.getElementById('company');
+            const companies = completeLogisticsDB.getCompanies();
+            companies.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company;
+                option.textContent = company;
+                companySelect.appendChild(option);
+            });
+        });
+
+        function onCompanyChange() {
+            const company = document.getElementById('company').value;
+            const serviceSelect = document.getElementById('service');
+            serviceSelect.innerHTML = '<option value="">请选择服务类型</option>';
+            
+            if (company) {
+                const services = completeLogisticsDB.getServices(company);
+                services.forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service;
+                    option.textContent = service;
+                    serviceSelect.appendChild(option);
+                });
+            }
+        }
+
+        function onServiceChange() {
+            const company = document.getElementById('company').value;
+            const service = document.getElementById('service').value;
+            const countrySelect = document.getElementById('country');
+            countrySelect.innerHTML = '<option value="">请选择目的地国家</option>';
+            
+            if (company && service) {
+                const countries = completeLogisticsDB.getCountries(company, service);
+                countries.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country;
+                    option.textContent = country;
+                    countrySelect.appendChild(option);
+                });
+                
+                // 自动设置除数
+                const divisorSelect = document.getElementById('divisor');
+                if (company === '云途物流' && service === '云途大货18000专线') {
+                    divisorSelect.value = '18000';
+                } else {
+                    divisorSelect.value = '8000';
+                }
+            }
+        }
+
+        function testVolumetricCalculation() {
+            const length = parseFloat(document.getElementById('length').value) || 0;
+            const width = parseFloat(document.getElementById('width').value) || 0;
+            const height = parseFloat(document.getElementById('height').value) || 0;
+            const divisor = parseFloat(document.getElementById('divisor').value) || 8000;
+            const actualWeight = parseFloat(document.getElementById('weight').value) || 0;
+            
+            const volumetricWeight = (length * width * height) / divisor;
+            const finalWeight = Math.max(actualWeight, volumetricWeight);
+            const weightType = volumetricWeight > actualWeight ? '体积重量' : '实际重量';
+            
+            const result = `
+                <h3>体积重量计算结果:</h3>
+                <p><strong>包裹尺寸:</strong> ${length} × ${width} × ${height} cm</p>
+                <p><strong>除数:</strong> ${divisor}</p>
+                <p><strong>体积重量:</strong> ${volumetricWeight.toFixed(3)} kg</p>
+                <p><strong>实际重量:</strong> ${actualWeight.toFixed(3)} kg</p>
+                <p><strong>计费重量:</strong> ${finalWeight.toFixed(3)} kg (按${weightType}计费)</p>
+            `;
+            
+            document.getElementById('basicTestResult').innerHTML = result;
+        }
+
+        function testAutoDivisor() {
+            const company = document.getElementById('company').value;
+            const service = document.getElementById('service').value;
+            
+            if (!company || !service) {
+                document.getElementById('basicTestResult').innerHTML = 
+                    '<div class="error-result">请先选择物流公司和服务类型</div>';
+                return;
+            }
+            
+            const expectedDivisor = completeLogisticsDB.getVolumeDivisor(company, service);
+            const currentDivisor = document.getElementById('divisor').value;
+            
+            const result = `
+                <h3>自动除数设置测试:</h3>
+                <p><strong>选择的渠道:</strong> ${company} - ${service}</p>
+                <p><strong>期望除数:</strong> ${expectedDivisor}</p>
+                <p><strong>当前除数:</strong> ${currentDivisor}</p>
+                <p><strong>测试结果:</strong> ${expectedDivisor == currentDivisor ? '✅ 通过' : '❌ 失败'}</p>
+            `;
+            
+            document.getElementById('basicTestResult').innerHTML = result;
+        }
+
+        function testYuntuService(serviceName) {
+            const length = 50, width = 40, height = 30;
+            const actualWeight = 2;
+            const divisor8000 = 8000, divisor18000 = 18000;
+            
+            const volumetricWeight8000 = (length * width * height) / divisor8000;
+            const volumetricWeight18000 = (length * width * height) / divisor18000;
+            
+            const expectedDivisor = completeLogisticsDB.getVolumeDivisor('云途物流', serviceName);
+            const expectedVolumetricWeight = (length * width * height) / expectedDivisor;
+            const finalWeight = Math.max(actualWeight, expectedVolumetricWeight);
+            
+            const result = `
+                <h3>${serviceName} 测试结果:</h3>
+                <p><strong>包裹尺寸:</strong> ${length} × ${width} × ${height} cm</p>
+                <p><strong>实际重量:</strong> ${actualWeight} kg</p>
+                <p><strong>期望除数:</strong> ${expectedDivisor}</p>
+                <p><strong>体积重量(8000):</strong> ${volumetricWeight8000.toFixed(3)} kg</p>
+                <p><strong>体积重量(18000):</strong> ${volumetricWeight18000.toFixed(3)} kg</p>
+                <p><strong>实际使用体积重量:</strong> ${expectedVolumetricWeight.toFixed(3)} kg</p>
+                <p><strong>最终计费重量:</strong> ${finalWeight.toFixed(3)} kg</p>
+                <p><strong>除数设置:</strong> ${expectedDivisor === 18000 ? '✅ 使用18000除数' : '✅ 使用8000除数'}</p>
+            `;
+            
+            document.getElementById('yuntuTestResult').innerHTML = result;
+        }
+
+        function testFullCalculation() {
+            const country = document.getElementById('testCountry').value;
+            const weight = parseFloat(document.getElementById('testWeight').value);
+            const length = 50, width = 40, height = 30;
+            
+            let resultHtml = `<h3>完整报价测试 - ${country} (${weight}kg)</h3>`;
+            
+            // 测试云途物流各个渠道
+            const yuntuServices = completeLogisticsDB.getServices('云途物流');
+            
+            yuntuServices.forEach(service => {
+                const countries = completeLogisticsDB.getCountries('云途物流', service);
+                if (!countries.includes(country)) return;
+                
+                const divisor = completeLogisticsDB.getVolumeDivisor('云途物流', service);
+                const dimensions = { length, width, height, divisor };
+                
+                const result = completeLogisticsDB.calculateShipping('云途物流', service, country, weight, null, dimensions);
+                
+                if (result) {
+                    resultHtml += `
+                        <div class="test-result">
+                            <h4>${service}</h4>
+                            <p><strong>除数:</strong> ${divisor}</p>
+                            <p><strong>实际重量:</strong> ${result.actualWeight?.toFixed(3) || 'N/A'} kg</p>
+                            <p><strong>体积重量:</strong> ${result.volumetricWeight?.toFixed(3) || 'N/A'} kg</p>
+                            <p><strong>计费重量:</strong> ${result.finalWeight?.toFixed(3) || weight.toFixed(3)} kg</p>
+                            <p><strong>计费类型:</strong> ${result.weightType || '实际重量'}</p>
+                            <p><strong>总价:</strong> ¥${result.totalPrice?.toFixed(2) || 'N/A'}</p>
+                            <p><strong>时效:</strong> ${result.timeframe || 'N/A'}</p>
+                        </div>
+                    `;
+                }
+            });
+            
+            document.getElementById('fullTestResult').innerHTML = resultHtml;
+        }
+    </script>
+</body>
+</html> 
