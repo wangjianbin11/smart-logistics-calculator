@@ -96,7 +96,8 @@
         }
 
         .input-group select,
-        .input-group input {
+        .input-group input[type="text"],
+        .input-group input[type="number"] {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e1e5e9;
@@ -105,11 +106,26 @@
             transition: all 0.3s ease;
         }
 
+        .input-group input[type="checkbox"] {
+            width: auto;
+            height: auto;
+            margin: 0;
+            padding: 0;
+            transform: scale(1.2);
+            accent-color: #28a745;
+        }
+
         .input-group select:focus,
-        .input-group input:focus {
+        .input-group input[type="text"]:focus,
+        .input-group input[type="number"]:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-group input[type="checkbox"]:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
         }
 
         .zone-group {
@@ -309,6 +325,23 @@
                     <input type="number" id="weight" step="0.001" min="0.001" placeholder="请输入重量">
                 </div>
 
+                <!-- 产品价格输入（可选） -->
+                <div class="input-group" style="border: 2px solid #17a2b8; border-radius: 10px; padding: 15px; background: #e1f7ff;">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <input type="checkbox" id="includeProductPrice" style="width: auto; height: auto; margin-right: 12px; transform: scale(1.2); accent-color: #17a2b8;">
+                        <label for="includeProductPrice" style="font-weight: bold; color: #2c3e50; margin: 0; cursor: pointer;">
+                            包含产品价格计算 🛍️
+                        </label>
+                    </div>
+                    <div id="productPriceInputs" style="display: none;">
+                        <label for="productPrice" style="margin-bottom: 8px; display: block; color: #495057;">产品价格 (RMB):</label>
+                        <input type="number" id="productPrice" step="0.01" min="0" placeholder="请输入产品价格" style="width: 100%; padding: 10px; border: 2px solid #17a2b8; border-radius: 8px; font-size: 16px;">
+                        <div style="font-size: 13px; color: #6c757d; margin-top: 5px;">
+                            💡 输入产品价格后，将显示产品价格 + 运费 + 服务费的完整总价
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 体积重量计算（可选） -->
                 <div class="input-group">
                     <label>
@@ -344,13 +377,15 @@
                 </div>
 
                 <!-- 可选服务费 -->
-                <div class="input-group">
-                    <label style="display: flex; align-items: center; font-weight: bold; color: #2c3e50;">
-                        <input type="checkbox" id="includeServiceFee" checked style="margin-right: 8px; transform: scale(1.2);">
-                        <span>包含服务费 💼</span>
-                        <span style="color: #27ae60; margin-left: 8px;">($1.2 USD 推荐)</span>
-                    </label>
-                    <div style="margin-top: 5px; padding: 8px; background: #fff3cd; border-radius: 5px; font-size: 13px; color: #856404;">
+                <div class="input-group" style="border: 2px solid #ffc107; border-radius: 10px; padding: 15px; background: #fff3cd;">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <input type="checkbox" id="includeServiceFee" checked style="width: auto; height: auto; margin-right: 12px; transform: scale(1.5); accent-color: #28a745;">
+                        <label for="includeServiceFee" style="font-weight: bold; color: #2c3e50; margin: 0; cursor: pointer; display: flex; align-items: center;">
+                            <span>包含服务费 💼</span>
+                            <span style="color: #27ae60; margin-left: 8px; font-size: 0.9em;">($1.2 USD 推荐)</span>
+                        </label>
+                    </div>
+                    <div style="font-size: 13px; color: #856404; line-height: 1.4;">
                         💡 <strong>建议选择：</strong>服务费包含订单处理、客服支持等增值服务，让您的物流体验更安心
                     </div>
                 </div>
@@ -420,6 +455,29 @@
             document.getElementById('width').addEventListener('input', calculateVolumetric);
             document.getElementById('height').addEventListener('input', calculateVolumetric);
             document.getElementById('divisor').addEventListener('change', calculateVolumetric);
+            document.getElementById('includeServiceFee').addEventListener('change', onServiceFeeChange);
+            document.getElementById('includeProductPrice').addEventListener('change', toggleProductPrice);
+            document.getElementById('productPrice').addEventListener('input', onProductPriceChange);
+        }
+
+        // 服务费选择变化
+        function onServiceFeeChange() {
+            const includeServiceFee = document.getElementById('includeServiceFee').checked;
+            console.log('服务费选择状态改变:', includeServiceFee);
+        }
+
+        // 切换产品价格输入显示
+        function toggleProductPrice() {
+            const includeProductPrice = document.getElementById('includeProductPrice').checked;
+            const productPriceInputs = document.getElementById('productPriceInputs');
+            productPriceInputs.style.display = includeProductPrice ? 'block' : 'none';
+            console.log('产品价格计算状态改变:', includeProductPrice);
+        }
+
+        // 产品价格输入变化
+        function onProductPriceChange() {
+            const productPrice = parseFloat(document.getElementById('productPrice').value) || 0;
+            console.log('产品价格输入:', productPrice);
         }
 
         // 切换体积重量计算显示
@@ -583,8 +641,25 @@
                 // 获取服务费选项
                 const includeServiceFee = document.getElementById('includeServiceFee').checked;
 
+                // 获取产品价格选项
+                const includeProductPrice = document.getElementById('includeProductPrice').checked;
+                const productPrice = includeProductPrice ? (parseFloat(document.getElementById('productPrice').value) || 0) : 0;
+
                 const result = db.calculateShipping(company, service, country, weight, zone || null, dimensions, includeServiceFee);
                 if (result) {
+                    // 添加产品价格信息到结果中
+                    if (includeProductPrice && productPrice > 0) {
+                        result.productPrice = productPrice;
+                        result.grandTotal = productPrice + result.totalPrice;
+                        result.grandTotalUSD = productPrice / db.exchangeRate + result.totalPriceUSD;
+                        result.includesProductPrice = true;
+                    } else {
+                        result.productPrice = 0;
+                        result.grandTotal = result.totalPrice;
+                        result.grandTotalUSD = result.totalPriceUSD;
+                        result.includesProductPrice = false;
+                    }
+                    
                     displaySingleResult(result);
                 } else {
                     showError('无法计算运费，请检查输入参数');
@@ -630,10 +705,32 @@
                 // 获取服务费选项
                 const includeServiceFee = document.getElementById('includeServiceFee').checked;
                 
+                // 获取产品价格选项
+                const includeProductPrice = document.getElementById('includeProductPrice').checked;
+                const productPrice = includeProductPrice ? (parseFloat(document.getElementById('productPrice').value) || 0) : 0;
+                
                 // 使用 setTimeout 让界面有时间显示加载状态
                 setTimeout(() => {
                     const results = db.compareAllPrices(country, weight, zone || null, dimensions, includeServiceFee);
                     if (results.length > 0) {
+                        // 为每个结果添加产品价格信息
+                        results.forEach(result => {
+                            if (includeProductPrice && productPrice > 0) {
+                                result.productPrice = productPrice;
+                                result.grandTotal = productPrice + result.totalPrice;
+                                result.grandTotalUSD = productPrice / db.exchangeRate + result.totalPriceUSD;
+                                result.includesProductPrice = true;
+                            } else {
+                                result.productPrice = 0;
+                                result.grandTotal = result.totalPrice;
+                                result.grandTotalUSD = result.totalPriceUSD;
+                                result.includesProductPrice = false;
+                            }
+                        });
+                        
+                        // 按照最终总价重新排序
+                        results.sort((a, b) => a.grandTotal - b.grandTotal);
+                        
                         displayComparisonResults(results);
                     } else {
                         showError('未找到可用的运输方案');
@@ -669,11 +766,14 @@
                  // 显示单个结果
          function displaySingleResult(result) {
              const resultsDiv = document.getElementById('results');
-             const usdPrice = result.totalPriceUSD ? `$${result.totalPriceUSD.toFixed(2)}` : '';
              
              // 计算基础运费（不含服务费）
              const basePriceRMB = result.totalPrice - (result.serviceFeeRMB || 0);
              const basePriceUSD = result.totalPriceUSD - (result.serviceFeeUSD || 0);
+             
+             // 显示价格（如果包含产品价格则显示最终总价）
+             const displayPrice = result.includesProductPrice ? result.grandTotal : result.totalPrice;
+             const displayPriceUSD = result.includesProductPrice ? result.grandTotalUSD : result.totalPriceUSD;
              
              resultsDiv.innerHTML = `
                  <div class="result-card">
@@ -681,10 +781,11 @@
                          <div class="result-title">
                              ${result.company} - ${result.service}
                              ${result.includesServiceFee ? '<span style="color: #27ae60; font-size: 0.9em; margin-left: 8px;">💼 含服务费</span>' : ''}
+                             ${result.includesProductPrice ? '<span style="color: #17a2b8; font-size: 0.9em; margin-left: 8px;">🛍️ 含产品价格</span>' : ''}
                          </div>
                          <div class="result-price">
-                             ¥${result.totalPrice.toFixed(2)}
-                             ${usdPrice ? `<br><small style="font-size: 0.8em; opacity: 0.8;">≈ ${usdPrice}</small>` : ''}
+                             ¥${displayPrice.toFixed(2)}
+                             <br><small style="font-size: 0.8em; opacity: 0.8;">≈ $${displayPriceUSD.toFixed(2)}</small>
                          </div>
                      </div>
                      <div class="result-details">
@@ -696,6 +797,10 @@
                          <div><strong>重量限制:</strong> ${result.weightLimit ? result.weightLimit + 'kg' : '未知'}</div>
                          <div><strong>尺寸限制:</strong> ${result.sizeLimit || '未知'}</div>
                          <div style="border-top: 1px solid #eee; margin: 10px 0 5px 0; padding-top: 8px;"><strong>费用明细:</strong></div>
+                         ${result.includesProductPrice ? 
+                           `<div><strong>产品价格:</strong> ¥${result.productPrice.toFixed(2)} ($${(result.productPrice / (result.totalPriceUSD > 0 ? result.totalPrice / result.totalPriceUSD : 7.0)).toFixed(2)}) 🛍️</div>` : 
+                           ``
+                         }
                          <div><strong>运费:</strong> ¥${result.weightFee ? result.weightFee.toFixed(2) : '0.00'}</div>
                          <div><strong>操作费:</strong> ¥${result.handlingFee ? result.handlingFee.toFixed(2) : '0.00'}</div>
                          ${result.includesServiceFee ? 
@@ -703,8 +808,14 @@
                            `<div style="color: #666;"><strong>服务费:</strong> 未包含 (可选)</div>`
                          }
                          <div style="border-top: 1px solid #eee; margin-top: 5px; padding-top: 5px; font-weight: bold;">
-                             <strong>基础费用小计:</strong> ¥${basePriceRMB.toFixed(2)} ($${basePriceUSD.toFixed(2)})
+                             <strong>物流费用小计:</strong> ¥${result.totalPrice.toFixed(2)} ($${result.totalPriceUSD.toFixed(2)})
                          </div>
+                         ${result.includesProductPrice ? 
+                           `<div style="border-top: 2px solid #17a2b8; margin-top: 8px; padding-top: 8px; font-weight: bold; color: #17a2b8;">
+                                <strong>最终总价:</strong> ¥${result.grandTotal.toFixed(2)} ($${result.grandTotalUSD.toFixed(2)}) 🎯
+                            </div>` : 
+                           ``
+                         }
                          ${result.note ? `<div><strong>备注:</strong> ${result.note}</div>` : ''}
                      </div>
                      ${result.details ? `<div style="margin-top: 10px; font-style: italic; color: #666;">${result.details}</div>` : ''}
@@ -715,7 +826,7 @@
         // 显示比价结果
         function displayComparisonResults(results) {
             const resultsDiv = document.getElementById('results');
-            const bestPrice = results[0].totalPrice;
+            const bestPrice = results[0].grandTotal;
             
             let html = `
                 <div class="comparison-section">
@@ -726,7 +837,7 @@
             `;
 
             results.forEach((result, index) => {
-                const savings = index === 0 ? 0 : result.totalPrice - bestPrice;
+                const savings = index === 0 ? 0 : result.grandTotal - bestPrice;
                 const savingsPercent = index === 0 ? 0 : ((savings / bestPrice) * 100);
                 
                 html += `
@@ -735,11 +846,12 @@
                                                          <div class="result-title">
                                  ${index === 0 ? '🥇 ' : `${index + 1}. `}${result.company} - ${result.service}
                                  ${result.includesServiceFee ? '<span style="color: #27ae60; font-size: 0.8em; margin-left: 4px;">💼</span>' : ''}
+                                 ${result.includesProductPrice ? '<span style="color: #17a2b8; font-size: 0.8em; margin-left: 4px;">🛍️</span>' : ''}
                                  ${index === 0 ? '<span class="savings">最优选择</span>' : savings > 0 ? `<span style="color: #dc3545; font-size: 0.9em;">+¥${savings.toFixed(2)} (+${savingsPercent.toFixed(1)}%)</span>` : ''}
                              </div>
                              <div class="result-price">
-                                 ¥${result.totalPrice.toFixed(2)}
-                                 ${result.totalPriceUSD ? `<br><small style="font-size: 0.8em; opacity: 0.8;">≈ $${result.totalPriceUSD.toFixed(2)}</small>` : ''}
+                                 ¥${result.grandTotal.toFixed(2)}
+                                 <br><small style="font-size: 0.8em; opacity: 0.8;">≈ $${result.grandTotalUSD.toFixed(2)}</small>
                              </div>
                         </div>
                         <div class="result-details">
@@ -751,11 +863,21 @@
                             <div><strong>重量限制:</strong> ${result.weightLimit ? result.weightLimit + 'kg' : '未知'}</div>
                             <div><strong>尺寸限制:</strong> ${result.sizeLimit || '未知'}</div>
                             <div style="border-top: 1px solid #eee; margin: 10px 0 5px 0; padding-top: 8px;"><strong>费用明细:</strong></div>
+                            ${result.includesProductPrice ? 
+                              `<div><strong>产品价格:</strong> ¥${result.productPrice.toFixed(2)} 🛍️</div>` : 
+                              ``
+                            }
                             <div><strong>运费:</strong> ¥${result.weightFee ? result.weightFee.toFixed(2) : '0.00'}</div>
                             <div><strong>操作费:</strong> ¥${result.handlingFee ? result.handlingFee.toFixed(2) : '0.00'}</div>
                             ${result.includesServiceFee ? 
                               `<div><strong>服务费:</strong> ¥${result.serviceFeeRMB.toFixed(2)} ($${result.serviceFeeUSD.toFixed(2)}) 💼</div>` : 
                               `<div style="color: #666;"><strong>服务费:</strong> 未包含</div>`
+                            }
+                            ${result.includesProductPrice ? 
+                              `<div style="border-top: 1px solid #17a2b8; margin-top: 5px; padding-top: 5px; font-weight: bold; color: #17a2b8;">
+                                   <strong>最终总价:</strong> ¥${result.grandTotal.toFixed(2)} 🎯
+                               </div>` : 
+                              ``
                             }
                             ${result.note ? `<div><strong>备注:</strong> ${result.note}</div>` : ''}
                         </div>

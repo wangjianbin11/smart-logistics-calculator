@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品价格功能测试 - v3.2.0</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .title { text-align: center; color: #333; margin-bottom: 30px; }
+        .test-section { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; }
+        .btn { width: 100%; padding: 15px; background: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin: 10px 0; }
+        .btn:hover { background: #0056b3; }
+        .result-card { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 5px solid #007bff; }
+        .error { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🛍️ 产品价格功能测试 - v3.2.0</h1>
+        
+        <div class="test-section">
+            <h3>🎯 功能说明</h3>
+            <p><strong>新功能：</strong>现在可以输入产品价格，系统将计算：<br>
+            <strong>最终总价 = 产品价格 + 运费 + 服务费（可选）</strong></p>
+        </div>
+
+        <div class="input-group">
+            <label>
+                <input type="checkbox" id="includeProductPrice" checked style="width: auto; margin-right: 10px;">
+                包含产品价格计算
+            </label>
+        </div>
+
+        <div class="input-group" id="productPriceInputs">
+            <label for="productPrice">产品价格 (RMB):</label>
+            <input type="number" id="productPrice" step="0.01" min="0" placeholder="请输入产品价格" value="99.99">
+        </div>
+
+        <div class="input-group">
+            <label for="company">物流公司:</label>
+            <select id="company"><option value="">选择物流公司</option></select>
+        </div>
+
+        <div class="input-group">
+            <label for="service">服务类型:</label>
+            <select id="service"><option value="">请选择服务类型</option></select>
+        </div>
+
+        <div class="input-group">
+            <label for="country">目的地国家:</label>
+            <select id="country"><option value="">请先选择服务类型</option></select>
+        </div>
+
+        <div class="input-group">
+            <label for="weight">包裹重量 (kg):</label>
+            <input type="number" id="weight" step="0.001" min="0.001" placeholder="请输入重量" value="1">
+        </div>
+
+        <div class="input-group">
+            <label>
+                <input type="checkbox" id="includeServiceFee" checked style="width: auto; margin-right: 10px;">
+                包含 $1.2 USD 服务费
+            </label>
+        </div>
+
+        <div class="input-group">
+            <label for="exchangeRate">美元汇率:</label>
+            <input type="number" id="exchangeRate" step="0.01" value="7.00">
+        </div>
+
+        <button class="btn" onclick="testCalculation()">🧪 测试计算</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script src="scripts/complete-database.js"></script>
+    <script>
+        let db = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            db = window.completeLogisticsDB || window.logisticsDB;
+            initializeSelectors();
+            bindEvents();
+        });
+
+        function initializeSelectors() {
+            const companies = db.getCompanies();
+            const companySelect = document.getElementById('company');
+            companies.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company;
+                option.textContent = company;
+                companySelect.appendChild(option);
+            });
+            companySelect.value = '云途物流';
+            onCompanyChange();
+        }
+
+        function bindEvents() {
+            document.getElementById('company').addEventListener('change', onCompanyChange);
+            document.getElementById('service').addEventListener('change', onServiceChange);
+            document.getElementById('includeProductPrice').addEventListener('change', toggleProductPrice);
+        }
+
+        function toggleProductPrice() {
+            const includeProductPrice = document.getElementById('includeProductPrice').checked;
+            const productPriceInputs = document.getElementById('productPriceInputs');
+            productPriceInputs.style.display = includeProductPrice ? 'block' : 'none';
+        }
+
+        function onCompanyChange() {
+            const company = document.getElementById('company').value;
+            const serviceSelect = document.getElementById('service');
+            serviceSelect.innerHTML = '<option value="">请选择服务类型</option>';
+            
+            if (company) {
+                const services = db.getServices(company);
+                services.forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service;
+                    option.textContent = service;
+                    serviceSelect.appendChild(option);
+                });
+                if (services.length > 0) {
+                    serviceSelect.value = services[0];
+                    onServiceChange();
+                }
+            }
+        }
+
+        function onServiceChange() {
+            const company = document.getElementById('company').value;
+            const service = document.getElementById('service').value;
+            const countrySelect = document.getElementById('country');
+            countrySelect.innerHTML = '<option value="">请选择目的地国家</option>';
+            
+            if (company && service) {
+                const countries = db.getCountries(company, service);
+                countries.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country;
+                    option.textContent = country;
+                    countrySelect.appendChild(option);
+                });
+                if (countries.includes('美国')) {
+                    countrySelect.value = '美国';
+                }
+            }
+        }
+
+        function testCalculation() {
+            const company = document.getElementById('company').value;
+            const service = document.getElementById('service').value;
+            const country = document.getElementById('country').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const includeServiceFee = document.getElementById('includeServiceFee').checked;
+            const includeProductPrice = document.getElementById('includeProductPrice').checked;
+            const productPrice = includeProductPrice ? (parseFloat(document.getElementById('productPrice').value) || 0) : 0;
+            const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 7.0;
+
+            if (!company || !service || !country || !weight) {
+                showError('请完整填写所有字段');
+                return;
+            }
+
+            db.setExchangeRate(exchangeRate);
+            const result = db.calculateShipping(company, service, country, weight, null, null, includeServiceFee);
+            
+            if (result) {
+                if (includeProductPrice && productPrice > 0) {
+                    result.productPrice = productPrice;
+                    result.grandTotal = productPrice + result.totalPrice;
+                    result.grandTotalUSD = productPrice / exchangeRate + result.totalPriceUSD;
+                    result.includesProductPrice = true;
+                } else {
+                    result.grandTotal = result.totalPrice;
+                    result.grandTotalUSD = result.totalPriceUSD;
+                    result.includesProductPrice = false;
+                }
+                
+                displayResult(result);
+            } else {
+                showError('计算失败');
+            }
+        }
+
+        function displayResult(result) {
+            document.getElementById('results').innerHTML = `
+                <div class="result-card">
+                    <h3>🧪 测试结果</h3>
+                    <div><strong>渠道:</strong> ${result.company} - ${result.service}</div>
+                    <div><strong>目的地:</strong> ${result.country}</div>
+                    <div><strong>重量:</strong> ${result.weight}kg</div>
+                    <hr>
+                    <h4>💰 费用明细:</h4>
+                    ${result.includesProductPrice ? `<div><strong>产品价格:</strong> ¥${result.productPrice.toFixed(2)} 🛍️</div>` : ''}
+                    <div><strong>运费:</strong> ¥${(result.weightFee || 0).toFixed(2)}</div>
+                    <div><strong>操作费:</strong> ¥${(result.handlingFee || 0).toFixed(2)}</div>
+                    ${result.includesServiceFee ? 
+                        `<div><strong>服务费:</strong> ¥${result.serviceFeeRMB.toFixed(2)} 💼</div>` : 
+                        '<div style="color: #666;">服务费: 未包含</div>'
+                    }
+                    <hr>
+                    <div><strong>物流费用:</strong> ¥${result.totalPrice.toFixed(2)} ($${result.totalPriceUSD.toFixed(2)})</div>
+                    ${result.includesProductPrice ? 
+                        `<div style="font-size: 18px; font-weight: bold; color: #007bff;">
+                            <strong>🎯 最终总价:</strong> ¥${result.grandTotal.toFixed(2)} ($${result.grandTotalUSD.toFixed(2)})
+                        </div>` : ''
+                    }
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            document.getElementById('results').innerHTML = `<div class="error">❌ ${message}</div>`;
+        }
+    </script>
+</body>
+</html> 

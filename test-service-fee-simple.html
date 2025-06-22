@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务费功能简化测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .service-fee-box {
+            border: 3px solid #ffc107;
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            accent-color: #28a745;
+        }
+        .checkbox-container label {
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+        .status {
+            font-weight: bold;
+            color: #007bff;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 服务费功能简化测试</h1>
+    
+    <div class="test-section">
+        <h3>1. 服务费选择测试</h3>
+        <div class="service-fee-box">
+            <div class="checkbox-container">
+                <input type="checkbox" id="serviceFeeTest" checked>
+                <label for="serviceFeeTest">包含 $1.2 USD 服务费 💼</label>
+            </div>
+            <div style="font-size: 14px; color: #856404;">
+                💡 服务费包含订单处理、客服支持等增值服务
+            </div>
+        </div>
+        <div class="status" id="checkboxStatus">状态: 已选中 ✅</div>
+        
+        <button onclick="testCheckbox()">检查选择状态</button>
+        <button onclick="toggleCheckbox()">切换选择状态</button>
+    </div>
+
+    <div class="test-section">
+        <h3>2. 服务费计算测试</h3>
+        <div>
+            <label>基础运费 (RMB): </label>
+            <input type="number" id="basePrice" value="50" style="padding: 5px; margin: 10px;">
+        </div>
+        <div>
+            <label>美元汇率: </label>
+            <input type="number" id="exchangeRate" value="7.00" step="0.01" style="padding: 5px; margin: 10px;">
+        </div>
+        
+        <button onclick="calculateWithServiceFee()">计算含服务费价格</button>
+        <button onclick="calculateWithoutServiceFee()">计算不含服务费价格</button>
+        
+        <div id="calculationResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. 数据库功能测试</h3>
+        <div>
+            <button onclick="testDatabaseServiceFee()">测试数据库服务费计算</button>
+            <div id="databaseTestResult"></div>
+        </div>
+    </div>
+
+    <script src="scripts/complete-database.js"></script>
+    <script>
+        // 更新复选框状态显示
+        function updateCheckboxStatus() {
+            const checkbox = document.getElementById('serviceFeeTest');
+            const status = document.getElementById('checkboxStatus');
+            const isChecked = checkbox.checked;
+            
+            status.innerHTML = `状态: ${isChecked ? '已选中 ✅' : '未选中 ❌'}`;
+            status.style.color = isChecked ? '#28a745' : '#dc3545';
+        }
+
+        // 测试复选框
+        function testCheckbox() {
+            updateCheckboxStatus();
+            console.log('复选框状态:', document.getElementById('serviceFeeTest').checked);
+        }
+
+        // 切换复选框
+        function toggleCheckbox() {
+            const checkbox = document.getElementById('serviceFeeTest');
+            checkbox.checked = !checkbox.checked;
+            updateCheckboxStatus();
+        }
+
+        // 计算含服务费价格
+        function calculateWithServiceFee() {
+            const basePrice = parseFloat(document.getElementById('basePrice').value) || 0;
+            const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 7.0;
+            const serviceFeeUSD = 1.2;
+            const serviceFeeRMB = serviceFeeUSD * exchangeRate;
+            const totalPrice = basePrice + serviceFeeRMB;
+            const totalPriceUSD = totalPrice / exchangeRate;
+
+            document.getElementById('calculationResult').innerHTML = `
+                <div class="result">
+                    <h4>含服务费计算结果:</h4>
+                    <div>基础运费: ¥${basePrice.toFixed(2)}</div>
+                    <div>服务费: ¥${serviceFeeRMB.toFixed(2)} ($${serviceFeeUSD})</div>
+                    <div>总价: ¥${totalPrice.toFixed(2)} (≈ $${totalPriceUSD.toFixed(2)})</div>
+                </div>
+            `;
+        }
+
+        // 计算不含服务费价格
+        function calculateWithoutServiceFee() {
+            const basePrice = parseFloat(document.getElementById('basePrice').value) || 0;
+            const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 7.0;
+            const totalPriceUSD = basePrice / exchangeRate;
+
+            document.getElementById('calculationResult').innerHTML = `
+                <div class="result">
+                    <h4>不含服务费计算结果:</h4>
+                    <div>基础运费: ¥${basePrice.toFixed(2)}</div>
+                    <div>服务费: ¥0.00 (未包含)</div>
+                    <div>总价: ¥${basePrice.toFixed(2)} (≈ $${totalPriceUSD.toFixed(2)})</div>
+                </div>
+            `;
+        }
+
+        // 测试数据库服务费功能
+        function testDatabaseServiceFee() {
+            try {
+                const db = window.completeLogisticsDB || window.logisticsDB;
+                if (!db) {
+                    throw new Error('数据库未加载');
+                }
+
+                // 设置汇率
+                const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 7.0;
+                db.setExchangeRate(exchangeRate);
+
+                // 测试参数
+                const company = '云途物流';
+                const service = '专线挂号特惠普货';
+                const country = '美国';
+                const weight = 1;
+
+                // 测试不含服务费
+                const resultWithoutFee = db.calculateShipping(company, service, country, weight, null, null, false);
+                console.log('不含服务费结果:', resultWithoutFee);
+
+                // 测试含服务费
+                const resultWithFee = db.calculateShipping(company, service, country, weight, null, null, true);
+                console.log('含服务费结果:', resultWithFee);
+
+                if (resultWithoutFee && resultWithFee) {
+                    const feeDifference = resultWithFee.totalPrice - resultWithoutFee.totalPrice;
+                    const expectedFee = 1.2 * exchangeRate;
+                    const isCorrect = Math.abs(feeDifference - expectedFee) < 0.01;
+
+                    document.getElementById('databaseTestResult').innerHTML = `
+                        <div class="result">
+                            <h4>数据库测试结果:</h4>
+                            <div>测试渠道: ${company} - ${service}</div>
+                            <div>目的地: ${country}</div>
+                            <div>重量: ${weight}kg</div>
+                            <div>汇率: 1 USD = ${exchangeRate} RMB</div>
+                            <hr>
+                            <div>不含服务费: ¥${resultWithoutFee.totalPrice.toFixed(2)}</div>
+                            <div>含服务费: ¥${resultWithFee.totalPrice.toFixed(2)}</div>
+                            <div>服务费差额: ¥${feeDifference.toFixed(2)}</div>
+                            <div>期望差额: ¥${expectedFee.toFixed(2)}</div>
+                            <div style="color: ${isCorrect ? 'green' : 'red'}; font-weight: bold;">
+                                计算验证: ${isCorrect ? '✅ 正确' : '❌ 错误'}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    throw new Error('计算失败');
+                }
+
+            } catch (error) {
+                document.getElementById('databaseTestResult').innerHTML = `
+                    <div style="color: red; padding: 10px; background: #f8d7da; border-radius: 5px;">
+                        ❌ 测试失败: ${error.message}
+                    </div>
+                `;
+                console.error('数据库测试错误:', error);
+            }
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定复选框事件
+            document.getElementById('serviceFeeTest').addEventListener('change', updateCheckboxStatus);
+            
+            // 初始化状态
+            updateCheckboxStatus();
+            
+            console.log('简化测试页面初始化完成');
+        });
+    </script>
+</body>
+</html> 

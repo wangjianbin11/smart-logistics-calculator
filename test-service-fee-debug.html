@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务费功能调试测试</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .debug-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+        .debug-title {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .service-fee-section {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid #ffc107;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            transform: scale(1.5);
+        }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .results {
+            margin-top: 30px;
+        }
+        .result-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid #28a745;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🛠️ 服务费功能调试测试</h1>
+        
+        <div class="debug-section">
+            <div class="debug-title">📊 调试信息面板</div>
+            <div id="debugInfo">等待测试...</div>
+        </div>
+
+        <div class="service-fee-section">
+            <h3>💼 服务费选择</h3>
+            <div class="checkbox-group">
+                <input type="checkbox" id="includeServiceFee" checked>
+                <label for="includeServiceFee">包含 $1.2 USD 服务费（推荐）</label>
+            </div>
+            <div style="font-size: 14px; color: #856404;">
+                💡 服务费包含订单处理、客服支持等增值服务
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="company">物流公司:</label>
+            <select id="company">
+                <option value="">选择物流公司</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="service">服务类型:</label>
+            <select id="service">
+                <option value="">请选择服务类型</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="country">目的地国家:</label>
+            <select id="country">
+                <option value="">请先选择服务类型</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="weight">包裹重量 (kg):</label>
+            <input type="number" id="weight" step="0.001" min="0.001" placeholder="请输入重量" value="1">
+        </div>
+
+        <div class="input-group">
+            <label for="exchangeRate">美元汇率 (1 USD = ? RMB):</label>
+            <input type="number" id="exchangeRate" step="0.01" value="7.00" placeholder="当前汇率">
+        </div>
+
+        <button class="btn btn-primary" onclick="testServiceFee()">🧪 测试服务费计算</button>
+        
+        <div id="results" class="results"></div>
+    </div>
+
+    <script src="scripts/complete-database.js"></script>
+    <script>
+        let db = null;
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                db = window.completeLogisticsDB || window.logisticsDB;
+                initializeSelectors();
+                bindEvents();
+                updateDebugInfo();
+                console.log('调试页面初始化成功');
+            } catch (error) {
+                console.error('初始化失败:', error);
+                showError('系统初始化失败: ' + error.message);
+            }
+        });
+
+        // 初始化选择器
+        function initializeSelectors() {
+            const companySelect = document.getElementById('company');
+            const companies = db.getCompanies();
+            
+            companySelect.innerHTML = '<option value="">选择物流公司</option>';
+            companies.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company;
+                option.textContent = company;
+                companySelect.appendChild(option);
+            });
+
+            // 默认选择云途物流进行测试
+            companySelect.value = '云途物流';
+            onCompanyChange();
+        }
+
+        // 绑定事件
+        function bindEvents() {
+            document.getElementById('company').addEventListener('change', onCompanyChange);
+            document.getElementById('service').addEventListener('change', onServiceChange);
+            document.getElementById('country').addEventListener('change', onCountryChange);
+            document.getElementById('exchangeRate').addEventListener('input', updateExchangeRate);
+            document.getElementById('includeServiceFee').addEventListener('change', updateDebugInfo);
+            document.getElementById('weight').addEventListener('input', updateDebugInfo);
+        }
+
+        // 更新调试信息
+        function updateDebugInfo() {
+            const includeServiceFee = document.getElementById('includeServiceFee').checked;
+            const weight = parseFloat(document.getElementById('weight').value) || 0;
+            const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 7.0;
+            
+            const serviceFeeUSD = 1.2;
+            const serviceFeeRMB = serviceFeeUSD * exchangeRate;
+            
+            document.getElementById('debugInfo').innerHTML = `
+                <strong>当前状态:</strong><br>
+                • 服务费选中状态: <span style="color: ${includeServiceFee ? 'green' : 'red'};">${includeServiceFee ? '✅ 已选中' : '❌ 未选中'}</span><br>
+                • 包裹重量: ${weight} kg<br>
+                • 美元汇率: 1 USD = ${exchangeRate} RMB<br>
+                • 固定服务费: $${serviceFeeUSD} USD = ¥${serviceFeeRMB.toFixed(2)} RMB<br>
+                • 时间戳: ${new Date().toLocaleTimeString()}
+            `;
+        }
+
+        // 公司选择变化
+        function onCompanyChange() {
+            const company = document.getElementById('company').value;
+            const serviceSelect = document.getElementById('service');
+            const countrySelect = document.getElementById('country');
+            
+            serviceSelect.innerHTML = '<option value="">请选择服务类型</option>';
+            countrySelect.innerHTML = '<option value="">请先选择服务类型</option>';
+            
+            if (company) {
+                const services = db.getServices(company);
+                services.forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service;
+                    option.textContent = service;
+                    serviceSelect.appendChild(option);
+                });
+
+                // 为测试方便，默认选择第一个服务
+                if (services.length > 0) {
+                    serviceSelect.value = services[0];
+                    onServiceChange();
+                }
+            }
+            updateDebugInfo();
+        }
+
+        // 服务选择变化
+        function onServiceChange() {
+            const company = document.getElementById('company').value;
+            const service = document.getElementById('service').value;
+            const countrySelect = document.getElementById('country');
+            
+            countrySelect.innerHTML = '<option value="">请选择目的地国家</option>';
+            
+            if (company && service) {
+                const countries = db.getCountries(company, service);
+                countries.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country;
+                    option.textContent = country;
+                    countrySelect.appendChild(option);
+                });
+
+                // 为测试方便，默认选择美国
+                if (countries.includes('美国')) {
+                    countrySelect.value = '美国';
+                } else if (countries.length > 0) {
+                    countrySelect.value = countries[0];
+                }
+            }
+            updateDebugInfo();
+        }
+
+        // 国家选择变化
+        function onCountryChange() {
+            updateDebugInfo();
+        }
+
+        // 更新汇率
+        function updateExchangeRate() {
+            const rate = parseFloat(document.getElementById('exchangeRate').value) || 7.0;
+            if (db && db.setExchangeRate) {
+                db.setExchangeRate(rate);
+            }
+            updateDebugInfo();
+        }
+
+        // 测试服务费功能
+        function testServiceFee() {
+            const company = document.getElementById('company').value;
+            const service = document.getElementById('service').value;
+            const country = document.getElementById('country').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const includeServiceFee = document.getElementById('includeServiceFee').checked;
+
+            // 验证输入
+            if (!company || !service || !country || !weight || weight <= 0) {
+                showError('请完整填写所有必需字段');
+                return;
+            }
+
+            try {
+                console.log('测试参数:', { company, service, country, weight, includeServiceFee });
+                
+                // 测试不含服务费的计算
+                const resultWithoutFee = db.calculateShipping(company, service, country, weight, null, null, false);
+                console.log('不含服务费结果:', resultWithoutFee);
+                
+                // 测试含服务费的计算
+                const resultWithFee = db.calculateShipping(company, service, country, weight, null, null, true);
+                console.log('含服务费结果:', resultWithFee);
+                
+                // 根据用户选择显示结果
+                const result = includeServiceFee ? resultWithFee : resultWithoutFee;
+                
+                if (result) {
+                    displayTestResult(result, resultWithoutFee, resultWithFee);
+                } else {
+                    showError('计算失败，请检查输入参数');
+                }
+                
+            } catch (error) {
+                console.error('测试错误:', error);
+                showError('测试过程中出现错误: ' + error.message);
+            }
+        }
+
+        // 显示测试结果
+        function displayTestResult(result, resultWithoutFee, resultWithFee) {
+            const resultsDiv = document.getElementById('results');
+            
+            const feeDifference = resultWithFee.totalPrice - resultWithoutFee.totalPrice;
+            const feeDifferenceUSD = resultWithFee.totalPriceUSD - resultWithoutFee.totalPriceUSD;
+            
+            resultsDiv.innerHTML = `
+                <div class="result-card">
+                    <h3>🧪 测试结果</h3>
+                    
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <h4>当前选择结果:</h4>
+                        <div><strong>公司:</strong> ${result.company}</div>
+                        <div><strong>服务:</strong> ${result.service}</div>
+                        <div><strong>目的地:</strong> ${result.country}</div>
+                        <div><strong>重量:</strong> ${result.weight}kg</div>
+                        <div><strong>包含服务费:</strong> ${result.includesServiceFee ? '✅ 是' : '❌ 否'}</div>
+                        <div><strong>总价:</strong> ¥${result.totalPrice.toFixed(2)} (≈ $${result.totalPriceUSD.toFixed(2)})</div>
+                        ${result.includesServiceFee ? `
+                            <div><strong>服务费:</strong> ¥${result.serviceFeeRMB.toFixed(2)} ($${result.serviceFeeUSD.toFixed(2)})</div>
+                            <div><strong>基础费用:</strong> ¥${(result.totalPrice - result.serviceFeeRMB).toFixed(2)}</div>
+                        ` : ''}
+                    </div>
+                    
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <h4>📊 对比分析:</h4>
+                        <div><strong>不含服务费:</strong> ¥${resultWithoutFee.totalPrice.toFixed(2)} ($${resultWithoutFee.totalPriceUSD.toFixed(2)})</div>
+                        <div><strong>含服务费:</strong> ¥${resultWithFee.totalPrice.toFixed(2)} ($${resultWithFee.totalPriceUSD.toFixed(2)})</div>
+                        <div><strong>服务费差额:</strong> ¥${feeDifference.toFixed(2)} ($${feeDifferenceUSD.toFixed(2)})</div>
+                        <div style="color: ${Math.abs(feeDifference - resultWithFee.serviceFeeRMB) < 0.01 ? 'green' : 'red'};">
+                            <strong>计算验证:</strong> ${Math.abs(feeDifference - resultWithFee.serviceFeeRMB) < 0.01 ? '✅ 正确' : '❌ 错误'}
+                        </div>
+                    </div>
+                    
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <h4>🔍 详细信息:</h4>
+                        <div><strong>运费:</strong> ¥${result.weightFee ? result.weightFee.toFixed(2) : '0.00'}</div>
+                        <div><strong>操作费:</strong> ¥${result.handlingFee ? result.handlingFee.toFixed(2) : '0.00'}</div>
+                        <div><strong>时效:</strong> ${result.timeframe || '未知'}</div>
+                        <div><strong>重量限制:</strong> ${result.weightLimit ? result.weightLimit + 'kg' : '未知'}</div>
+                        <div><strong>尺寸限制:</strong> ${result.sizeLimit || '未知'}</div>
+                        ${result.note ? `<div><strong>备注:</strong> ${result.note}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 显示错误
+        function showError(message) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="error">
+                    <strong>❌ 错误:</strong> ${message}
+                </div>
+            `;
+        }
+
+        // 定期更新调试信息
+        setInterval(updateDebugInfo, 1000);
+    </script>
+</body>
+</html> 
