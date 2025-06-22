@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完整国家数据测试 - 智能物流报价机器人</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .company-section {
+            margin: 30px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .company-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .service-row {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .service-row:last-child {
+            border-bottom: none;
+        }
+
+        .service-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .country-count {
+            background: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .countries-list {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .test-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .test-controls select, .test-controls input, .test-controls button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .test-result {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 4px solid #007bff;
+        }
+
+        .success { border-left-color: #28a745; }
+        .error { border-left-color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 完整国家数据统计</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>物流公司总数</h3>
+                <div class="number" id="totalCompanies">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>服务渠道总数</h3>
+                <div class="number" id="totalServices">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>支持国家总数</h3>
+                <div class="number" id="totalCountries">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>数据覆盖率</h3>
+                <div class="number" id="coverageRate">-</div>
+            </div>
+        </div>
+
+        <div id="companiesData"></div>
+
+        <div class="test-section">
+            <h3>🧪 功能测试</h3>
+            <div class="test-controls">
+                <select id="testCountry">
+                    <option value="">选择国家测试</option>
+                </select>
+                <input type="number" id="testWeight" placeholder="重量(KG)" step="0.1" min="0.001" value="1">
+                <button onclick="testCountry()">测试计算</button>
+                <button onclick="runFullTest()">全面测试</button>
+            </div>
+            <div id="testResults"></div>
+        </div>
+    </div>
+
+    <script src="scripts/complete-database.js"></script>
+    <script>
+        // 等待数据库初始化
+        setTimeout(() => {
+            displayStatistics();
+            displayCompaniesData();
+            populateCountrySelect();
+        }, 100);
+
+        function displayStatistics() {
+            const db = window.completeLogisticsDB;
+            
+            const companies = db.getCompanies();
+            const totalCompanies = companies.length;
+            
+            let totalServices = 0;
+            companies.forEach(company => {
+                totalServices += db.getServices(company).length;
+            });
+            
+            const allCountries = db.getAllCountries();
+            const totalCountries = allCountries.length;
+            
+            // 计算覆盖率（基于世界主要贸易国家）
+            const majorTradeCountries = [
+                '美国', '中国', '德国', '日本', '英国', '法国', '意大利', '韩国',
+                '加拿大', '西班牙', '荷兰', '澳大利亚', '新加坡', '瑞士', '比利时',
+                '印度', '墨西哥', '俄罗斯', '巴西', '阿联酋'
+            ];
+            const coveredMajorCountries = majorTradeCountries.filter(country => 
+                allCountries.includes(country)
+            ).length;
+            const coverageRate = Math.round((coveredMajorCountries / majorTradeCountries.length) * 100);
+            
+            document.getElementById('totalCompanies').textContent = totalCompanies;
+            document.getElementById('totalServices').textContent = totalServices;
+            document.getElementById('totalCountries').textContent = totalCountries;
+            document.getElementById('coverageRate').textContent = coverageRate + '%';
+        }
+
+        function displayCompaniesData() {
+            const db = window.completeLogisticsDB;
+            const companies = db.getCompanies();
+            let html = '';
+            
+            companies.forEach(company => {
+                const services = db.getServices(company);
+                html += `<div class="company-section">`;
+                html += `<div class="company-header">${company}</div>`;
+                
+                services.forEach(service => {
+                    const countries = db.getCountries(company, service);
+                    html += `<div class="service-row">`;
+                    html += `<div>`;
+                    html += `<div class="service-name">${service}</div>`;
+                    html += `<div class="countries-list">${countries.join('、')}</div>`;
+                    html += `</div>`;
+                    html += `<div class="country-count">${countries.length}个国家</div>`;
+                    html += `</div>`;
+                });
+                
+                html += `</div>`;
+            });
+            
+            document.getElementById('companiesData').innerHTML = html;
+        }
+
+        function populateCountrySelect() {
+            const db = window.completeLogisticsDB;
+            const countries = db.getAllCountries();
+            const select = document.getElementById('testCountry');
+            
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                select.appendChild(option);
+            });
+        }
+
+        function testCountry() {
+            const country = document.getElementById('testCountry').value;
+            const weight = parseFloat(document.getElementById('testWeight').value) || 1;
+            
+            if (!country) {
+                alert('请选择国家');
+                return;
+            }
+            
+            const db = window.completeLogisticsDB;
+            const results = db.compareAllPrices(country, weight);
+            
+            let html = `<div class="test-result ${results.length > 0 ? 'success' : 'error'}">`;
+            html += `<h4>测试结果：${country} (${weight}KG)</h4>`;
+            
+            if (results.length > 0) {
+                html += `<p>找到 ${results.length} 个可用方案：</p>`;
+                results.slice(0, 5).forEach((result, index) => {
+                    html += `<p>${index + 1}. ${result.company} - ${result.service} - `;
+                    if (result.zone) html += `${result.zone} - `;
+                    html += `¥${result.totalPrice.toFixed(2)} ($${result.totalPriceUSD.toFixed(2)})`;
+                    html += ` - ${result.timeframe}</p>`;
+                });
+            } else {
+                html += `<p>❌ 该国家暂无可用服务</p>`;
+            }
+            
+            html += `</div>`;
+            document.getElementById('testResults').innerHTML = html;
+        }
+
+        function runFullTest() {
+            const db = window.completeLogisticsDB;
+            const countries = db.getAllCountries();
+            const testWeight = 1;
+            
+            let successCount = 0;
+            let totalCount = countries.length;
+            let failedCountries = [];
+            
+            countries.forEach(country => {
+                const results = db.compareAllPrices(country, testWeight);
+                if (results.length > 0) {
+                    successCount++;
+                } else {
+                    failedCountries.push(country);
+                }
+            });
+            
+            let html = `<div class="test-result ${failedCountries.length === 0 ? 'success' : 'error'}">`;
+            html += `<h4>全面测试结果</h4>`;
+            html += `<p>测试重量：${testWeight}KG</p>`;
+            html += `<p>测试国家：${totalCount}个</p>`;
+            html += `<p>成功计算：${successCount}个 (${Math.round(successCount/totalCount*100)}%)</p>`;
+            
+            if (failedCountries.length > 0) {
+                html += `<p>计算失败：${failedCountries.length}个</p>`;
+                html += `<p>失败国家：${failedCountries.join('、')}</p>`;
+            } else {
+                html += `<p>✅ 所有国家都能正常计算！</p>`;
+            }
+            
+            html += `</div>`;
+            document.getElementById('testResults').innerHTML = html;
+        }
+    </script>
+</body>
+</html> 
