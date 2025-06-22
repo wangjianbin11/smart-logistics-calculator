@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务费功能测试</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e8;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        .checkbox-container {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ffeaa7;
+        }
+        .fee-detail {
+            background: #f0f8ff;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 3px solid #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💼 服务费功能测试页面</h1>
+        
+        <div class="test-section">
+            <h3>🧪 服务费计算测试</h3>
+            <div class="input-group checkbox-container">
+                <label style="display: flex; align-items: center;">
+                    <input type="checkbox" id="includeServiceFee" checked style="margin-right: 10px; transform: scale(1.3);">
+                    <span style="font-size: 18px;">包含服务费 💼 ($1.2 USD 推荐)</span>
+                </label>
+                <div style="margin-top: 8px; font-size: 14px; color: #856404;">
+                    💡 <strong>建议选择：</strong>服务费包含订单处理、客服支持等增值服务
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label>包裹重量 (kg):</label>
+                <input type="number" id="weight" value="2" step="0.01" min="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label>美元汇率 (1 USD = ? RMB):</label>
+                <input type="number" id="exchangeRate" value="7.2" step="0.01" min="1">
+            </div>
+            
+            <button onclick="testServiceFee()">🧮 测试服务费计算</button>
+            
+            <div id="testResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 实际报价测试</h3>
+            <div class="input-group">
+                <label>目的地国家:</label>
+                <select id="country">
+                    <option value="美国">美国</option>
+                    <option value="英国">英国</option>
+                    <option value="德国">德国</option>
+                    <option value="澳大利亚">澳大利亚</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>包裹重量 (kg):</label>
+                <input type="number" id="realWeight" value="1.5" step="0.01" min="0.01">
+            </div>
+            
+            <div class="input-group checkbox-container">
+                <label style="display: flex; align-items: center;">
+                    <input type="checkbox" id="realIncludeServiceFee" checked style="margin-right: 10px; transform: scale(1.3);">
+                    <span style="font-size: 16px;">包含服务费 💼</span>
+                </label>
+            </div>
+            
+            <button onclick="testRealQuote()">📊 获取真实报价</button>
+            
+            <div id="realResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📈 服务费对比测试</h3>
+            <p>测试同一包裹在有无服务费情况下的价格差异</p>
+            <button onclick="testComparison()">⚡ 快速对比测试</button>
+            <div id="comparisonResult"></div>
+        </div>
+    </div>
+
+    <script src="scripts/complete-database.js"></script>
+    <script>
+        // 服务费功能测试
+        function testServiceFee() {
+            const includeServiceFee = document.getElementById('includeServiceFee').checked;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const exchangeRate = parseFloat(document.getElementById('exchangeRate').value);
+            
+            // 模拟基础运费
+            const baseWeightFee = 50; // 50元基础运费
+            const baseHandlingFee = 15; // 15元操作费
+            const baseTotalRMB = baseWeightFee + baseHandlingFee;
+            const baseTotalUSD = baseTotalRMB / exchangeRate;
+            
+            // 计算服务费
+            const serviceFeeUSD = 1.2;
+            const serviceFeeRMB = serviceFeeUSD * exchangeRate;
+            
+            let finalTotalRMB = baseTotalRMB;
+            let finalTotalUSD = baseTotalUSD;
+            
+            if (includeServiceFee) {
+                finalTotalRMB += serviceFeeRMB;
+                finalTotalUSD += serviceFeeUSD;
+            }
+            
+            document.getElementById('testResult').innerHTML = `
+                <div class="result">
+                    <h4>💰 费用计算结果</h4>
+                    <div class="fee-detail">
+                        <strong>基础费用:</strong><br>
+                        • 运费: ¥${baseWeightFee.toFixed(2)}<br>
+                        • 操作费: ¥${baseHandlingFee.toFixed(2)}<br>
+                        • 基础小计: ¥${baseTotalRMB.toFixed(2)} ($${baseTotalUSD.toFixed(2)})
+                    </div>
+                    
+                    <div class="fee-detail">
+                        <strong>服务费 (${includeServiceFee ? '已包含' : '未包含'}):</strong><br>
+                        • 服务费: ${includeServiceFee ? `¥${serviceFeeRMB.toFixed(2)} ($${serviceFeeUSD.toFixed(2)}) 💼` : '¥0.00 (未选择)'}
+                    </div>
+                    
+                    <div class="fee-detail" style="background: #e8f5e8; border-left-color: #4CAF50;">
+                        <strong>🎯 最终总价:</strong><br>
+                        • 人民币: <span style="font-size: 18px; color: #2e7d32;">¥${finalTotalRMB.toFixed(2)}</span><br>
+                        • 美元: <span style="font-size: 18px; color: #2e7d32;">$${finalTotalUSD.toFixed(2)}</span><br>
+                        • 当前汇率: 1 USD = ${exchangeRate} RMB
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 真实报价测试
+        function testRealQuote() {
+            if (!window.completeLogisticsDB) {
+                document.getElementById('realResult').innerHTML = `
+                    <div class="result" style="background: #ffebee; border-left-color: #f44336;">
+                        <strong>❌ 错误:</strong> 数据库未加载，请刷新页面重试
+                    </div>
+                `;
+                return;
+            }
+            
+            const country = document.getElementById('country').value;
+            const weight = parseFloat(document.getElementById('realWeight').value);
+            const includeServiceFee = document.getElementById('realIncludeServiceFee').checked;
+            
+            try {
+                // 使用云途物流进行测试
+                const result = window.completeLogisticsDB.calculateShipping(
+                    '云途物流', 
+                    '专线挂号标快普货', 
+                    country, 
+                    weight, 
+                    null, 
+                    null, 
+                    includeServiceFee
+                );
+                
+                if (result) {
+                    const baseTotalRMB = result.totalPrice - (result.serviceFeeRMB || 0);
+                    const baseTotalUSD = result.totalPriceUSD - (result.serviceFeeUSD || 0);
+                    
+                    document.getElementById('realResult').innerHTML = `
+                        <div class="result">
+                            <h4>📊 ${result.company} - ${result.service}</h4>
+                            <div class="fee-detail">
+                                <strong>目的地:</strong> ${result.country}<br>
+                                <strong>重量:</strong> ${weight}kg<br>
+                                <strong>时效:</strong> ${result.timeframe || '未知'}
+                            </div>
+                            
+                            <div class="fee-detail">
+                                <strong>费用明细:</strong><br>
+                                • 运费: ¥${result.weightFee?.toFixed(2) || '0.00'}<br>
+                                • 操作费: ¥${result.handlingFee?.toFixed(2) || '0.00'}<br>
+                                • 服务费: ${result.includesServiceFee ? 
+                                  `¥${result.serviceFeeRMB.toFixed(2)} ($${result.serviceFeeUSD.toFixed(2)}) 💼` : 
+                                  '未包含'}
+                            </div>
+                            
+                            <div class="fee-detail" style="background: #e8f5e8; border-left-color: #4CAF50;">
+                                <strong>🎯 总价:</strong><br>
+                                • 人民币: <span style="font-size: 18px; color: #2e7d32;">¥${result.totalPrice.toFixed(2)}</span><br>
+                                • 美元: <span style="font-size: 18px; color: #2e7d32;">$${result.totalPriceUSD.toFixed(2)}</span>
+                                ${result.includesServiceFee ? '<br>• <span style="color: #27ae60;">💼 含服务费</span>' : ''}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('realResult').innerHTML = `
+                        <div class="result" style="background: #ffebee; border-left-color: #f44336;">
+                            <strong>❌ 无法获取报价</strong> - 该目的地可能不支持或重量超出限制
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('测试错误:', error);
+                document.getElementById('realResult').innerHTML = `
+                    <div class="result" style="background: #ffebee; border-left-color: #f44336;">
+                        <strong>❌ 计算错误:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // 对比测试
+        function testComparison() {
+            if (!window.completeLogisticsDB) {
+                document.getElementById('comparisonResult').innerHTML = `
+                    <div class="result" style="background: #ffebee; border-left-color: #f44336;">
+                        <strong>❌ 错误:</strong> 数据库未加载
+                    </div>
+                `;
+                return;
+            }
+            
+            const weight = 2; // 固定2kg测试
+            const country = '美国';
+            
+            try {
+                // 不含服务费的报价
+                const resultWithoutFee = window.completeLogisticsDB.calculateShipping(
+                    '云途物流', '专线挂号标快普货', country, weight, null, null, false
+                );
+                
+                // 含服务费的报价
+                const resultWithFee = window.completeLogisticsDB.calculateShipping(
+                    '云途物流', '专线挂号标快普货', country, weight, null, null, true
+                );
+                
+                if (resultWithoutFee && resultWithFee) {
+                    const priceDiffRMB = resultWithFee.totalPrice - resultWithoutFee.totalPrice;
+                    const priceDiffUSD = resultWithFee.totalPriceUSD - resultWithoutFee.totalPriceUSD;
+                    
+                    document.getElementById('comparisonResult').innerHTML = `
+                        <div class="result">
+                            <h4>📈 对比结果 (${country} ${weight}kg)</h4>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+                                <div class="fee-detail">
+                                    <strong>❌ 不含服务费:</strong><br>
+                                    • 总价: ¥${resultWithoutFee.totalPrice.toFixed(2)}<br>
+                                    • 美元: $${resultWithoutFee.totalPriceUSD.toFixed(2)}
+                                </div>
+                                
+                                <div class="fee-detail" style="background: #e8f5e8;">
+                                    <strong>✅ 含服务费:</strong><br>
+                                    • 总价: ¥${resultWithFee.totalPrice.toFixed(2)}<br>
+                                    • 美元: $${resultWithFee.totalPriceUSD.toFixed(2)}
+                                </div>
+                            </div>
+                            
+                            <div class="fee-detail" style="background: #fff3cd; border-left-color: #ffc107;">
+                                <strong>💰 服务费差额:</strong><br>
+                                • 人民币: +¥${priceDiffRMB.toFixed(2)}<br>
+                                • 美元: +$${priceDiffUSD.toFixed(2)}<br>
+                                • <span style="color: #856404;">实际服务费: ¥${resultWithFee.serviceFeeRMB.toFixed(2)} ($${resultWithFee.serviceFeeUSD.toFixed(2)})</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('comparisonResult').innerHTML = `
+                        <div class="result" style="background: #ffebee; border-left-color: #f44336;">
+                            <strong>❌ 对比失败:</strong> 无法获取报价数据
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('对比测试错误:', error);
+                document.getElementById('comparisonResult').innerHTML = `
+                    <div class="result" style="background: #ffebee; border-left-color: #f44336;">
+                        <strong>❌ 对比错误:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // 页面加载完成后执行初始测试
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('服务费测试页面加载完成');
+            if (window.completeLogisticsDB) {
+                console.log('数据库加载成功');
+                // 自动执行一次服务费计算测试
+                setTimeout(testServiceFee, 500);
+            } else {
+                console.error('数据库未加载');
+            }
+        });
+    </script>
+</body>
+</html> 
