@@ -807,7 +807,7 @@ class CompleteLogisticsDatabase {
     getWanbaoElectricData() { return this.getBasicWanbaoData('USECSLR'); }
 
     getBasicWanbaoData(code) {
-        return {
+        const baseData = {
             '美国': {
                 code: code,
                 timeframe: '9-12工作日',
@@ -815,22 +815,162 @@ class CompleteLogisticsDatabase {
                 sizeLimit: '55cm*40cm*40cm',
                 note: '50G起重',
                 priceRanges: [
-                    { min: 0, max: 0.1, perKg: 102, handling: 24 },
-                    { min: 0.101, max: 0.2, perKg: 100, handling: 22 },
-                    { min: 0.201, max: 0.3, perKg: 92, handling: 20 }
+                    { min: 0, max: 0.1, perKg: code === 'USPHFZ' ? 102 : (code === 'MUSLR' ? 113 : (code === 'USPHSLR' ? 104 : 110)), handling: 24 },
+                    { min: 0.101, max: 0.2, perKg: code === 'USPHFZ' ? 100 : (code === 'MUSLR' ? 111 : (code === 'USPHSLR' ? 102 : 108)), handling: 22 },
+                    { min: 0.201, max: 0.3, perKg: code === 'USPHFZ' ? 92 : (code === 'MUSLR' ? 105 : (code === 'USPHSLR' ? 94 : 102)), handling: 20 },
+                    { min: 0.301, max: 0.45, perKg: code === 'USPHFZ' ? 91 : (code === 'MUSLR' ? 103 : (code === 'USPHSLR' ? 93 : 100)), handling: 20 },
+                    { min: 0.451, max: 0.7, perKg: code === 'USPHFZ' ? 86 : (code === 'MUSLR' ? 97 : (code === 'USPHSLR' ? 88 : 94)), handling: 20 },
+                    { min: 0.701, max: 3, perKg: code === 'USPHFZ' ? 86 : (code === 'MUSLR' ? 91 : (code === 'USPHSLR' ? 88 : 88)), handling: 13 },
+                    { min: 3.001, max: 30, perKg: code === 'USPHFZ' ? 82 : (code === 'MUSLR' ? 89 : (code === 'USPHSLR' ? 84 : 86)), handling: 13 }
                 ]
             },
             '英国': {
                 code: code,
-                timeframe: '7-10工作日',
+                timeframe: code === 'MUSLR' ? '6-8工作日' : '7-10工作日',
                 weightLimit: 20,
                 sizeLimit: '60*40*40cm',
-                note: '偏远地区限重20KG',
+                note: '偏远地区限重20KG；偏远地区体积限制0.031m³',
                 priceRanges: [
-                    { min: 0, max: 0.3, perKg: 33, handling: 16 }
+                    { min: 0, max: 0.3, perKg: code === 'MUSLR' ? 38 : (code === 'USECSLR' ? 38 : 34), handling: 16 },
+                    { min: 0.301, max: 2, perKg: code === 'MUSLR' ? 43 : (code === 'USECSLR' ? 43 : 37), handling: 16 },
+                    { min: 2.001, max: 20, perKg: code === 'MUSLR' ? 47 : (code === 'USECSLR' ? 47 : 41), handling: 16 }
+                ]
+            },
+            '德国': {
+                code: code,
+                timeframe: code === 'MUSLR' ? '7-9工作日' : '8-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                note: 'Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: code === 'MUSLR' ? 56 : (code === 'USECSLR' ? 54 : 43), handling: 19 },
+                    { min: 0.301, max: 1, perKg: code === 'MUSLR' ? 53 : (code === 'USECSLR' ? 51 : 40), handling: 22 },
+                    { min: 1.001, max: 30, perKg: code === 'MUSLR' ? 53 : (code === 'USECSLR' ? 51 : 42), handling: 22 }
+                ]
+            },
+            '法国': {
+                code: code,
+                timeframe: code === 'MUSLR' ? '7-9工作日' : '8-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                note: 'Min size:16*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: code === 'MUSLR' ? 59 : (code === 'USECSLR' ? 57 : 56), handling: code === 'MUSLR' ? 21 : 20 },
+                    { min: 0.301, max: 2, perKg: code === 'MUSLR' ? 57 : (code === 'USECSLR' ? 55 : 52), handling: 21 },
+                    { min: 2.001, max: 30, perKg: code === 'MUSLR' ? 57 : (code === 'USECSLR' ? 55 : 52), handling: 21 }
+                ]
+            },
+            '意大利': {
+                code: code,
+                timeframe: code === 'MUSLR' ? '7-9工作日' : '8-12工作日',
+                weightLimit: 5,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: code === 'MUSLR' ? 52 : (code === 'USECSLR' ? 50 : 46), handling: 25 },
+                    { min: 0.501, max: 2, perKg: code === 'MUSLR' ? 54 : (code === 'USECSLR' ? 52 : 48), handling: 24 },
+                    { min: 2.001, max: 5, perKg: code === 'MUSLR' ? 56 : (code === 'USECSLR' ? 54 : 50), handling: 24 }
+                ]
+            },
+            '西班牙': {
+                code: code,
+                timeframe: code === 'MUSLR' ? '7-9工作日' : '8-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.25, perKg: code === 'MUSLR' ? 58 : (code === 'USECSLR' ? 56 : 49), handling: code === 'MUSLR' ? 21 : 18 },
+                    { min: 0.251, max: 2, perKg: code === 'MUSLR' ? 58 : (code === 'USECSLR' ? 56 : 49), handling: 18 },
+                    { min: 2.001, max: 30, perKg: code === 'MUSLR' ? 58 : (code === 'USECSLR' ? 56 : 49), handling: 18 }
                 ]
             }
         };
+
+        // 为所有产品代码添加共同的国家数据
+        if (code === 'USPHSLR' || code === 'USECSLR') {
+            // 专线挂号普货和带电特有的其他国家
+            baseData['加拿大'] = {
+                code: code,
+                timeframe: '9-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.1, perKg: code === 'USECSLR' ? 65 : 55, handling: 23 },
+                    { min: 0.101, max: 0.5, perKg: code === 'USECSLR' ? 66 : 55, handling: 24 },
+                    { min: 0.501, max: 0.75, perKg: code === 'USECSLR' ? 70 : 55, handling: 25 },
+                    { min: 0.751, max: 1, perKg: code === 'USECSLR' ? 70 : 55, handling: 27 },
+                    { min: 1.001, max: 1.5, perKg: code === 'USECSLR' ? 70 : 63, handling: 27 },
+                    { min: 1.501, max: 2, perKg: code === 'USECSLR' ? 70 : 63, handling: 27 },
+                    { min: 2.001, max: 30, perKg: code === 'USECSLR' ? 70 : 64, handling: 27 }
+                ]
+            };
+
+            baseData['波兰'] = {
+                code: code,
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 69, handling: 11 },
+                    { min: 0.201, max: 2, perKg: code === 'USECSLR' ? 60 : 55, handling: 15 },
+                    { min: 2.001, max: 30, perKg: 55, handling: 15 }
+                ]
+            };
+
+            baseData['澳大利亚'] = {
+                code: code,
+                timeframe: '5-8工作日',
+                weightLimit: 20,
+                sizeLimit: 'L≤60cm，长+宽+高≤140cm，L*W*H＜250000cm³',
+                note: '50G起重，分区计费',
+                zones: {
+                    '1区': [
+                        { min: 0, max: 0.25, perKg: code === 'USECSLR' ? 48 : 29, handling: 24 },
+                        { min: 0.251, max: 0.5, perKg: code === 'USECSLR' ? 48 : 29, handling: 24 },
+                        { min: 0.501, max: 1, perKg: code === 'USECSLR' ? 48 : 29, handling: 26 },
+                        { min: 1.001, max: 2, perKg: code === 'USECSLR' ? 50 : 29, handling: 20 },
+                        { min: 2.001, max: 20, perKg: code === 'USECSLR' ? 50 : 29, handling: 20 }
+                    ],
+                    '2区': [
+                        { min: 0, max: 0.25, perKg: code === 'USECSLR' ? 57 : 38, handling: 29 },
+                        { min: 0.251, max: 0.5, perKg: code === 'USECSLR' ? 57 : 38, handling: 29 },
+                        { min: 0.501, max: 1, perKg: code === 'USECSLR' ? 57 : 38, handling: 29 },
+                        { min: 1.001, max: 2, perKg: code === 'USECSLR' ? 57 : 38, handling: 27 },
+                        { min: 2.001, max: 20, perKg: code === 'USECSLR' ? 57 : 38, handling: 27 }
+                    ],
+                    '3区': [
+                        { min: 0, max: 0.25, perKg: code === 'USECSLR' ? 66 : 53, handling: 50 },
+                        { min: 0.251, max: 0.5, perKg: code === 'USECSLR' ? 66 : 53, handling: 50 },
+                        { min: 0.501, max: 1, perKg: code === 'USECSLR' ? 66 : 53, handling: 60 },
+                        { min: 1.001, max: 2, perKg: code === 'USECSLR' ? 66 : 48, handling: 60 },
+                        { min: 2.001, max: 20, perKg: code === 'USECSLR' ? 66 : 48, handling: 60 }
+                    ],
+                    '4区': [
+                        { min: 0, max: 0.25, perKg: code === 'USECSLR' ? 76 : 59, handling: 60 },
+                        { min: 0.251, max: 0.5, perKg: code === 'USECSLR' ? 76 : 59, handling: 60 },
+                        { min: 0.501, max: 1, perKg: code === 'USECSLR' ? 84 : 70, handling: 85 },
+                        { min: 1.001, max: 2, perKg: code === 'USECSLR' ? 82 : 70, handling: 85 },
+                        { min: 2.001, max: 20, perKg: code === 'USECSLR' ? 82 : 70, handling: 85 }
+                    ]
+                }
+            };
+
+            baseData['日本'] = {
+                code: code,
+                timeframe: '4-6工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                note: '首重续重计费，重量按0.5KG进位，长*宽*高/6000',
+                calculationType: 'firstContinue',
+                firstWeight: 0.5,
+                firstPrice: code === 'USECSLR' ? 33 : 31,
+                priceRanges: [
+                    { min: 0, max: 2, continuePrice: code === 'USECSLR' ? 11 : 8 },
+                    { min: 2.001, max: 10, continuePrice: code === 'USECSLR' ? 14 : 11 }
+                ]
+            };
+        }
+
+        return baseData;
     }
 
     // 其他服务的占位符
@@ -866,12 +1006,741 @@ class CompleteLogisticsDatabase {
     getYuntuBulkCompleteData() { return {}; }
     getHuahanStandardData() { 
         return {
-            '美国': { code: 'HSTZB', timeframe: '7-10工作日', weightLimit: 30, priceRanges: [{ min: 0, max: 30, perKg: 45, handling: 20 }] }
+            '美国': {
+                code: 'PK0377',
+                timeframe: '12-18工作日',
+                weightLimit: 2,
+                note: '包税，最长边+2*(宽+高)≤120cm，单边长≤55cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 0.1, perKg: 112, handling: 28 },
+                    { min: 0.1, max: 0.2, perKg: 112, handling: 28 },
+                    { min: 0.2, max: 0.3, perKg: 112, handling: 28 },
+                    { min: 0.3, max: 0.453, perKg: 129, handling: 23 },
+                    { min: 0.453, max: 0.7, perKg: 129, handling: 23 },
+                    { min: 0.7, max: 1, perKg: 126, handling: 14 },
+                    { min: 1, max: 2, perKg: 126, handling: 14 }
+                ]
+            },
+            '加拿大': {
+                code: 'PK0377',
+                timeframe: '9-15工作日',
+                weightLimit: 10,
+                note: '最长边≤60cm，长+宽+高≤90cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 0.3, perKg: 117, handling: 40 },
+                    { min: 0.3, max: 0.75, perKg: 101, handling: 40 },
+                    { min: 0.75, max: 1, perKg: 101, handling: 46 },
+                    { min: 1, max: 1.5, perKg: 100, handling: 52 },
+                    { min: 1.5, max: 2, perKg: 100, handling: 57 },
+                    { min: 2, max: 10, perKg: 100, handling: 55 }
+                ]
+            },
+            '英国': {
+                code: 'PK0377',
+                timeframe: '6-9工作日',
+                weightLimit: 5,
+                note: '最大尺寸≤60x40x40cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 5, perKg: 82, handling: 19 }
+                ]
+            },
+            '德国': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 72, handling: 32 }
+                ]
+            },
+            '奥地利': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 79, handling: 38 }
+                ]
+            },
+            '荷兰': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 76, handling: 32 }
+                ]
+            },
+            '西班牙': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 88, handling: 26 }
+                ]
+            },
+            '葡萄牙': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 88, handling: 26 }
+                ]
+            },
+            '比利时': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 109, handling: 29 }
+                ]
+            },
+            '捷克': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 107, handling: 26 }
+                ]
+            },
+            '法国': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 83, handling: 34 }
+                ]
+            },
+            '希腊': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 85, handling: 24 }
+                ]
+            },
+            '意大利': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 93, handling: 41 }
+                ]
+            },
+            '立陶宛': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 108, handling: 25 }
+                ]
+            },
+            '卢森堡': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 78, handling: 35 }
+                ]
+            },
+            '波兰': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 114, handling: 27 }
+                ]
+            },
+            '罗马尼亚': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 96, handling: 23 }
+                ]
+            },
+            '瑞典': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 83, handling: 26 }
+                ]
+            },
+            '斯洛伐克': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 80, handling: 27 }
+                ]
+            },
+            '丹麦': {
+                code: 'PK0377',
+                timeframe: '10-16工作日',
+                weightLimit: 2,
+                note: '最大尺寸≤45*45*35cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 2, perKg: 77, handling: 43 }
+                ]
+            },
+            '澳大利亚': {
+                code: 'PK0377',
+                timeframe: '7-9工作日',
+                weightLimit: 5,
+                note: '最大尺寸≤60x40x40cm，最小尺寸≥15x10x1cm',
+                priceRanges: [
+                    { min: 0.05, max: 5, perKg: 92, handling: 42 }
+                ]
+            }
         };
     }
     getYanwenTrackingData() {
         return {
-            '美国': { code: 'YWZXZZ', timeframe: '7-15工作日', weightLimit: 30, priceRanges: [{ min: 0, max: 30, perKg: 35, handling: 15 }] }
+            '美国': {
+                code: '481',
+                timeframe: '7-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.1, perKg: 120, handling: 20 },
+                    { min: 0.101, max: 0.2, perKg: 114, handling: 18 },
+                    { min: 0.201, max: 0.45, perKg: 110, handling: 16 },
+                    { min: 0.451, max: 0.7, perKg: 103, handling: 16 },
+                    { min: 0.701, max: 1.5, perKg: 103, handling: 9 },
+                    { min: 1.501, max: 2, perKg: 103, handling: 9 },
+                    { min: 2.001, max: 30, perKg: 96, handling: 9 }
+                ]
+            },
+            '加拿大': {
+                code: '481',
+                timeframe: '7-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.15, perKg: 78, handling: 21 },
+                    { min: 0.151, max: 0.45, perKg: 79, handling: 22 },
+                    { min: 0.451, max: 0.75, perKg: 82, handling: 23 },
+                    { min: 0.751, max: 1, perKg: 83, handling: 23 },
+                    { min: 1.001, max: 30, perKg: 83, handling: 23 }
+                ]
+            },
+            '墨西哥': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 5,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.5, perKg: 84, handling: 18 },
+                    { min: 0.501, max: 1, perKg: 84, handling: 19 },
+                    { min: 1.001, max: 5, perKg: 90, handling: 20 }
+                ]
+            },
+            '英国': {
+                code: '481',
+                timeframe: '7-12工作日',
+                weightLimit: 20,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 1, perKg: 68, handling: 16 },
+                    { min: 1.001, max: 20, perKg: 70, handling: 16 }
+                ]
+            },
+            '法国': {
+                code: '481',
+                timeframe: '7-12工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.2, perKg: 84, handling: 18 },
+                    { min: 0.201, max: 0.5, perKg: 82, handling: 19 },
+                    { min: 0.501, max: 30, perKg: 78, handling: 23 }
+                ]
+            },
+            '德国': {
+                code: '481',
+                timeframe: '7-12工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.3, perKg: 70, handling: 19 },
+                    { min: 0.301, max: 30, perKg: 65, handling: 22 }
+                ]
+            },
+            '意大利': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 68, handling: 25 }
+                ]
+            },
+            '西班牙': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 74, handling: 18 }
+                ]
+            },
+            '荷兰': {
+                code: '481',
+                timeframe: '7-12工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.3, perKg: 85, handling: 21 },
+                    { min: 0.301, max: 0.5, perKg: 85, handling: 21 },
+                    { min: 0.501, max: 2, perKg: 83, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 82, handling: 21 }
+                ]
+            },
+            '奥地利': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.2, perKg: 72, handling: 23 },
+                    { min: 0.201, max: 0.5, perKg: 72, handling: 23 },
+                    { min: 0.501, max: 30, perKg: 72, handling: 23 }
+                ]
+            },
+            '比利时': {
+                code: '481',
+                timeframe: '7-12工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.2, perKg: 88, handling: 23 },
+                    { min: 0.201, max: 2, perKg: 88, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 77, handling: 21 }
+                ]
+            },
+            '保加利亚': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 70, handling: 17 }
+                ]
+            },
+            '瑞士': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.2, perKg: 85, handling: 22 },
+                    { min: 0.201, max: 0.5, perKg: 100, handling: 24 },
+                    { min: 0.501, max: 1, perKg: 104, handling: 24 },
+                    { min: 1.001, max: 2, perKg: 104, handling: 24 },
+                    { min: 2.001, max: 30, perKg: 112, handling: 34 }
+                ]
+            },
+            '塞浦路斯': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 20,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.2, perKg: 90, handling: 29 },
+                    { min: 0.201, max: 20, perKg: 132, handling: 29 }
+                ]
+            },
+            '捷克': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 2,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 2, perKg: 52, handling: 20 }
+                ]
+            },
+            '丹麦': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 2,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.3, perKg: 91, handling: 24 },
+                    { min: 0.301, max: 2, perKg: 75, handling: 24 }
+                ]
+            },
+            '爱沙尼亚': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 2, perKg: 77, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 77, handling: 20 }
+                ]
+            },
+            '芬兰': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 20,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 20, perKg: 74, handling: 26 }
+                ]
+            },
+            '希腊': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 90, handling: 18 }
+                ]
+            },
+            '克罗地亚': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 85, handling: 23 }
+                ]
+            },
+            '匈牙利': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 75, handling: 21 }
+                ]
+            },
+            '爱尔兰': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 20,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 20, perKg: 90, handling: 23 }
+                ]
+            },
+            '立陶宛': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 2, perKg: 69, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 69, handling: 20 }
+                ]
+            },
+            '卢森堡': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 2, perKg: 110, handling: 26 },
+                    { min: 2.001, max: 30, perKg: 115, handling: 26 }
+                ]
+            },
+            '拉脱维亚': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 2, perKg: 77, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 77, handling: 20 }
+                ]
+            },
+            '马耳他': {
+                code: '481',
+                timeframe: '12-20工作日',
+                weightLimit: 20,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 20, perKg: 120, handling: 31 }
+                ]
+            },
+            '挪威': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 5,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.1, perKg: 80, handling: 20 },
+                    { min: 0.101, max: 0.3, perKg: 66, handling: 20 },
+                    { min: 0.301, max: 5, perKg: 58, handling: 20 }
+                ]
+            },
+            '波兰': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 20,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.2, perKg: 69, handling: 11 },
+                    { min: 0.201, max: 20, perKg: 64, handling: 15 }
+                ]
+            },
+            '葡萄牙': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 89, handling: 20 }
+                ]
+            },
+            '罗马尼亚': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 70, handling: 18 }
+                ]
+            },
+            '瑞典': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 20,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.3, perKg: 72, handling: 16 },
+                    { min: 0.301, max: 2, perKg: 62, handling: 21 },
+                    { min: 2.001, max: 20, perKg: 65, handling: 21 }
+                ]
+            },
+            '斯洛文尼亚': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 85, handling: 24 }
+                ]
+            },
+            '斯洛伐克': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 78, handling: 20 }
+                ]
+            },
+            '巴西': {
+                code: '481',
+                timeframe: '15-25工作日',
+                weightLimit: 5,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.5, perKg: 84, handling: 38 },
+                    { min: 0.501, max: 1, perKg: 84, handling: 40 },
+                    { min: 1.001, max: 1.5, perKg: 84, handling: 45 },
+                    { min: 1.501, max: 2, perKg: 84, handling: 49 },
+                    { min: 2.001, max: 3, perKg: 84, handling: 65 },
+                    { min: 3.001, max: 5, perKg: 84, handling: 75 }
+                ]
+            },
+            '智利': {
+                code: '481',
+                timeframe: '15-25工作日',
+                weightLimit: 5,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.5, perKg: 95, handling: 23 },
+                    { min: 0.501, max: 1, perKg: 100, handling: 27 },
+                    { min: 1.001, max: 5, perKg: 100, handling: 32 }
+                ]
+            },
+            '哥伦比亚': {
+                code: '481',
+                timeframe: '15-25工作日',
+                weightLimit: 3,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 2, perKg: 134, handling: 26 },
+                    { min: 2.001, max: 3, perKg: 134, handling: 26 }
+                ]
+            },
+            '秘鲁': {
+                code: '481',
+                timeframe: '15-25工作日',
+                weightLimit: 2,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 2, perKg: 185, handling: 21 }
+                ]
+            },
+            '新西兰': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 25,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 25, perKg: 83, handling: 17 }
+                ]
+            },
+            '日本': {
+                code: '481',
+                timeframe: '4-8工作日',
+                weightLimit: 10,
+                note: '首重续重计费，重量按0.5KG进位',
+                calculationType: 'firstContinue',
+                firstWeight: 0.5,
+                firstPrice: 31,
+                priceRanges: [
+                    { min: 0.001, max: 2, continuePrice: 5 },
+                    { min: 2.001, max: 10, continuePrice: 6 }
+                ]
+            },
+            '澳大利亚': {
+                code: '481',
+                timeframe: '6-12工作日',
+                weightLimit: 22,
+                note: '分区计费，最小计费重量0.001KG',
+                zones: {
+                    '1区': [
+                        { min: 0.001, max: 0.5, perKg: 37, handling: 20 },
+                        { min: 0.501, max: 1, perKg: 37, handling: 20 },
+                        { min: 1.001, max: 2, perKg: 37, handling: 21 },
+                        { min: 2.001, max: 5, perKg: 37, handling: 25 },
+                        { min: 5.001, max: 10, perKg: 37, handling: 35 },
+                        { min: 10.001, max: 22, perKg: 37, handling: 55 }
+                    ],
+                    '2区': [
+                        { min: 0.001, max: 0.5, perKg: 38, handling: 25 },
+                        { min: 0.501, max: 1, perKg: 38, handling: 27 },
+                        { min: 1.001, max: 2, perKg: 38, handling: 27 },
+                        { min: 2.001, max: 5, perKg: 38, handling: 28 },
+                        { min: 5.001, max: 10, perKg: 38, handling: 46 },
+                        { min: 10.001, max: 22, perKg: 38, handling: 66 }
+                    ],
+                    '3区': [
+                        { min: 0.001, max: 0.5, perKg: 50, handling: 49 },
+                        { min: 0.501, max: 1, perKg: 50, handling: 65 },
+                        { min: 1.001, max: 2, perKg: 50, handling: 67 },
+                        { min: 2.001, max: 5, perKg: 50, handling: 85 },
+                        { min: 5.001, max: 10, perKg: 50, handling: 105 },
+                        { min: 10.001, max: 22, perKg: 50, handling: 125 }
+                    ],
+                    '4区': [
+                        { min: 0.001, max: 0.5, perKg: 51, handling: 55 },
+                        { min: 0.501, max: 2, perKg: 51, handling: 95 },
+                        { min: 2.001, max: 5, perKg: 51, handling: 117 },
+                        { min: 5.001, max: 10, perKg: 51, handling: 132 },
+                        { min: 10.001, max: 22, perKg: 51, handling: 155 }
+                    ]
+                }
+            },
+            '韩国': {
+                code: '481',
+                timeframe: '4-8工作日',
+                weightLimit: 20,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 2, perKg: 6, handling: 17 },
+                    { min: 2.001, max: 20, perKg: 8, handling: 17 }
+                ]
+            },
+            '马来西亚': {
+                code: '481',
+                timeframe: '5-10工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0, max: 1, perKg: 30.5, handling: 21 },
+                    { min: 1.001, max: 30, perKg: 33.5, handling: 16 }
+                ]
+            },
+            '菲律宾': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 90, handling: 12 },
+                    { min: 0.501, max: 10, perKg: 86, handling: 12 },
+                    { min: 10.001, max: 30, perKg: 86, handling: 11 }
+                ]
+            },
+            '新加坡': {
+                code: '481',
+                timeframe: '5-10工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 46, handling: 20 }
+                ]
+            },
+            '泰国': {
+                code: '481',
+                timeframe: '5-10工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 28, handling: 11 }
+                ]
+            },
+            '阿联酋': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.5, perKg: 45, handling: 22 },
+                    { min: 0.501, max: 2, perKg: 45, handling: 22 },
+                    { min: 2.001, max: 5, perKg: 45, handling: 22 },
+                    { min: 5.001, max: 30, perKg: 45, handling: 24 }
+                ]
+            },
+            '以色列': {
+                code: '481',
+                timeframe: '10-15工作日',
+                weightLimit: 5,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0.001, max: 0.5, perKg: 95, handling: 21 },
+                    { min: 0.501, max: 5, perKg: 95, handling: 23 }
+                ]
+            },
+            '土耳其': {
+                code: '481',
+                timeframe: '8-15工作日',
+                weightLimit: 10,
+                note: '最小计费重量0.05KG',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 83, handling: 27 },
+                    { min: 0.201, max: 0.5, perKg: 80, handling: 22 },
+                    { min: 0.501, max: 10, perKg: 86, handling: 18 }
+                ]
+            },
+            '越南': {
+                code: '481',
+                timeframe: '5-10工作日',
+                weightLimit: 30,
+                note: '最小计费重量0.001KG',
+                priceRanges: [
+                    { min: 0.001, max: 30, perKg: 29, handling: 10 }
+                ]
+            }
         };
     }
 
