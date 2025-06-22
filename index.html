@@ -282,14 +282,15 @@
                     <input type="number" id="weight" step="0.001" min="0.001" placeholder="请输入重量">
                 </div>
 
-                <div class="input-group">
-                    <label for="exchangeRate">美元汇率 (1 USD = ? RMB):</label>
-                    <input type="number" id="exchangeRate" step="0.01" value="7.20" placeholder="当前汇率">
-                </div>
+                                 <div class="input-group">
+                     <label for="exchangeRate">美元汇率 (1 USD = ? RMB):</label>
+                     <input type="number" id="exchangeRate" step="0.01" value="7.00" placeholder="当前汇率">
+                 </div>
 
-                <div style="margin-top: 20px; padding: 15px; background: #e8f5e8; border-radius: 10px;">
-                    <strong>当前汇率:</strong> 1 USD = <span id="currentRate">7.20</span> RMB
-                </div>
+                 <div style="margin-top: 20px; padding: 15px; background: #e8f5e8; border-radius: 10px;">
+                     <strong>当前汇率:</strong> 1 USD = <span id="currentRate">7.00</span> RMB<br>
+                     <small style="color: #666;">所有结果将同时显示人民币和美元价格</small>
+                 </div>
             </div>
         </div>
 
@@ -302,6 +303,7 @@
     </div>
 
     <script src="scripts/enhanced-database.js"></script>
+    <script src="scripts/complete-database.js"></script>
     <script>
         // 全局变量
         let db = null;
@@ -309,7 +311,8 @@
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             try {
-                db = window.logisticsDB;
+                // 使用完整数据库
+                db = window.completeLogisticsDB || window.logisticsDB;
                 initializeSelectors();
                 bindEvents();
                 console.log('数据库初始化成功');
@@ -412,11 +415,14 @@
             }
         }
 
-        // 更新汇率显示
-        function updateExchangeRate() {
-            const rate = document.getElementById('exchangeRate').value;
-            document.getElementById('currentRate').textContent = rate || '7.20';
-        }
+                 // 更新汇率显示
+         function updateExchangeRate() {
+             const rate = parseFloat(document.getElementById('exchangeRate').value) || 7.0;
+             document.getElementById('currentRate').textContent = rate.toFixed(2);
+             if (db && db.setExchangeRate) {
+                 db.setExchangeRate(rate);
+             }
+         }
 
         // 单独计算
         function calculateSingle() {
@@ -496,29 +502,33 @@
             return true;
         }
 
-        // 显示单个结果
-        function displaySingleResult(result) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = `
-                <div class="result-card">
-                    <div class="result-header">
-                        <div class="result-title">${result.company} - ${result.service}</div>
-                        <div class="result-price">¥${result.totalPrice.toFixed(2)}</div>
-                    </div>
-                    <div class="result-details">
-                        <div><strong>目的地:</strong> ${result.country}${result.zone ? ` (${result.zone})` : ''}</div>
-                        <div><strong>重量:</strong> ${result.weight}kg</div>
-                        <div><strong>时效:</strong> ${result.timeframe || '未知'}</div>
-                        <div><strong>重量限制:</strong> ${result.weightLimit ? result.weightLimit + 'kg' : '未知'}</div>
-                        <div><strong>尺寸限制:</strong> ${result.sizeLimit || '未知'}</div>
-                        <div><strong>运费:</strong> ¥${result.weightFee ? result.weightFee.toFixed(2) : '0.00'}</div>
-                        <div><strong>操作费:</strong> ¥${result.handlingFee ? result.handlingFee.toFixed(2) : '0.00'}</div>
-                        ${result.note ? `<div><strong>备注:</strong> ${result.note}</div>` : ''}
-                    </div>
-                    ${result.details ? `<div style="margin-top: 10px; font-style: italic; color: #666;">${result.details}</div>` : ''}
-                </div>
-            `;
-        }
+                 // 显示单个结果
+         function displaySingleResult(result) {
+             const resultsDiv = document.getElementById('results');
+             const usdPrice = result.totalPriceUSD ? `$${result.totalPriceUSD.toFixed(2)}` : '';
+             resultsDiv.innerHTML = `
+                 <div class="result-card">
+                     <div class="result-header">
+                         <div class="result-title">${result.company} - ${result.service}</div>
+                         <div class="result-price">
+                             ¥${result.totalPrice.toFixed(2)}
+                             ${usdPrice ? `<br><small style="font-size: 0.8em; opacity: 0.8;">≈ ${usdPrice}</small>` : ''}
+                         </div>
+                     </div>
+                     <div class="result-details">
+                         <div><strong>目的地:</strong> ${result.country}${result.zone ? ` (${result.zone})` : ''}</div>
+                         <div><strong>重量:</strong> ${result.weight}kg</div>
+                         <div><strong>时效:</strong> ${result.timeframe || '未知'}</div>
+                         <div><strong>重量限制:</strong> ${result.weightLimit ? result.weightLimit + 'kg' : '未知'}</div>
+                         <div><strong>尺寸限制:</strong> ${result.sizeLimit || '未知'}</div>
+                         <div><strong>运费:</strong> ¥${result.weightFee ? result.weightFee.toFixed(2) : '0.00'}</div>
+                         <div><strong>操作费:</strong> ¥${result.handlingFee ? result.handlingFee.toFixed(2) : '0.00'}</div>
+                         ${result.note ? `<div><strong>备注:</strong> ${result.note}</div>` : ''}
+                     </div>
+                     ${result.details ? `<div style="margin-top: 10px; font-style: italic; color: #666;">${result.details}</div>` : ''}
+                 </div>
+             `;
+         }
 
         // 显示比价结果
         function displayComparisonResults(results) {
@@ -540,11 +550,14 @@
                 html += `
                     <div class="result-card ${index === 0 ? 'best-option' : ''}">
                         <div class="result-header">
-                            <div class="result-title">
-                                ${index === 0 ? '🥇 ' : `${index + 1}. `}${result.company} - ${result.service}
-                                ${index === 0 ? '<span class="savings">最优选择</span>' : savings > 0 ? `<span style="color: #dc3545; font-size: 0.9em;">+¥${savings.toFixed(2)} (+${savingsPercent.toFixed(1)}%)</span>` : ''}
-                            </div>
-                            <div class="result-price">¥${result.totalPrice.toFixed(2)}</div>
+                                                         <div class="result-title">
+                                 ${index === 0 ? '🥇 ' : `${index + 1}. `}${result.company} - ${result.service}
+                                 ${index === 0 ? '<span class="savings">最优选择</span>' : savings > 0 ? `<span style="color: #dc3545; font-size: 0.9em;">+¥${savings.toFixed(2)} (+${savingsPercent.toFixed(1)}%)</span>` : ''}
+                             </div>
+                             <div class="result-price">
+                                 ¥${result.totalPrice.toFixed(2)}
+                                 ${result.totalPriceUSD ? `<br><small style="font-size: 0.8em; opacity: 0.8;">≈ $${result.totalPriceUSD.toFixed(2)}</small>` : ''}
+                             </div>
                         </div>
                         <div class="result-details">
                             <div><strong>目的地:</strong> ${result.country}${result.zone ? ` (${result.zone})` : ''}</div>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据库功能测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .result {
+            background: #e8f5e8;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border-left: 4px solid #4caf50;
+        }
+        .error {
+            background: #ffeaea;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border-left: 4px solid #f44336;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 物流数据库功能测试</h1>
+    
+    <div class="test-section">
+        <h2>基础功能测试</h2>
+        <button onclick="testBasicFunctions()">测试基础功能</button>
+        <div id="basicResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>计算功能测试</h2>
+        <button onclick="testCalculations()">测试计算功能</button>
+        <div id="calcResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>比价功能测试</h2>
+        <button onclick="testComparison()">测试智能比价</button>
+        <div id="compResults"></div>
+    </div>
+
+    <script src="scripts/enhanced-database.js"></script>
+    <script>
+        let db = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                db = window.logisticsDB;
+                log('系统初始化成功！', 'basicResults');
+            } catch (error) {
+                log('系统初始化失败：' + error.message, 'basicResults', true);
+            }
+        });
+
+        function log(message, containerId, isError = false) {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = isError ? 'error' : 'result';
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+
+        function testBasicFunctions() {
+            const container = document.getElementById('basicResults');
+            container.innerHTML = '';
+
+            try {
+                // 测试获取公司列表
+                const companies = db.getCompanies();
+                log(`✅ 获取到 ${companies.length} 家物流公司：${companies.join(', ')}`, 'basicResults');
+
+                // 测试云途物流服务
+                const yuntuServices = db.getServices('云途物流');
+                log(`✅ 云途物流服务数量：${yuntuServices.length}`, 'basicResults');
+                log(`云途物流服务列表：${yuntuServices.join(', ')}`, 'basicResults');
+
+                // 测试万邦物流国家
+                const wanbaoCountries = db.getCountries('万邦物流', '服装专线');
+                log(`✅ 万邦物流服装专线支持 ${wanbaoCountries.length} 个国家：${wanbaoCountries.join(', ')}`, 'basicResults');
+
+                // 测试澳大利亚分区
+                const auZones = db.getZones('云途物流', '服装专线', '澳大利亚');
+                log(`✅ 云途物流服装专线澳大利亚支持 ${auZones.length} 个分区：${auZones.join(', ')}`, 'basicResults');
+
+            } catch (error) {
+                log('❌ 基础功能测试失败：' + error.message, 'basicResults', true);
+            }
+        }
+
+        function testCalculations() {
+            const container = document.getElementById('calcResults');
+            container.innerHTML = '';
+
+            try {
+                // 测试万邦物流美国计算
+                const result1 = db.calculateShipping('万邦物流', '服装专线', '美国', 1.5);
+                if (result1) {
+                    log(`✅ 万邦物流服装专线到美国1.5kg：¥${result1.totalPrice.toFixed(2)}`, 'calcResults');
+                    log(`   详情：${result1.details}`, 'calcResults');
+                } else {
+                    log('❌ 万邦物流计算失败', 'calcResults', true);
+                }
+
+                // 测试云途物流澳大利亚分区计算
+                const result2 = db.calculateShipping('云途物流', '服装专线', '澳大利亚', 2.0, '1区');
+                if (result2) {
+                    log(`✅ 云途物流服装专线到澳大利亚1区2kg：¥${result2.totalPrice.toFixed(2)}`, 'calcResults');
+                    log(`   详情：${result2.details}`, 'calcResults');
+                } else {
+                    log('❌ 云途物流澳大利亚计算失败', 'calcResults', true);
+                }
+
+                // 测试燕文物流日本首重续重计算
+                const result3 = db.calculateShipping('燕文物流', '燕文专线追踪', '日本', 1.2);
+                if (result3) {
+                    log(`✅ 燕文物流专线追踪到日本1.2kg：¥${result3.totalPrice.toFixed(2)}`, 'calcResults');
+                    log(`   详情：${result3.details}`, 'calcResults');
+                } else {
+                    log('❌ 燕文物流日本计算失败', 'calcResults', true);
+                }
+
+            } catch (error) {
+                log('❌ 计算功能测试失败：' + error.message, 'calcResults', true);
+            }
+        }
+
+        function testComparison() {
+            const container = document.getElementById('compResults');
+            container.innerHTML = '';
+
+            try {
+                // 测试美国比价
+                const results = db.compareAllPrices('美国', 1.0);
+                log(`✅ 美国1kg比价结果：找到 ${results.length} 个方案`, 'compResults');
+                
+                if (results.length > 0) {
+                    const best = results[0];
+                    log(`🥇 最优方案：${best.company} - ${best.service}，价格：¥${best.totalPrice.toFixed(2)}`, 'compResults');
+                    
+                    results.slice(0, 3).forEach((result, index) => {
+                        const savings = index === 0 ? 0 : result.totalPrice - best.totalPrice;
+                        const extra = savings > 0 ? ` (+¥${savings.toFixed(2)})` : '';
+                        log(`${index + 1}. ${result.company} - ${result.service}：¥${result.totalPrice.toFixed(2)}${extra}`, 'compResults');
+                    });
+                }
+
+                // 测试英国比价
+                const ukResults = db.compareAllPrices('英国', 0.5);
+                log(`✅ 英国0.5kg比价结果：找到 ${ukResults.length} 个方案`, 'compResults');
+
+            } catch (error) {
+                log('❌ 比价功能测试失败：' + error.message, 'compResults', true);
+            }
+        }
+    </script>
+</body>
+</html> 

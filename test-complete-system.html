@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完整系统测试 - 智能物流报价机器人</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .test-section {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .test-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .test-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .input-group select, .input-group input {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group select:focus, .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .country-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .country-item {
+            padding: 8px 12px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+        
+        .price-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .price-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .price-title {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .price-amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .usd-price {
+            font-size: 14px;
+            color: #888;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 完整系统测试</h1>
+            <p>测试所有国家数据和美元换算功能</p>
+        </div>
+
+        <div class="test-section">
+            <h2>🌍 国家覆盖测试</h2>
+            <div class="test-controls">
+                <div class="input-group">
+                    <label for="company">物流公司:</label>
+                    <select id="company">
+                        <option value="">请选择物流公司</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="service">服务类型:</label>
+                    <select id="service">
+                        <option value="">请先选择物流公司</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <button class="btn" onclick="showCountries()">显示支持的国家</button>
+                </div>
+            </div>
+            <div id="countryResults" class="results" style="display: none;">
+                <h3>支持的国家列表:</h3>
+                <div id="countryList" class="country-list"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>💰 美元换算测试</h2>
+            <div class="test-controls">
+                <div class="input-group">
+                    <label for="testCountry">测试国家:</label>
+                    <select id="testCountry">
+                        <option value="">请选择国家</option>
+                        <option value="美国">美国</option>
+                        <option value="英国">英国</option>
+                        <option value="德国">德国</option>
+                        <option value="法国">法国</option>
+                        <option value="日本">日本</option>
+                        <option value="澳大利亚">澳大利亚</option>
+                        <option value="加拿大">加拿大</option>
+                        <option value="新加坡">新加坡</option>
+                        <option value="韩国">韩国</option>
+                        <option value="泰国">泰国</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="testWeight">包裹重量 (kg):</label>
+                    <input type="number" id="testWeight" step="0.1" value="1.0" min="0.1">
+                </div>
+                <div class="input-group">
+                    <label for="testRate">汇率 (1 USD = ? RMB):</label>
+                    <input type="number" id="testRate" step="0.01" value="7.00" min="1">
+                </div>
+                <div class="input-group">
+                    <button class="btn" onclick="testPricing()">开始测试</button>
+                </div>
+            </div>
+            <div id="pricingResults" class="results" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔍 全面比价测试</h2>
+            <div class="test-controls">
+                <div class="input-group">
+                    <label for="compareCountry">目的地国家:</label>
+                    <select id="compareCountry">
+                        <option value="">请选择国家</option>
+                        <option value="美国">美国</option>
+                        <option value="英国">英国</option>
+                        <option value="德国">德国</option>
+                        <option value="法国">法国</option>
+                        <option value="日本">日本</option>
+                        <option value="澳大利亚">澳大利亚</option>
+                        <option value="新加坡">新加坡</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="compareWeight">包裹重量 (kg):</label>
+                    <input type="number" id="compareWeight" step="0.1" value="1.0" min="0.1">
+                </div>
+                <div class="input-group">
+                    <button class="btn" onclick="compareAllServices()">智能比价</button>
+                </div>
+            </div>
+            <div id="compareResults" class="results" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 系统状态</h2>
+            <div id="systemStatus"></div>
+        </div>
+    </div>
+
+    <script src="scripts/enhanced-database.js"></script>
+    <script src="scripts/complete-database.js"></script>
+    <script>
+        let db = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                db = window.completeLogisticsDB || window.logisticsDB;
+                initializeSystem();
+                updateSystemStatus();
+            } catch (error) {
+                console.error('初始化失败:', error);
+                showStatus('系统初始化失败: ' + error.message, 'error');
+            }
+        });
+
+        function initializeSystem() {
+            // 初始化物流公司选择器
+            const companySelect = document.getElementById('company');
+            const companies = db.getCompanies();
+            
+            companies.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company;
+                option.textContent = company;
+                companySelect.appendChild(option);
+            });
+
+            // 绑定事件
+            companySelect.addEventListener('change', updateServices);
+            
+            showStatus('系统初始化成功！共加载 ' + companies.length + ' 家物流公司', 'success');
+        }
+
+        function updateServices() {
+            const company = document.getElementById('company').value;
+            const serviceSelect = document.getElementById('service');
+            
+            serviceSelect.innerHTML = '<option value="">请选择服务类型</option>';
+            
+            if (company) {
+                const services = db.getServices(company);
+                services.forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service;
+                    option.textContent = service;
+                    serviceSelect.appendChild(option);
+                });
+            }
+        }
+
+        function showCountries() {
+            const company = document.getElementById('company').value;
+            const service = document.getElementById('service').value;
+            
+            if (!company || !service) {
+                alert('请先选择物流公司和服务类型');
+                return;
+            }
+
+            const countries = db.getCountries(company, service);
+            const resultsDiv = document.getElementById('countryResults');
+            const listDiv = document.getElementById('countryList');
+            
+            listDiv.innerHTML = '';
+            countries.forEach(country => {
+                const countryDiv = document.createElement('div');
+                countryDiv.className = 'country-item';
+                countryDiv.textContent = country;
+                listDiv.appendChild(countryDiv);
+            });
+            
+            resultsDiv.style.display = 'block';
+            showStatus(`${company} - ${service} 支持 ${countries.length} 个国家`, 'success');
+        }
+
+        function testPricing() {
+            const country = document.getElementById('testCountry').value;
+            const weight = parseFloat(document.getElementById('testWeight').value);
+            const rate = parseFloat(document.getElementById('testRate').value);
+            
+            if (!country || !weight || !rate) {
+                alert('请填写完整的测试参数');
+                return;
+            }
+
+            // 设置汇率
+            db.setExchangeRate(rate);
+            
+            // 获取所有可用的报价
+            const results = db.compareAllPrices(country, weight);
+            const resultsDiv = document.getElementById('pricingResults');
+            
+            if (results.length === 0) {
+                resultsDiv.innerHTML = '<p>未找到适合的物流方案</p>';
+            } else {
+                let html = `<h3>找到 ${results.length} 个可用方案 (按价格排序):</h3>`;
+                
+                results.forEach((result, index) => {
+                    html += `
+                        <div class="price-card">
+                            <div class="price-header">
+                                <div class="price-title">
+                                    ${index + 1}. ${result.company} - ${result.service}
+                                    ${result.zone ? ` (${result.zone})` : ''}
+                                </div>
+                                <div>
+                                    <div class="price-amount">¥${result.totalPrice.toFixed(2)}</div>
+                                    <div class="usd-price">≈ $${result.totalPriceUSD.toFixed(2)}</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 14px; color: #666;">
+                                时效: ${result.timeframe} | 重量限制: ${result.weightLimit}kg
+                                ${result.note ? ` | ${result.note}` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                resultsDiv.innerHTML = html;
+            }
+            
+            resultsDiv.style.display = 'block';
+            showStatus(`完成 ${country} ${weight}kg 的价格测试，汇率 1:${rate}`, 'success');
+        }
+
+        function compareAllServices() {
+            const country = document.getElementById('compareCountry').value;
+            const weight = parseFloat(document.getElementById('compareWeight').value);
+            
+            if (!country || !weight) {
+                alert('请选择国家和重量');
+                return;
+            }
+
+            const results = db.compareAllPrices(country, weight);
+            const resultsDiv = document.getElementById('compareResults');
+            
+            if (results.length === 0) {
+                resultsDiv.innerHTML = '<p>未找到适合的物流方案</p>';
+            } else {
+                const bestPrice = results[0].totalPrice;
+                let html = `<h3>🏆 智能比价结果 - 共找到 ${results.length} 个方案</h3>`;
+                
+                results.forEach((result, index) => {
+                    const savings = result.totalPrice - bestPrice;
+                    const savingsPercent = bestPrice > 0 ? (savings / bestPrice) * 100 : 0;
+                    
+                    html += `
+                        <div class="price-card" style="${index === 0 ? 'border: 2px solid #28a745;' : ''}">
+                            <div class="price-header">
+                                <div class="price-title">
+                                    ${index === 0 ? '🥇 ' : `${index + 1}. `}${result.company} - ${result.service}
+                                    ${result.zone ? ` (${result.zone})` : ''}
+                                    ${index === 0 ? '<span style="color: #28a745; font-size: 0.9em;"> 最优选择</span>' : 
+                                      savings > 0 ? `<span style="color: #dc3545; font-size: 0.9em;">+¥${savings.toFixed(2)}</span>` : ''}
+                                </div>
+                                <div>
+                                    <div class="price-amount">¥${result.totalPrice.toFixed(2)}</div>
+                                    <div class="usd-price">≈ $${result.totalPriceUSD.toFixed(2)}</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 14px; color: #666;">
+                                时效: ${result.timeframe} | 重量限制: ${result.weightLimit}kg
+                                ${result.note ? ` | ${result.note}` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                resultsDiv.innerHTML = html;
+            }
+            
+            resultsDiv.style.display = 'block';
+            showStatus(`完成 ${country} ${weight}kg 的全面比价`, 'success');
+        }
+
+        function updateSystemStatus() {
+            const statusDiv = document.getElementById('systemStatus');
+            
+            if (!db) {
+                statusDiv.innerHTML = '<div class="status error">❌ 数据库未加载</div>';
+                return;
+            }
+
+            const companies = db.getCompanies();
+            let totalServices = 0;
+            let totalCountries = new Set();
+            
+            companies.forEach(company => {
+                const services = db.getServices(company);
+                totalServices += services.length;
+                
+                services.forEach(service => {
+                    const countries = db.getCountries(company, service);
+                    countries.forEach(country => totalCountries.add(country));
+                });
+            });
+
+            const allCountries = db.getAllCountries();
+            
+            statusDiv.innerHTML = `
+                <div class="status success">
+                    ✅ 数据库状态正常<br>
+                    📊 统计信息：<br>
+                    • 物流公司：${companies.length} 家<br>
+                    • 服务类型：${totalServices} 种<br>
+                    • 覆盖国家：${allCountries.length} 个<br>
+                    • 美元换算：已启用 (当前汇率 1:${db.exchangeRate})<br>
+                    • 分区支持：${allCountries.filter(country => db.needsZone(country)).length} 个国家需要分区
+                </div>
+            `;
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('systemStatus');
+            const statusElement = document.createElement('div');
+            statusElement.className = `status ${type}`;
+            statusElement.innerHTML = (type === 'success' ? '✅ ' : '❌ ') + message;
+            statusDiv.appendChild(statusElement);
+            
+            // 5秒后自动移除状态信息
+            setTimeout(() => {
+                if (statusElement.parentNode) {
+                    statusElement.parentNode.removeChild(statusElement);
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html> 
