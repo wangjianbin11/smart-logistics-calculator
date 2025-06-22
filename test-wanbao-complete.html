@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>万邦物流完整数据测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .service-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+        .service-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .country-list {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+        .stats {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .test-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚛 万邦物流完整数据测试</h1>
+        
+        <div class="stats">
+            <h3>📊 数据统计</h3>
+            <div id="stats-content">加载中...</div>
+        </div>
+
+        <div class="test-section">
+            <h3>📦 万邦物流服务概览</h3>
+            <div class="service-grid" id="service-overview">
+                <div>加载中...</div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🧮 价格计算测试</h3>
+            <div class="test-form">
+                <div class="form-group">
+                    <label for="service-select">选择服务:</label>
+                    <select id="service-select">
+                        <option value="">请选择服务</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="country-select">选择国家:</label>
+                    <select id="country-select">
+                        <option value="">请先选择服务</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="zone-group" style="display: none;">
+                    <label for="zone-select">选择分区:</label>
+                    <select id="zone-select">
+                        <option value="">请选择分区</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="weight-input">重量(KG):</label>
+                    <input type="number" id="weight-input" step="0.01" min="0.01" placeholder="请输入重量">
+                </div>
+                
+                <button onclick="calculateShipping()">计算运费</button>
+                
+                <div id="calculation-result"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 详细数据检查</h3>
+            <div id="data-details">
+                <button onclick="showDetailedData()">显示详细数据</button>
+                <div id="detailed-output"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/complete-database.js"></script>
+    <script>
+        let database;
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                database = new CompleteLogisticsDatabase();
+                loadStatistics();
+                loadServiceOverview();
+                loadServiceOptions();
+            } catch (error) {
+                console.error('初始化失败:', error);
+                document.getElementById('stats-content').innerHTML = `<div class="error">初始化失败: ${error.message}</div>`;
+            }
+        });
+
+        function loadStatistics() {
+            const services = database.getServices('万邦物流');
+            let totalCountries = 0;
+            let serviceDetails = [];
+            
+            Object.keys(services).forEach(serviceName => {
+                const countries = database.getCountries('万邦物流', serviceName);
+                totalCountries += countries.length;
+                serviceDetails.push(`${serviceName}: ${countries.length}个国家`);
+            });
+            
+            document.getElementById('stats-content').innerHTML = `
+                <div><strong>总服务数:</strong> ${Object.keys(services).length}个</div>
+                <div><strong>总国家数:</strong> ${totalCountries}个</div>
+                <div><strong>服务分布:</strong> ${serviceDetails.join(', ')}</div>
+            `;
+        }
+
+        function loadServiceOverview() {
+            const services = database.getServices('万邦物流');
+            const container = document.getElementById('service-overview');
+            
+            container.innerHTML = Object.keys(services).map(serviceName => {
+                const countries = database.getCountries('万邦物流', serviceName);
+                return `
+                    <div class="service-card">
+                        <div class="service-title">${serviceName}</div>
+                        <div><strong>支持国家数:</strong> ${countries.length}</div>
+                        <div class="country-list">
+                            <strong>国家列表:</strong><br>
+                            ${countries.join(', ')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadServiceOptions() {
+            const services = database.getServices('万邦物流');
+            const serviceSelect = document.getElementById('service-select');
+            
+            serviceSelect.innerHTML = '<option value="">请选择服务</option>' +
+                Object.keys(services).map(service => 
+                    `<option value="${service}">${service}</option>`
+                ).join('');
+        }
+
+        function onServiceChange() {
+            const service = document.getElementById('service-select').value;
+            const countrySelect = document.getElementById('country-select');
+            const zoneGroup = document.getElementById('zone-group');
+            
+            if (service) {
+                const countries = database.getCountries('万邦物流', service);
+                countrySelect.innerHTML = '<option value="">请选择国家</option>' +
+                    countries.map(country => 
+                        `<option value="${country}">${country}</option>`
+                    ).join('');
+            } else {
+                countrySelect.innerHTML = '<option value="">请先选择服务</option>';
+            }
+            
+            zoneGroup.style.display = 'none';
+        }
+
+        function onCountryChange() {
+            const service = document.getElementById('service-select').value;
+            const country = document.getElementById('country-select').value;
+            const zoneGroup = document.getElementById('zone-group');
+            const zoneSelect = document.getElementById('zone-select');
+            
+            if (service && country) {
+                const zones = database.getZones('万邦物流', service, country);
+                if (zones && zones.length > 0) {
+                    zoneGroup.style.display = 'block';
+                    zoneSelect.innerHTML = '<option value="">请选择分区</option>' +
+                        zones.map(zone => 
+                            `<option value="${zone}">${zone}</option>`
+                        ).join('');
+                } else {
+                    zoneGroup.style.display = 'none';
+                }
+            } else {
+                zoneGroup.style.display = 'none';
+            }
+        }
+
+        function calculateShipping() {
+            const service = document.getElementById('service-select').value;
+            const country = document.getElementById('country-select').value;
+            const weight = parseFloat(document.getElementById('weight-input').value);
+            const zone = document.getElementById('zone-select').value;
+            const resultDiv = document.getElementById('calculation-result');
+            
+            if (!service || !country || !weight) {
+                resultDiv.innerHTML = '<div class="error">请填写完整信息</div>';
+                return;
+            }
+            
+            try {
+                const result = database.calculateShipping('万邦物流', service, country, weight, zone || null);
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `
+                        <div class="result">
+                            <h4>💰 运费计算结果</h4>
+                            <div><strong>物流公司:</strong> 万邦物流</div>
+                            <div><strong>服务类型:</strong> ${service}</div>
+                            <div><strong>目的地:</strong> ${country}${zone ? ` (${zone})` : ''}</div>
+                            <div><strong>重量:</strong> ${weight}KG</div>
+                            <div><strong>运费:</strong> ¥${result.shippingCost.toFixed(2)} (约$${result.shippingCostUSD.toFixed(2)})</div>
+                            <div><strong>操作费:</strong> ¥${result.handlingFee.toFixed(2)} (约$${result.handlingFeeUSD.toFixed(2)})</div>
+                            <div><strong>总费用:</strong> ¥${result.totalCost.toFixed(2)} (约$${result.totalCostUSD.toFixed(2)})</div>
+                            <div><strong>时效:</strong> ${result.timeframe}</div>
+                            ${result.note ? `<div><strong>备注:</strong> ${result.note}</div>` : ''}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">计算失败: ${result.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">计算错误: ${error.message}</div>`;
+            }
+        }
+
+        function showDetailedData() {
+            const services = database.getServices('万邦物流');
+            const output = document.getElementById('detailed-output');
+            
+            let html = '<div style="margin-top: 20px;">';
+            
+            Object.keys(services).forEach(serviceName => {
+                html += `<h4>${serviceName}</h4>`;
+                const countries = database.getCountries('万邦物流', serviceName);
+                
+                countries.forEach(country => {
+                    const countryData = database.getCountryData('万邦物流', serviceName, country);
+                    html += `
+                        <div style="margin-left: 20px; margin-bottom: 10px; padding: 10px; border: 1px solid #eee; border-radius: 4px;">
+                            <strong>${country}</strong> - ${countryData.code}<br>
+                            时效: ${countryData.timeframe}<br>
+                            重量限制: ${countryData.weightLimit}KG<br>
+                            ${countryData.sizeLimit ? `尺寸限制: ${countryData.sizeLimit}<br>` : ''}
+                            ${countryData.note ? `备注: ${countryData.note}<br>` : ''}
+                            价格段数: ${countryData.priceRanges ? countryData.priceRanges.length : 0}
+                            ${countryData.hasZones ? '<br><strong>包含分区定价</strong>' : ''}
+                            ${countryData.isFirstContinue ? '<br><strong>首重续重计费</strong>' : ''}
+                        </div>
+                    `;
+                });
+            });
+            
+            html += '</div>';
+            output.innerHTML = html;
+        }
+
+        // 事件监听
+        document.getElementById('service-select').addEventListener('change', onServiceChange);
+        document.getElementById('country-select').addEventListener('change', onCountryChange);
+    </script>
+</body>
+</html> 
