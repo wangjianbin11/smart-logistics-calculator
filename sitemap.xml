@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+    <!-- 主页面 -->
+    <url>
+        <loc>https://wangjianbin11.github.io/smart-logistics-calculator/</loc>
+        <lastmod>2025-06-22</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- 主功能页面 -->
+    <url>
+        <loc>https://wangjianbin11.github.io/smart-logistics-calculator/index.html</loc>
+        <lastmod>2025-06-22</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- 体积重量测试页面 -->
+    <url>
+        <loc>https://wangjianbin11.github.io/smart-logistics-calculator/test-volumetric-weight.html</loc>
+        <lastmod>2025-06-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- 服务费测试页面 -->
+    <url>
+        <loc>https://wangjianbin11.github.io/smart-logistics-calculator/test-service-fee.html</loc>
+        <lastmod>2025-06-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- 智能比价测试页面 -->
+    <url>
+        <loc>https://wangjianbin11.github.io/smart-logistics-calculator/test-comparison-feature.html</loc>
+        <lastmod>2025-06-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- 完整系统测试页面 -->
+    <url>
+        <loc>https://wangjianbin11.github.io/smart-logistics-calculator/test-complete-system.html</loc>
+        <lastmod>2025-06-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- 增强功能测试页面 -->
+    <url>
+        <loc>https://wangjianbin11.github.io/smart-logistics-calculator/test-enhanced-features.html</loc>
+        <lastmod>2025-06-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- 网页版物流计算器 -->
+    <url>
+        <loc>https://wangjianbin11.github.io/smart-logistics-calculator/web-logistics-calculator.html</loc>
+        <lastmod>2025-06-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+</urlset> 
