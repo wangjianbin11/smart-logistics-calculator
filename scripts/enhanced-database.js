@@ -118,126 +118,371 @@ class LogisticsDatabase {
                     { min: 2.001, max: 5, perKg: 48, handling: 18 },
                     { min: 5.001, max: 30, perKg: 48, handling: 18 }
                 ]
-            }
-        };
-    }
-
-    getWanbaoCosmeticData() {
-        return {
-            '美国': {
-                code: 'MUSLR',
+            },
+            '加拿大': {
+                code: 'WBPHFZ',
                 timeframe: '9-12工作日',
                 weightLimit: 30,
-                sizeLimit: '55cm*40cm*40cm, Min size:15*10cm',
+                sizeLimit: '60*40*40cm',
                 note: '50G起重',
                 priceRanges: [
-                    { min: 0, max: 0.1, perKg: 113, handling: 24 },
-                    { min: 0.101, max: 0.2, perKg: 111, handling: 22 },
-                    { min: 0.201, max: 0.3, perKg: 105, handling: 20 },
-                    { min: 0.301, max: 0.45, perKg: 103, handling: 20 },
-                    { min: 0.451, max: 0.7, perKg: 97, handling: 20 },
-                    { min: 0.701, max: 2, perKg: 91, handling: 13 },
-                    { min: 2.001, max: 30, perKg: 89, handling: 13 }
+                    { min: 0, max: 0.1, perKg: 53, handling: 23 },
+                    { min: 0.101, max: 0.5, perKg: 53, handling: 24 },
+                    { min: 0.501, max: 0.75, perKg: 53, handling: 25 },
+                    { min: 0.751, max: 1, perKg: 53, handling: 27 },
+                    { min: 1.001, max: 1.5, perKg: 61, handling: 27 },
+                    { min: 1.501, max: 2, perKg: 61, handling: 27 },
+                    { min: 2.001, max: 30, perKg: 62, handling: 27 }
                 ]
             },
-            '英国': {
-                code: 'MUSLR',
-                timeframe: '6-8工作日',
+            '波兰': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 67, handling: 11 },
+                    { min: 0.201, max: 2, perKg: 53, handling: 15 },
+                    { min: 2.001, max: 30, perKg: 53, handling: 15 }
+                ]
+            },
+            '葡萄牙': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: 'L<60cm, L+W+H<=90cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 46, handling: 20 },
+                    { min: 0.501, max: 2, perKg: 44, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 44, handling: 20 }
+                ]
+            },
+            '比利时': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.4, perKg: 77, handling: 23 },
+                    { min: 0.401, max: 2, perKg: 63, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 63, handling: 21 }
+                ]
+            },
+            '荷兰': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 15,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 58, handling: 26 },
+                    { min: 0.301, max: 2, perKg: 48, handling: 21 },
+                    { min: 2.001, max: 15, perKg: 45, handling: 21 }
+                ]
+            },
+            '奥地利': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 67, handling: 23 },
+                    { min: 0.501, max: 30, perKg: 52, handling: 23 }
+                ]
+            },
+            '捷克': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 52, handling: 22 },
+                    { min: 0.501, max: 30, perKg: 52, handling: 22 }
+                ]
+            },
+            '斯洛伐克': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 47, handling: 21 },
+                    { min: 0.501, max: 30, perKg: 47, handling: 21 }
+                ]
+            },
+            '匈牙利': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 42, handling: 21 },
+                    { min: 0.501, max: 30, perKg: 47, handling: 21 }
+                ]
+            },
+            '芬兰': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 90, handling: 32 },
+                    { min: 0.501, max: 10, perKg: 80, handling: 32 }
+                ]
+            },
+            '克罗地亚': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 62, handling: 26 },
+                    { min: 0.501, max: 2, perKg: 62, handling: 26 }
+                ]
+            },
+            '立陶宛': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: 'L≤60cm, W≤58cm, H≤36cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 74, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 67, handling: 21 }
+                ]
+            },
+            '卢森堡': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 72, handling: 30 },
+                    { min: 0.301, max: 2, perKg: 67, handling: 28 }
+                ]
+            },
+            '拉脱维亚': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 70, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 68, handling: 21 }
+                ]
+            },
+            '斯洛文尼亚': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 52, handling: 26 },
+                    { min: 0.501, max: 2, perKg: 62, handling: 26 }
+                ]
+            },
+            '保加利亚': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 75, handling: 18 },
+                    { min: 0.501, max: 30, perKg: 57, handling: 18 }
+                ]
+            },
+            '罗马尼亚': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 47, handling: 20 },
+                    { min: 0.501, max: 30, perKg: 47, handling: 20 }
+                ]
+            },
+            '丹麦': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
                 weightLimit: 20,
                 sizeLimit: '60*40*40cm',
-                note: '偏远地区限重20KG；偏远地区体积限制0.031m³',
                 priceRanges: [
-                    { min: 0, max: 0.3, perKg: 38, handling: 16 },
-                    { min: 0.301, max: 2, perKg: 43, handling: 16 },
-                    { min: 2.001, max: 20, perKg: 47, handling: 16 }
+                    { min: 0, max: 0.3, perKg: 67, handling: 36 },
+                    { min: 0.301, max: 1, perKg: 65, handling: 36 },
+                    { min: 1.001, max: 20, perKg: 60, handling: 30 }
                 ]
             },
-            '德国': {
-                code: 'MUSLR',
-                timeframe: '7-9工作日',
-                weightLimit: 30,
-                sizeLimit: '60*40*40cm, MIN SIZE: 15cm*11cm*1cm',
+            '瑞典': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                note: '50G起重',
                 priceRanges: [
-                    { min: 0, max: 0.3, perKg: 56, handling: 19 },
-                    { min: 0.301, max: 2, perKg: 53, handling: 22 },
-                    { min: 2.001, max: 30, perKg: 53, handling: 22 }
+                    { min: 0, max: 0.5, perKg: 54, handling: 21 },
+                    { min: 0.501, max: 1, perKg: 58, handling: 21 },
+                    { min: 1.001, max: 2, perKg: 60, handling: 21 }
                 ]
             },
-            '法国': {
-                code: 'MUSLR',
-                timeframe: '7-9工作日',
-                weightLimit: 30,
-                sizeLimit: '60*40*40cm, MIN SIZE: 16cm*11cm*1cm',
+            '爱尔兰': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 25,
+                sizeLimit: '60*40*40cm',
                 priceRanges: [
-                    { min: 0, max: 0.3, perKg: 59, handling: 21 },
-                    { min: 0.301, max: 2, perKg: 57, handling: 21 },
-                    { min: 2.001, max: 30, perKg: 57, handling: 21 }
+                    { min: 0, max: 0.5, perKg: 53, handling: 23 },
+                    { min: 0.501, max: 25, perKg: 48, handling: 23 }
                 ]
             },
-            '意大利': {
-                code: 'MUSLR',
-                timeframe: '7-9工作日',
+            '希腊': {
+                code: 'WBPHFZ',
+                timeframe: '12-15工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 60, handling: 18 },
+                    { min: 0.501, max: 10, perKg: 60, handling: 18 }
+                ]
+            },
+            '瑞士': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
                 weightLimit: 5,
-                sizeLimit: '60*40*40cm',
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
                 priceRanges: [
-                    { min: 0, max: 0.5, perKg: 52, handling: 25 },
-                    { min: 0.501, max: 2, perKg: 54, handling: 24 },
-                    { min: 2.001, max: 5, perKg: 56, handling: 24 }
+                    { min: 0, max: 0.5, perKg: 144, handling: 18 },
+                    { min: 0.501, max: 1, perKg: 92, handling: 18 },
+                    { min: 1.001, max: 5, perKg: 77, handling: 18 }
                 ]
             },
-            '西班牙': {
-                code: 'MUSLR',
-                timeframe: '7-9工作日',
-                weightLimit: 30,
+            '挪威': {
+                code: 'WBPHFZ',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 102, handling: 32 },
+                    { min: 0.501, max: 2, perKg: 97, handling: 32 }
+                ]
+            },
+            '爱沙尼亚': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
                 sizeLimit: '60*40*40cm',
                 priceRanges: [
-                    { min: 0, max: 0.25, perKg: 58, handling: 21 },
-                    { min: 0.251, max: 0.5, perKg: 58, handling: 18 },
-                    { min: 0.501, max: 2, perKg: 58, handling: 18 },
-                    { min: 2.001, max: 30, perKg: 58, handling: 18 }
+                    { min: 0, max: 0.5, perKg: 64, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 68, handling: 21 }
                 ]
-            }
-        };
-    }
-
-    // 其他数据方法...
-    getWanbaoGeneralData() {
-        // 基于万邦专线挂号普货数据
-        return {
-            '美国': {
-                code: 'USPHSLR',
-                timeframe: '9-12工作日',
-                weightLimit: 30,
-                sizeLimit: '55cm*40cm*40cm',
+            },
+            '马耳他': {
+                code: 'WBPHFZ',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 112, handling: 30 },
+                    { min: 0.501, max: 2, perKg: 102, handling: 30 }
+                ]
+            },
+            '塞浦路斯': {
+                code: 'WBPHFZ',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 102, handling: 24 },
+                    { min: 0.501, max: 2, perKg: 102, handling: 24 }
+                ]
+            },
+            '冰岛': {
+                code: 'WBPHFZ',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 132, handling: 35 },
+                    { min: 0.501, max: 2, perKg: 132, handling: 35 }
+                ]
+            },
+            '澳大利亚': {
+                code: 'WBPHFZ',
+                timeframe: '5-8工作日',
+                weightLimit: 20,
+                sizeLimit: 'L≤60cm，长+宽+高≤140cm，L*W*H＜250000cm³',
+                note: '50G起重',
+                zones: {
+                    '1区': [
+                        { min: 0, max: 0.25, perKg: 27, handling: 24 },
+                        { min: 0.251, max: 0.5, perKg: 27, handling: 24 },
+                        { min: 0.501, max: 1, perKg: 27, handling: 26 },
+                        { min: 1.001, max: 2, perKg: 27, handling: 20 },
+                        { min: 2.001, max: 20, perKg: 27, handling: 20 }
+                    ],
+                    '2区': [
+                        { min: 0, max: 0.25, perKg: 36, handling: 29 },
+                        { min: 0.251, max: 0.5, perKg: 36, handling: 29 },
+                        { min: 0.501, max: 1, perKg: 36, handling: 29 },
+                        { min: 1.001, max: 2, perKg: 36, handling: 27 },
+                        { min: 2.001, max: 20, perKg: 36, handling: 27 }
+                    ],
+                    '3区': [
+                        { min: 0, max: 0.25, perKg: 51, handling: 50 },
+                        { min: 0.251, max: 0.5, perKg: 51, handling: 50 },
+                        { min: 0.501, max: 1, perKg: 51, handling: 60 },
+                        { min: 1.001, max: 2, perKg: 46, handling: 60 },
+                        { min: 2.001, max: 20, perKg: 46, handling: 60 }
+                    ],
+                    '4区': [
+                        { min: 0, max: 0.25, perKg: 57, handling: 60 },
+                        { min: 0.251, max: 0.5, perKg: 57, handling: 60 },
+                        { min: 0.501, max: 1, perKg: 68, handling: 85 },
+                        { min: 1.001, max: 2, perKg: 68, handling: 85 },
+                        { min: 2.001, max: 20, perKg: 68, handling: 85 }
+                    ]
+                }
+            },
+            '巴西': {
+                code: 'WBPHFZ',
+                timeframe: '15-25工作日',
+                weightLimit: 20,
+                sizeLimit: 'L<=60cm, L+W+H<=90cm',
                 note: '50G起重',
                 priceRanges: [
-                    { min: 0, max: 0.1, perKg: 104, handling: 24 },
-                    { min: 0.101, max: 0.2, perKg: 102, handling: 22 },
-                    { min: 0.201, max: 0.3, perKg: 94, handling: 20 },
-                    { min: 0.301, max: 0.45, perKg: 93, handling: 20 },
-                    { min: 0.451, max: 0.7, perKg: 88, handling: 20 },
-                    { min: 0.701, max: 3, perKg: 88, handling: 13 },
-                    { min: 3.001, max: 30, perKg: 84, handling: 13 }
+                    { min: 0, max: 0.2, perKg: 92, handling: 35 },
+                    { min: 0.201, max: 0.5, perKg: 92, handling: 38 },
+                    { min: 0.501, max: 2, perKg: 95, handling: 40 },
+                    { min: 2.001, max: 20, perKg: 95, handling: 45 }
                 ]
             },
-            '英国': {
-                code: 'EUSLPHR',
-                timeframe: '7-10工作日',
-                weightLimit: 20,
-                sizeLimit: '60*40*40cm',
-                note: '偏远地区限重20KG；偏远地区体积限制0.031m³',
+            '新西兰': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
                 priceRanges: [
-                    { min: 0, max: 0.3, perKg: 34, handling: 16 },
-                    { min: 0.301, max: 2, perKg: 37, handling: 16 },
-                    { min: 2.001, max: 20, perKg: 41, handling: 16 }
+                    { min: 0, max: 0.5, perKg: 72, handling: 17 },
+                    { min: 0.501, max: 2, perKg: 72, handling: 17 },
+                    { min: 2.001, max: 30, perKg: 72, handling: 17 }
+                ]
+            },
+            '日本': {
+                code: 'EUSLPHR',
+                timeframe: '4-6工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                note: '重量按0.5KG进位，长*宽*高/6000',
+                calculationType: 'firstContinue',
+                firstWeight: 0.5,
+                firstPrice: 31,
+                priceRanges: [
+                    { min: 0, max: 2, continuePrice: 8 },
+                    { min: 2.001, max: 10, continuePrice: 11 }
                 ]
             }
-            // 继续添加其他国家...
         };
     }
 
     getWanbaoElectricData() {
-        // 基于万邦专线挂号带电数据
+        // 基于万邦专线挂号带电完整数据
         return {
             '美国': {
                 code: 'USECSLR',
@@ -255,18 +500,345 @@ class LogisticsDatabase {
                     { min: 2.001, max: 30, perKg: 86, handling: 13 }
                 ]
             },
-            '日本': {
+            '英国': {
                 code: 'EUSLR',
-                timeframe: '4-6工作日',
-                weightLimit: 10,
-                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
-                note: '重量按0.5KG进位，长*宽*高/6000',
-                calculationType: 'firstContinue',
-                firstWeight: 0.5,
-                firstPrice: 33,
+                timeframe: '5-8工作日',
+                weightLimit: 20,
+                sizeLimit: '60*40*40cm',
+                note: '偏远地区限重20KG；偏远地区体积限制0.031m³',
                 priceRanges: [
-                    { min: 0, max: 2, continuePrice: 11 },
-                    { min: 2.001, max: 10, continuePrice: 14 }
+                    { min: 0, max: 0.3, perKg: 38, handling: 16 },
+                    { min: 0.301, max: 2, perKg: 43, handling: 16 },
+                    { min: 2.001, max: 20, perKg: 47, handling: 16 }
+                ]
+            },
+            '德国': {
+                code: 'EUSLR',
+                timeframe: '6-9工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 54, handling: 19 },
+                    { min: 0.301, max: 2, perKg: 51, handling: 22 },
+                    { min: 2.001, max: 30, perKg: 51, handling: 22 }
+                ]
+            },
+            '法国': {
+                code: 'EUSLR',
+                timeframe: '6-9工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 57, handling: 21 },
+                    { min: 0.301, max: 2, perKg: 55, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 55, handling: 21 }
+                ]
+            },
+            '意大利': {
+                code: 'EUSLR',
+                timeframe: '6-9工作日',
+                weightLimit: 5,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 50, handling: 25 },
+                    { min: 0.501, max: 2, perKg: 52, handling: 24 },
+                    { min: 2.001, max: 5, perKg: 54, handling: 24 }
+                ]
+            },
+            '西班牙': {
+                code: 'EUSLR',
+                timeframe: '6-9工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.25, perKg: 56, handling: 21 },
+                    { min: 0.251, max: 0.5, perKg: 56, handling: 18 },
+                    { min: 0.501, max: 2, perKg: 56, handling: 18 },
+                    { min: 2.001, max: 30, perKg: 56, handling: 18 }
+                ]
+            },
+            '加拿大': {
+                code: 'EUSLR',
+                timeframe: '9-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.1, perKg: 65, handling: 23 },
+                    { min: 0.101, max: 0.5, perKg: 66, handling: 24 },
+                    { min: 0.501, max: 0.75, perKg: 70, handling: 25 },
+                    { min: 0.751, max: 1, perKg: 70, handling: 27 },
+                    { min: 1.001, max: 1.5, perKg: 70, handling: 27 },
+                    { min: 1.501, max: 2, perKg: 70, handling: 27 },
+                    { min: 2.001, max: 30, perKg: 70, handling: 27 }
+                ]
+            },
+            '波兰': {
+                code: 'EUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 69, handling: 11 },
+                    { min: 0.201, max: 2, perKg: 60, handling: 15 },
+                    { min: 2.001, max: 30, perKg: 55, handling: 15 }
+                ]
+            },
+            '葡萄牙': {
+                code: 'EUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 58, handling: 20 },
+                    { min: 0.501, max: 2, perKg: 56, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 56, handling: 20 }
+                ]
+            },
+            '比利时': {
+                code: 'EUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.4, perKg: 88, handling: 23 },
+                    { min: 0.401, max: 2, perKg: 71, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 71, handling: 21 }
+                ]
+            },
+            '荷兰': {
+                code: 'EUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 15,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 73, handling: 26 },
+                    { min: 0.301, max: 2, perKg: 63, handling: 21 },
+                    { min: 2.001, max: 15, perKg: 63, handling: 21 }
+                ]
+            },
+            '奥地利': {
+                code: 'EUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 80, handling: 23 },
+                    { min: 0.501, max: 30, perKg: 54, handling: 23 }
+                ]
+            },
+            '捷克': {
+                code: 'EUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 54, handling: 22 },
+                    { min: 0.501, max: 30, perKg: 54, handling: 22 }
+                ]
+            },
+            '斯洛伐克': {
+                code: 'EUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 49, handling: 21 },
+                    { min: 0.501, max: 30, perKg: 49, handling: 21 }
+                ]
+            },
+            '匈牙利': {
+                code: 'EUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 44, handling: 21 },
+                    { min: 0.501, max: 30, perKg: 49, handling: 21 }
+                ]
+            },
+            '芬兰': {
+                code: 'EUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 92, handling: 32 },
+                    { min: 0.501, max: 10, perKg: 82, handling: 32 }
+                ]
+            },
+            '克罗地亚': {
+                code: 'EUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 64, handling: 26 },
+                    { min: 0.501, max: 2, perKg: 64, handling: 26 }
+                ]
+            },
+            '立陶宛': {
+                code: 'EUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: 'L≤60cm, W≤58cm, H≤36cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 76, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 69, handling: 21 }
+                ]
+            },
+            '卢森堡': {
+                code: 'EUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 74, handling: 30 },
+                    { min: 0.301, max: 2, perKg: 69, handling: 28 }
+                ]
+            },
+            '拉脱维亚': {
+                code: 'EUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 72, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 70, handling: 21 }
+                ]
+            },
+            '斯洛文尼亚': {
+                code: 'EUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 54, handling: 26 },
+                    { min: 0.501, max: 2, perKg: 64, handling: 26 }
+                ]
+            },
+            '保加利亚': {
+                code: 'EUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 77, handling: 18 },
+                    { min: 0.501, max: 30, perKg: 59, handling: 18 }
+                ]
+            },
+            '罗马尼亚': {
+                code: 'EUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 49, handling: 20 },
+                    { min: 0.501, max: 30, perKg: 49, handling: 20 }
+                ]
+            },
+            '丹麦': {
+                code: 'EUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 20,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 69, handling: 36 },
+                    { min: 0.301, max: 1, perKg: 67, handling: 36 },
+                    { min: 1.001, max: 20, perKg: 62, handling: 30 }
+                ]
+            },
+            '瑞典': {
+                code: 'EUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 56, handling: 21 },
+                    { min: 0.501, max: 1, perKg: 60, handling: 21 },
+                    { min: 1.001, max: 2, perKg: 62, handling: 21 }
+                ]
+            },
+            '爱尔兰': {
+                code: 'EUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 25,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 57, handling: 23 },
+                    { min: 0.501, max: 25, perKg: 52, handling: 23 }
+                ]
+            },
+            '希腊': {
+                code: 'EUSLR',
+                timeframe: '12-15工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 62, handling: 18 },
+                    { min: 0.501, max: 10, perKg: 62, handling: 18 }
+                ]
+            },
+            '瑞士': {
+                code: 'EUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 5,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 146, handling: 18 },
+                    { min: 0.501, max: 1, perKg: 94, handling: 18 },
+                    { min: 1.001, max: 5, perKg: 79, handling: 18 }
+                ]
+            },
+            '挪威': {
+                code: 'EUSLR',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 104, handling: 32 },
+                    { min: 0.501, max: 2, perKg: 99, handling: 32 }
+                ]
+            },
+            '爱沙尼亚': {
+                code: 'EUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 66, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 70, handling: 21 }
+                ]
+            },
+            '马耳他': {
+                code: 'EUSLR',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 114, handling: 30 },
+                    { min: 0.501, max: 2, perKg: 104, handling: 30 }
+                ]
+            },
+            '塞浦路斯': {
+                code: 'EUSLR',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 104, handling: 24 },
+                    { min: 0.501, max: 2, perKg: 104, handling: 24 }
+                ]
+            },
+            '冰岛': {
+                code: 'EUSLR',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 134, handling: 35 },
+                    { min: 0.501, max: 2, perKg: 134, handling: 35 }
                 ]
             },
             '澳大利亚': {
@@ -305,6 +877,55 @@ class LogisticsDatabase {
                         { min: 2.001, max: 20, perKg: 82, handling: 85 }
                     ]
                 }
+            },
+            '墨西哥': {
+                code: 'EUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: 'L≤60CM，L+W+H≤120CM',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 84, handling: 20 },
+                    { min: 0.501, max: 10, perKg: 84, handling: 20 }
+                ]
+            },
+            '巴西': {
+                code: 'EUSLR',
+                timeframe: '15-25工作日',
+                weightLimit: 20,
+                sizeLimit: 'L<=60cm, L+W+H<=90cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 96, handling: 35 },
+                    { min: 0.201, max: 0.5, perKg: 96, handling: 38 },
+                    { min: 0.501, max: 2, perKg: 99, handling: 40 },
+                    { min: 2.001, max: 20, perKg: 98, handling: 45 }
+                ]
+            },
+            '新西兰': {
+                code: 'EUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 86, handling: 17 },
+                    { min: 0.501, max: 2, perKg: 86, handling: 17 },
+                    { min: 2.001, max: 30, perKg: 86, handling: 17 }
+                ]
+            },
+            '日本': {
+                code: 'EUSLR',
+                timeframe: '4-6工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                note: '重量按0.5KG进位，长*宽*高/6000',
+                calculationType: 'firstContinue',
+                firstWeight: 0.5,
+                firstPrice: 33,
+                priceRanges: [
+                    { min: 0, max: 2, continuePrice: 11 },
+                    { min: 2.001, max: 10, continuePrice: 14 }
+                ]
             }
         };
     }
@@ -1675,6 +2296,881 @@ class LogisticsDatabase {
             }
         }
         return Array.from(zones).sort();
+    }
+
+    getWanbaoCosmeticData() {
+        return {
+            '美国': {
+                code: 'MUSLR',
+                timeframe: '9-12工作日',
+                weightLimit: 30,
+                sizeLimit: '55cm*40cm*40cm, Min size:15*10cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.1, perKg: 113, handling: 24 },
+                    { min: 0.101, max: 0.2, perKg: 111, handling: 22 },
+                    { min: 0.201, max: 0.3, perKg: 105, handling: 20 },
+                    { min: 0.301, max: 0.45, perKg: 103, handling: 20 },
+                    { min: 0.451, max: 0.7, perKg: 97, handling: 20 },
+                    { min: 0.701, max: 2, perKg: 91, handling: 13 },
+                    { min: 2.001, max: 30, perKg: 89, handling: 13 }
+                ]
+            },
+            '英国': {
+                code: 'MUSLR',
+                timeframe: '6-8工作日',
+                weightLimit: 20,
+                sizeLimit: '60*40*40cm',
+                note: '偏远地区限重20KG；偏远地区体积限制0.031m³',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 38, handling: 16 },
+                    { min: 0.301, max: 2, perKg: 43, handling: 16 },
+                    { min: 2.001, max: 20, perKg: 47, handling: 16 }
+                ]
+            },
+            '德国': {
+                code: 'MUSLR',
+                timeframe: '7-9工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm, MIN SIZE: 15cm*11cm*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 56, handling: 19 },
+                    { min: 0.301, max: 2, perKg: 53, handling: 22 },
+                    { min: 2.001, max: 30, perKg: 53, handling: 22 }
+                ]
+            },
+            '法国': {
+                code: 'MUSLR',
+                timeframe: '7-9工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm, MIN SIZE: 16cm*11cm*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 59, handling: 21 },
+                    { min: 0.301, max: 2, perKg: 57, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 57, handling: 21 }
+                ]
+            },
+            '意大利': {
+                code: 'MUSLR',
+                timeframe: '7-9工作日',
+                weightLimit: 5,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 52, handling: 25 },
+                    { min: 0.501, max: 2, perKg: 54, handling: 24 },
+                    { min: 2.001, max: 5, perKg: 56, handling: 24 }
+                ]
+            },
+            '西班牙': {
+                code: 'MUSLR',
+                timeframe: '7-9工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.25, perKg: 58, handling: 21 },
+                    { min: 0.251, max: 0.5, perKg: 58, handling: 18 },
+                    { min: 0.501, max: 2, perKg: 58, handling: 18 },
+                    { min: 2.001, max: 30, perKg: 58, handling: 18 }
+                ]
+            },
+            '加拿大': {
+                code: 'MUSLR',
+                timeframe: '9-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.1, perKg: 64, handling: 23 },
+                    { min: 0.101, max: 0.5, perKg: 64, handling: 24 },
+                    { min: 0.501, max: 0.75, perKg: 64, handling: 25 },
+                    { min: 0.751, max: 1, perKg: 64, handling: 27 },
+                    { min: 1.001, max: 1.5, perKg: 72, handling: 27 },
+                    { min: 1.501, max: 2, perKg: 72, handling: 27 },
+                    { min: 2.001, max: 30, perKg: 73, handling: 27 }
+                ]
+            },
+            '波兰': {
+                code: 'MUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 80, handling: 11 },
+                    { min: 0.201, max: 2, perKg: 64, handling: 15 },
+                    { min: 2.001, max: 30, perKg: 64, handling: 15 }
+                ]
+            },
+            '葡萄牙': {
+                code: 'MUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: 'L<60cm, L+W+H<=90cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 57, handling: 20 },
+                    { min: 0.501, max: 2, perKg: 55, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 55, handling: 20 }
+                ]
+            },
+            '比利时': {
+                code: 'MUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.4, perKg: 90, handling: 23 },
+                    { min: 0.401, max: 2, perKg: 74, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 74, handling: 21 }
+                ]
+            },
+            '荷兰': {
+                code: 'MUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 15,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 71, handling: 26 },
+                    { min: 0.301, max: 2, perKg: 59, handling: 21 },
+                    { min: 2.001, max: 15, perKg: 56, handling: 21 }
+                ]
+            },
+            '奥地利': {
+                code: 'MUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 82, handling: 23 },
+                    { min: 0.501, max: 30, perKg: 56, handling: 23 }
+                ]
+            },
+            '捷克': {
+                code: 'MUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 56, handling: 22 },
+                    { min: 0.501, max: 30, perKg: 56, handling: 22 }
+                ]
+            },
+            '斯洛伐克': {
+                code: 'MUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 51, handling: 21 },
+                    { min: 0.501, max: 30, perKg: 51, handling: 21 }
+                ]
+            },
+            '匈牙利': {
+                code: 'MUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 46, handling: 21 },
+                    { min: 0.501, max: 30, perKg: 51, handling: 21 }
+                ]
+            },
+            '芬兰': {
+                code: 'MUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 103, handling: 32 },
+                    { min: 0.501, max: 10, perKg: 93, handling: 32 }
+                ]
+            },
+            '克罗地亚': {
+                code: 'MUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 66, handling: 26 },
+                    { min: 0.501, max: 2, perKg: 66, handling: 26 }
+                ]
+            },
+            '立陶宛': {
+                code: 'MUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: 'L≤60cm, W≤58cm, H≤36cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 78, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 71, handling: 21 }
+                ]
+            },
+            '卢森堡': {
+                code: 'MUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 76, handling: 30 },
+                    { min: 0.301, max: 2, perKg: 71, handling: 28 }
+                ]
+            },
+            '拉脱维亚': {
+                code: 'MUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 74, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 72, handling: 21 }
+                ]
+            },
+            '斯洛文尼亚': {
+                code: 'MUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 56, handling: 26 },
+                    { min: 0.501, max: 2, perKg: 66, handling: 26 }
+                ]
+            },
+            '保加利亚': {
+                code: 'MUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 79, handling: 18 },
+                    { min: 0.501, max: 30, perKg: 61, handling: 18 }
+                ]
+            },
+            '罗马尼亚': {
+                code: 'MUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 51, handling: 20 },
+                    { min: 0.501, max: 30, perKg: 51, handling: 20 }
+                ]
+            },
+            '丹麦': {
+                code: 'MUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 20,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 71, handling: 36 },
+                    { min: 0.301, max: 1, perKg: 69, handling: 36 },
+                    { min: 1.001, max: 20, perKg: 64, handling: 30 }
+                ]
+            },
+            '瑞典': {
+                code: 'MUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 58, handling: 21 },
+                    { min: 0.501, max: 1, perKg: 62, handling: 21 },
+                    { min: 1.001, max: 2, perKg: 64, handling: 21 }
+                ]
+            },
+            '爱尔兰': {
+                code: 'MUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 25,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 57, handling: 23 },
+                    { min: 0.501, max: 25, perKg: 52, handling: 23 }
+                ]
+            },
+            '希腊': {
+                code: 'MUSLR',
+                timeframe: '12-15工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 64, handling: 18 },
+                    { min: 0.501, max: 10, perKg: 64, handling: 18 }
+                ]
+            },
+            '瑞士': {
+                code: 'MUSLR',
+                timeframe: '10-12工作日',
+                weightLimit: 5,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 148, handling: 18 },
+                    { min: 0.501, max: 1, perKg: 96, handling: 18 },
+                    { min: 1.001, max: 5, perKg: 81, handling: 18 }
+                ]
+            },
+            '挪威': {
+                code: 'MUSLR',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 106, handling: 32 },
+                    { min: 0.501, max: 2, perKg: 101, handling: 32 }
+                ]
+            },
+            '爱沙尼亚': {
+                code: 'MUSLR',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 68, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 72, handling: 21 }
+                ]
+            },
+            '马耳他': {
+                code: 'MUSLR',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 116, handling: 30 },
+                    { min: 0.501, max: 2, perKg: 106, handling: 30 }
+                ]
+            },
+            '塞浦路斯': {
+                code: 'MUSLR',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 106, handling: 24 },
+                    { min: 0.501, max: 2, perKg: 106, handling: 24 }
+                ]
+            },
+            '冰岛': {
+                code: 'MUSLR',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 136, handling: 35 },
+                    { min: 0.501, max: 2, perKg: 136, handling: 35 }
+                ]
+            },
+            '澳大利亚': {
+                code: 'MUSLR',
+                timeframe: '5-8工作日',
+                weightLimit: 20,
+                sizeLimit: 'L≤60cm，长+宽+高≤140cm，L*W*H＜250000cm³',
+                note: '50G起重',
+                zones: {
+                    '1区': [
+                        { min: 0, max: 0.25, perKg: 31, handling: 24 },
+                        { min: 0.251, max: 0.5, perKg: 31, handling: 24 },
+                        { min: 0.501, max: 1, perKg: 31, handling: 26 },
+                        { min: 1.001, max: 2, perKg: 31, handling: 20 },
+                        { min: 2.001, max: 20, perKg: 31, handling: 20 }
+                    ],
+                    '2区': [
+                        { min: 0, max: 0.25, perKg: 40, handling: 29 },
+                        { min: 0.251, max: 0.5, perKg: 40, handling: 29 },
+                        { min: 0.501, max: 1, perKg: 40, handling: 29 },
+                        { min: 1.001, max: 2, perKg: 40, handling: 27 },
+                        { min: 2.001, max: 20, perKg: 40, handling: 27 }
+                    ],
+                    '3区': [
+                        { min: 0, max: 0.25, perKg: 55, handling: 50 },
+                        { min: 0.251, max: 0.5, perKg: 55, handling: 50 },
+                        { min: 0.501, max: 1, perKg: 55, handling: 60 },
+                        { min: 1.001, max: 2, perKg: 50, handling: 60 },
+                        { min: 2.001, max: 20, perKg: 50, handling: 60 }
+                    ],
+                    '4区': [
+                        { min: 0, max: 0.25, perKg: 61, handling: 60 },
+                        { min: 0.251, max: 0.5, perKg: 61, handling: 60 },
+                        { min: 0.501, max: 1, perKg: 72, handling: 85 },
+                        { min: 1.001, max: 2, perKg: 72, handling: 85 },
+                        { min: 2.001, max: 20, perKg: 72, handling: 85 }
+                    ]
+                }
+            },
+            '巴西': {
+                code: 'MUSLR',
+                timeframe: '15-25工作日',
+                weightLimit: 20,
+                sizeLimit: 'L<=60cm, L+W+H<=90cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 96, handling: 35 },
+                    { min: 0.201, max: 0.5, perKg: 96, handling: 38 },
+                    { min: 0.501, max: 2, perKg: 99, handling: 40 },
+                    { min: 2.001, max: 20, perKg: 99, handling: 45 }
+                ]
+            },
+            '新西兰': {
+                code: 'MUSLR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 74, handling: 17 },
+                    { min: 0.501, max: 2, perKg: 74, handling: 17 },
+                    { min: 2.001, max: 30, perKg: 74, handling: 17 }
+                ]
+            },
+            '日本': {
+                code: 'MUSLR',
+                timeframe: '4-6工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                note: '重量按0.5KG进位，长*宽*高/6000',
+                calculationType: 'firstContinue',
+                firstWeight: 0.5,
+                firstPrice: 33,
+                priceRanges: [
+                    { min: 0, max: 2, continuePrice: 8 },
+                    { min: 2.001, max: 10, continuePrice: 11 }
+                ]
+            }
+        };
+    }
+
+    // 其他数据方法...
+    getWanbaoGeneralData() {
+        return {
+            '美国': {
+                code: 'USPHFZ',
+                timeframe: '9-12工作日',
+                weightLimit: 30,
+                sizeLimit: '55cm*40cm*40cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.1, perKg: 102, handling: 24 },
+                    { min: 0.101, max: 0.2, perKg: 100, handling: 22 },
+                    { min: 0.201, max: 0.3, perKg: 92, handling: 20 },
+                    { min: 0.301, max: 0.45, perKg: 91, handling: 20 },
+                    { min: 0.451, max: 0.7, perKg: 86, handling: 20 },
+                    { min: 0.701, max: 3, perKg: 86, handling: 13 },
+                    { min: 3.001, max: 30, perKg: 82, handling: 13 }
+                ]
+            },
+            '英国': {
+                code: 'WBPHFZ',
+                timeframe: '7-10工作日',
+                weightLimit: 20,
+                sizeLimit: '60*40*40cm',
+                note: '偏远地区限重20KG；偏远地区体积限制0.031m³',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 33, handling: 16 },
+                    { min: 0.301, max: 2, perKg: 36, handling: 16 },
+                    { min: 2.001, max: 20, perKg: 40, handling: 16 }
+                ]
+            },
+            '德国': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 42, handling: 19 },
+                    { min: 0.301, max: 1, perKg: 39, handling: 22 },
+                    { min: 1.001, max: 30, perKg: 41, handling: 22 }
+                ]
+            },
+            '法国': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 54, handling: 20 },
+                    { min: 0.301, max: 2, perKg: 50, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 50, handling: 21 }
+                ]
+            },
+            '意大利': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 5,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 45, handling: 25 },
+                    { min: 0.501, max: 2, perKg: 47, handling: 24 },
+                    { min: 2.001, max: 5, perKg: 49, handling: 24 }
+                ]
+            },
+            '西班牙': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.25, perKg: 48, handling: 18 },
+                    { min: 0.251, max: 2, perKg: 48, handling: 18 },
+                    { min: 2.001, max: 5, perKg: 48, handling: 18 },
+                    { min: 5.001, max: 30, perKg: 48, handling: 18 }
+                ]
+            },
+            '加拿大': {
+                code: 'WBPHFZ',
+                timeframe: '9-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.1, perKg: 53, handling: 23 },
+                    { min: 0.101, max: 0.5, perKg: 53, handling: 24 },
+                    { min: 0.501, max: 0.75, perKg: 53, handling: 25 },
+                    { min: 0.751, max: 1, perKg: 53, handling: 27 },
+                    { min: 1.001, max: 1.5, perKg: 61, handling: 27 },
+                    { min: 1.501, max: 2, perKg: 61, handling: 27 },
+                    { min: 2.001, max: 30, perKg: 62, handling: 27 }
+                ]
+            },
+            '波兰': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 67, handling: 11 },
+                    { min: 0.201, max: 2, perKg: 53, handling: 15 },
+                    { min: 2.001, max: 30, perKg: 53, handling: 15 }
+                ]
+            },
+            '葡萄牙': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: 'L<60cm, L+W+H<=90cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 46, handling: 20 },
+                    { min: 0.501, max: 2, perKg: 44, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 44, handling: 20 }
+                ]
+            },
+            '比利时': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.4, perKg: 77, handling: 23 },
+                    { min: 0.401, max: 2, perKg: 63, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 63, handling: 21 }
+                ]
+            },
+            '荷兰': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 15,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 58, handling: 26 },
+                    { min: 0.301, max: 2, perKg: 48, handling: 21 },
+                    { min: 2.001, max: 15, perKg: 45, handling: 21 }
+                ]
+            },
+            '奥地利': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 67, handling: 23 },
+                    { min: 0.501, max: 30, perKg: 52, handling: 23 }
+                ]
+            },
+            '捷克': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 52, handling: 22 },
+                    { min: 0.501, max: 30, perKg: 52, handling: 22 }
+                ]
+            },
+            '斯洛伐克': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 47, handling: 21 },
+                    { min: 0.501, max: 30, perKg: 47, handling: 21 }
+                ]
+            },
+            '匈牙利': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 42, handling: 21 },
+                    { min: 0.501, max: 30, perKg: 47, handling: 21 }
+                ]
+            },
+            '芬兰': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 90, handling: 32 },
+                    { min: 0.501, max: 10, perKg: 80, handling: 32 }
+                ]
+            },
+            '克罗地亚': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 62, handling: 26 },
+                    { min: 0.501, max: 2, perKg: 62, handling: 26 }
+                ]
+            },
+            '立陶宛': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: 'L≤60cm, W≤58cm, H≤36cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 74, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 67, handling: 21 }
+                ]
+            },
+            '卢森堡': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 72, handling: 30 },
+                    { min: 0.301, max: 2, perKg: 67, handling: 28 }
+                ]
+            },
+            '拉脱维亚': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 70, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 68, handling: 21 }
+                ]
+            },
+            '斯洛文尼亚': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 52, handling: 26 },
+                    { min: 0.501, max: 2, perKg: 62, handling: 26 }
+                ]
+            },
+            '保加利亚': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 75, handling: 18 },
+                    { min: 0.501, max: 30, perKg: 57, handling: 18 }
+                ]
+            },
+            '罗马尼亚': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 47, handling: 20 },
+                    { min: 0.501, max: 30, perKg: 47, handling: 20 }
+                ]
+            },
+            '丹麦': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 20,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 67, handling: 36 },
+                    { min: 0.301, max: 1, perKg: 65, handling: 36 },
+                    { min: 1.001, max: 20, perKg: 60, handling: 30 }
+                ]
+            },
+            '瑞典': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 54, handling: 21 },
+                    { min: 0.501, max: 1, perKg: 58, handling: 21 },
+                    { min: 1.001, max: 2, perKg: 60, handling: 21 }
+                ]
+            },
+            '爱尔兰': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 25,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 53, handling: 23 },
+                    { min: 0.501, max: 25, perKg: 48, handling: 23 }
+                ]
+            },
+            '希腊': {
+                code: 'WBPHFZ',
+                timeframe: '12-15工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 60, handling: 18 },
+                    { min: 0.501, max: 10, perKg: 60, handling: 18 }
+                ]
+            },
+            '瑞士': {
+                code: 'WBPHFZ',
+                timeframe: '10-12工作日',
+                weightLimit: 5,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 144, handling: 18 },
+                    { min: 0.501, max: 1, perKg: 92, handling: 18 },
+                    { min: 1.001, max: 5, perKg: 77, handling: 18 }
+                ]
+            },
+            '挪威': {
+                code: 'WBPHFZ',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 102, handling: 32 },
+                    { min: 0.501, max: 2, perKg: 97, handling: 32 }
+                ]
+            },
+            '爱沙尼亚': {
+                code: 'WBPHFZ',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 64, handling: 21 },
+                    { min: 0.501, max: 10, perKg: 68, handling: 21 }
+                ]
+            },
+            '马耳他': {
+                code: 'WBPHFZ',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 112, handling: 30 },
+                    { min: 0.501, max: 2, perKg: 102, handling: 30 }
+                ]
+            },
+            '塞浦路斯': {
+                code: 'WBPHFZ',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 102, handling: 24 },
+                    { min: 0.501, max: 2, perKg: 102, handling: 24 }
+                ]
+            },
+            '冰岛': {
+                code: 'WBPHFZ',
+                timeframe: '12-15工作日',
+                weightLimit: 2,
+                sizeLimit: 'L<60cm, L+W+H<=90cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 132, handling: 35 },
+                    { min: 0.501, max: 2, perKg: 132, handling: 35 }
+                ]
+            },
+            '澳大利亚': {
+                code: 'WBPHFZ',
+                timeframe: '5-8工作日',
+                weightLimit: 20,
+                sizeLimit: 'L≤60cm，长+宽+高≤140cm，L*W*H＜250000cm³',
+                note: '50G起重',
+                zones: {
+                    '1区': [
+                        { min: 0, max: 0.25, perKg: 27, handling: 24 },
+                        { min: 0.251, max: 0.5, perKg: 27, handling: 24 },
+                        { min: 0.501, max: 1, perKg: 27, handling: 26 },
+                        { min: 1.001, max: 2, perKg: 27, handling: 20 },
+                        { min: 2.001, max: 20, perKg: 27, handling: 20 }
+                    ],
+                    '2区': [
+                        { min: 0, max: 0.25, perKg: 36, handling: 29 },
+                        { min: 0.251, max: 0.5, perKg: 36, handling: 29 },
+                        { min: 0.501, max: 1, perKg: 36, handling: 29 },
+                        { min: 1.001, max: 2, perKg: 36, handling: 27 },
+                        { min: 2.001, max: 20, perKg: 36, handling: 27 }
+                    ],
+                    '3区': [
+                        { min: 0, max: 0.25, perKg: 51, handling: 50 },
+                        { min: 0.251, max: 0.5, perKg: 51, handling: 50 },
+                        { min: 0.501, max: 1, perKg: 51, handling: 60 },
+                        { min: 1.001, max: 2, perKg: 46, handling: 60 },
+                        { min: 2.001, max: 20, perKg: 46, handling: 60 }
+                    ],
+                    '4区': [
+                        { min: 0, max: 0.25, perKg: 57, handling: 60 },
+                        { min: 0.251, max: 0.5, perKg: 57, handling: 60 },
+                        { min: 0.501, max: 1, perKg: 68, handling: 85 },
+                        { min: 1.001, max: 2, perKg: 68, handling: 85 },
+                        { min: 2.001, max: 20, perKg: 68, handling: 85 }
+                    ]
+                }
+            },
+            '巴西': {
+                code: 'WBPHFZ',
+                timeframe: '15-25工作日',
+                weightLimit: 20,
+                sizeLimit: 'L<=60cm, L+W+H<=90cm',
+                note: '50G起重',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 92, handling: 35 },
+                    { min: 0.201, max: 0.5, perKg: 92, handling: 38 },
+                    { min: 0.501, max: 2, perKg: 95, handling: 40 },
+                    { min: 2.001, max: 20, perKg: 95, handling: 45 }
+                ]
+            },
+            '新西兰': {
+                code: 'WBPHFZ',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                priceRanges: [
+                    { min: 0, max: 0.5, perKg: 72, handling: 17 },
+                    { min: 0.501, max: 2, perKg: 72, handling: 17 },
+                    { min: 2.001, max: 30, perKg: 72, handling: 17 }
+                ]
+            },
+            '日本': {
+                code: 'EUSLPHR',
+                timeframe: '4-6工作日',
+                weightLimit: 10,
+                sizeLimit: '60*40*40cm, Min size:15*11*1cm',
+                note: '重量按0.5KG进位，长*宽*高/6000',
+                calculationType: 'firstContinue',
+                firstWeight: 0.5,
+                firstPrice: 31,
+                priceRanges: [
+                    { min: 0, max: 2, continuePrice: 8 },
+                    { min: 2.001, max: 10, continuePrice: 11 }
+                ]
+            }
+        };
     }
 }
 
