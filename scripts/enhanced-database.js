@@ -1280,12 +1280,12 @@ class LogisticsDatabase {
                 note: '最低计费重0.03KG',
                 priceRanges: [
                     { min: 0, max: 0.1, perKg: 105, handling: 24 },
-                    { min: 0.1, max: 0.2, perKg: 99, handling: 22 },
-                    { min: 0.2, max: 0.3, perKg: 97, handling: 20 },
-                    { min: 0.3, max: 0.45, perKg: 96, handling: 20 },
-                    { min: 0.45, max: 0.7, perKg: 95, handling: 20 },
-                    { min: 0.7, max: 2, perKg: 94, handling: 13 },
-                    { min: 2, max: 30, perKg: 89, handling: 13 }
+                    { min: 0.101, max: 0.2, perKg: 99, handling: 22 },
+                    { min: 0.201, max: 0.3, perKg: 97, handling: 20 },
+                    { min: 0.301, max: 0.45, perKg: 96, handling: 20 },
+                    { min: 0.451, max: 0.7, perKg: 95, handling: 20 },
+                    { min: 0.701, max: 2, perKg: 94, handling: 13 },
+                    { min: 2.001, max: 30, perKg: 89, handling: 13 }
                 ]
             },
             '英国': {
@@ -1294,9 +1294,372 @@ class LogisticsDatabase {
                 weightLimit: 20,
                 priceRanges: [
                     { min: 0, max: 0.3, perKg: 46, handling: 16 },
-                    { min: 0.3, max: 0.5, perKg: 48, handling: 16 },
-                    { min: 0.5, max: 1, perKg: 48, handling: 16 },
-                    { min: 1, max: 20, perKg: 50, handling: 16 }
+                    { min: 0.301, max: 0.5, perKg: 48, handling: 16 },
+                    { min: 0.501, max: 1, perKg: 48, handling: 16 },
+                    { min: 1.001, max: 20, perKg: 50, handling: 16 }
+                ]
+            },
+            '法国': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 0.4, perKg: 69, handling: 19 },
+                    { min: 0.401, max: 2, perKg: 67, handling: 23 },
+                    { min: 2.001, max: 30, perKg: 67, handling: 23 }
+                ]
+            },
+            '德国': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 57, handling: 19 },
+                    { min: 0.301, max: 30, perKg: 57, handling: 22 }
+                ]
+            },
+            '意大利': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 55, handling: 25 },
+                    { min: 2.001, max: 30, perKg: 57, handling: 25 }
+                ]
+            },
+            '西班牙': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 59, handling: 18 },
+                    { min: 2.001, max: 30, perKg: 62, handling: 18 }
+                ]
+            },
+            '荷兰': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 20,
+                priceRanges: [
+                    { min: 0, max: 0.1, perKg: 79, handling: 21 },
+                    { min: 0.101, max: 0.2, perKg: 72, handling: 23 },
+                    { min: 0.201, max: 2, perKg: 69, handling: 23 },
+                    { min: 2.001, max: 20, perKg: 61, handling: 23 }
+                ]
+            },
+            '比利时': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 20,
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 71, handling: 23 },
+                    { min: 0.201, max: 2, perKg: 71, handling: 21 },
+                    { min: 2.001, max: 20, perKg: 60, handling: 21 }
+                ]
+            },
+            '奥地利': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 61, handling: 23 },
+                    { min: 2.001, max: 30, perKg: 61, handling: 23 }
+                ]
+            },
+            '瑞典': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 20,
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 58, handling: 16 },
+                    { min: 0.301, max: 2, perKg: 60, handling: 21 },
+                    { min: 2.001, max: 20, perKg: 60, handling: 21 }
+                ]
+            },
+            '波兰': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 64, handling: 13 },
+                    { min: 0.201, max: 2, perKg: 61, handling: 15 },
+                    { min: 2.001, max: 30, perKg: 61, handling: 15 }
+                ]
+            },
+            '南非': {
+                code: 'THPHR',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                note: '进位制0.01KG',
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 156, handling: 28 },
+                    { min: 2.001, max: 10, perKg: 156, handling: 28 }
+                ]
+            },
+            '塞浦路斯': {
+                code: 'THPHR',
+                timeframe: '8-12工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 30, perKg: 127, handling: 29 }
+                ]
+            },
+            '爱尔兰': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 20,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 78, handling: 23 },
+                    { min: 2.001, max: 20, perKg: 78, handling: 23 }
+                ]
+            },
+            '希腊': {
+                code: 'THPHR',
+                timeframe: '8-12工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 30, perKg: 87, handling: 18 }
+                ]
+            },
+            '保加利亚': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 81, handling: 18 },
+                    { min: 2.001, max: 30, perKg: 81, handling: 18 }
+                ]
+            },
+            '葡萄牙': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 70, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 73, handling: 20 }
+                ]
+            },
+            '匈牙利': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 64, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 70, handling: 21 }
+                ]
+            },
+            '斯洛伐克': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 78, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 81, handling: 21 }
+                ]
+            },
+            '捷克': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 55, handling: 21 },
+                    { min: 2.001, max: 30, perKg: 61, handling: 21 }
+                ]
+            },
+            '罗马尼亚': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 82, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 81, handling: 20 }
+                ]
+            },
+            '芬兰': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 73, handling: 26 },
+                    { min: 2.001, max: 30, perKg: 71, handling: 26 }
+                ]
+            },
+            '丹麦': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 15,
+                priceRanges: [
+                    { min: 0, max: 0.3, perKg: 87, handling: 24 },
+                    { min: 0.301, max: 2, perKg: 71, handling: 24 },
+                    { min: 2.001, max: 15, perKg: 62, handling: 24 }
+                ]
+            },
+            '挪威': {
+                code: 'THPHR',
+                timeframe: '8-10工作日',
+                weightLimit: 5,
+                priceRanges: [
+                    { min: 0, max: 0.1, perKg: 79, handling: 21 },
+                    { min: 0.101, max: 0.3, perKg: 64, handling: 20 },
+                    { min: 0.301, max: 5, perKg: 59, handling: 20 }
+                ]
+            },
+            '墨西哥': {
+                code: 'THPHR',
+                timeframe: '8-12工作日',
+                weightLimit: 10,
+                note: '最低计费重0.02KG',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 65, handling: 17 },
+                    { min: 0.201, max: 0.5, perKg: 65, handling: 18 },
+                    { min: 0.501, max: 1, perKg: 65, handling: 18 },
+                    { min: 1.001, max: 3, perKg: 65, handling: 20 },
+                    { min: 3.001, max: 10, perKg: 65, handling: 20 }
+                ]
+            },
+            '以色列': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 5,
+                priceRanges: [
+                    { min: 0, max: 5, perKg: 73, handling: 26 }
+                ]
+            },
+            '巴西': {
+                code: 'THPHR',
+                timeframe: '15-25工作日',
+                weightLimit: 10,
+                note: '受巴西PRC政策影响，预计延误7-10工作日，最低计费重0.05KG',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 88, handling: 35 },
+                    { min: 0.201, max: 0.5, perKg: 88, handling: 35 },
+                    { min: 0.501, max: 1, perKg: 88, handling: 37 },
+                    { min: 1.001, max: 1.5, perKg: 88, handling: 45 },
+                    { min: 1.501, max: 2, perKg: 88, handling: 49 },
+                    { min: 2.001, max: 5, perKg: 88, handling: 60 },
+                    { min: 5.001, max: 10, perKg: 88, handling: 100 }
+                ]
+            },
+            '新加坡': {
+                code: 'THPHR',
+                timeframe: '5-6工作日',
+                weightLimit: 30,
+                note: '最低计费重0.1KG',
+                priceRanges: [
+                    { min: 0, max: 30, perKg: 35, handling: 16 }
+                ]
+            },
+            '马来西亚': {
+                code: 'THPHR',
+                timeframe: '8-10工作日',
+                weightLimit: 30,
+                note: '东马9-12工作日',
+                priceRanges: [
+                    { min: 0, max: 30, perKg: 22, handling: 16 }
+                ]
+            },
+            '泰国': {
+                code: 'THPHR',
+                timeframe: '5-8工作日',
+                weightLimit: 25,
+                note: '最低计费重0.1KG',
+                priceRanges: [
+                    { min: 0, max: 25, perKg: 19, handling: 8 }
+                ]
+            },
+            '土耳其': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                note: '最低计费重0.05KG',
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 103, handling: 30 },
+                    { min: 0.201, max: 0.5, perKg: 96, handling: 23 },
+                    { min: 0.501, max: 1, perKg: 96, handling: 23 },
+                    { min: 1.001, max: 30, perKg: 96, handling: 23 }
+                ]
+            },
+            '新西兰': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 25,
+                priceRanges: [
+                    { min: 0, max: 25, perKg: 84, handling: 17 }
+                ]
+            },
+            '瑞士': {
+                code: 'THPHR',
+                timeframe: '8-12工作日',
+                weightLimit: 5,
+                priceRanges: [
+                    { min: 0, max: 0.1, perKg: 145, handling: 18 },
+                    { min: 0.101, max: 0.2, perKg: 108, handling: 18 },
+                    { min: 0.201, max: 0.5, perKg: 107, handling: 18 },
+                    { min: 0.501, max: 5, perKg: 93, handling: 18 }
+                ]
+            },
+            '爱沙尼亚': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 67, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 71, handling: 20 }
+                ]
+            },
+            '拉脱维亚': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 72, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 73, handling: 20 }
+                ]
+            },
+            '立陶宛': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 68, handling: 20 },
+                    { min: 2.001, max: 30, perKg: 71, handling: 20 }
+                ]
+            },
+            '卢森堡': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 20,
+                priceRanges: [
+                    { min: 0, max: 0.2, perKg: 95, handling: 27 },
+                    { min: 0.201, max: 2, perKg: 92, handling: 26 },
+                    { min: 2.001, max: 20, perKg: 90, handling: 26 }
+                ]
+            },
+            '克罗地亚': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 83, handling: 26 },
+                    { min: 2.001, max: 30, perKg: 83, handling: 26 }
+                ]
+            },
+            '斯洛文尼亚': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 79, handling: 26 },
+                    { min: 2.001, max: 30, perKg: 79, handling: 26 }
+                ]
+            },
+            '马耳他': {
+                code: 'THPHR',
+                timeframe: '6-10工作日',
+                weightLimit: 30,
+                priceRanges: [
+                    { min: 0, max: 2, perKg: 138, handling: 30 },
+                    { min: 2.001, max: 30, perKg: 138, handling: 30 }
                 ]
             }
         };
@@ -1567,7 +1930,7 @@ class LogisticsDatabase {
                 code: 'THZXR',
                 timeframe: '8-12工作日',
                 weightLimit: 10,
-                note: '进位制0.01',
+                note: '进位制0.01KG',
                 priceRanges: [
                     { min: 0, max: 2, perKg: 161, handling: 28 },
                     { min: 2.001, max: 10, perKg: 161, handling: 28 }
@@ -1575,9 +1938,9 @@ class LogisticsDatabase {
             },
             '巴西': {
                 code: 'THZXR',
-                timeframe: '15-25工作日（受巴西PRC政策影响，预计延误7-10工作日）',
+                timeframe: '15-25工作日',
                 weightLimit: 10,
-                note: '最低计费重0.05KG',
+                note: '受巴西PRC政策影响，预计延误7-10工作日，最低计费重0.05KG',
                 priceRanges: [
                     { min: 0, max: 0.2, perKg: 93, handling: 35 },
                     { min: 0.201, max: 0.5, perKg: 93, handling: 35 },
@@ -1641,8 +2004,9 @@ class LogisticsDatabase {
             },
             '马来西亚': {
                 code: 'THZXR',
-                timeframe: '8-10工作日（东马9-12工作日）',
+                timeframe: '8-10工作日',
                 weightLimit: 30,
+                note: '东马9-12工作日',
                 priceRanges: [
                     { min: 0, max: 30, perKg: 27, handling: 16 }
                 ]
@@ -1741,7 +2105,7 @@ class LogisticsDatabase {
                 code: 'THZXR',
                 timeframe: '11-13工作日',
                 weightLimit: 5,
-                note: '进位制0.01-0.5KG',
+                note: '进位制0.01KG, 0.5KG',
                 priceRanges: [
                     { min: 0, max: 2, perKg: 100, handling: 8 },
                     { min: 2.001, max: 5, perKg: 99, handling: 8 }
@@ -1751,7 +2115,7 @@ class LogisticsDatabase {
                 code: 'THZXR',
                 timeframe: '13-16工作日',
                 weightLimit: 30,
-                note: '进位制0.01-1KG',
+                note: '进位制0.01KG, 0.5KG, 1KG',
                 priceRanges: [
                     { min: 0, max: 2, perKg: 115, handling: 22 },
                     { min: 2.001, max: 10, perKg: 114, handling: 22 },
@@ -1762,7 +2126,7 @@ class LogisticsDatabase {
                 code: 'THZXR',
                 timeframe: '13-16工作日',
                 weightLimit: 30,
-                note: '进位制0.01-1KG',
+                note: '进位制0.01KG, 0.5KG, 1KG',
                 priceRanges: [
                     { min: 0, max: 2, perKg: 143, handling: 22 },
                     { min: 2.001, max: 10, perKg: 142, handling: 22 },
@@ -1773,7 +2137,7 @@ class LogisticsDatabase {
                 code: 'THZXR',
                 timeframe: '13-16工作日',
                 weightLimit: 30,
-                note: '进位制0.01-1KG',
+                note: '进位制0.01KG, 0.5KG, 1KG',
                 priceRanges: [
                     { min: 0, max: 2, perKg: 143, handling: 22 },
                     { min: 2.001, max: 10, perKg: 142, handling: 22 },
@@ -1784,7 +2148,7 @@ class LogisticsDatabase {
                 code: 'THZXR',
                 timeframe: '13-16工作日',
                 weightLimit: 30,
-                note: '进位制0.01-1KG',
+                note: '进位制0.01KG, 0.5KG, 1KG',
                 priceRanges: [
                     { min: 0, max: 2, perKg: 110, handling: 22 },
                     { min: 2.001, max: 10, perKg: 109, handling: 22 },
@@ -1823,6 +2187,7 @@ class LogisticsDatabase {
                 timeframe: '13-16工作日',
                 weightLimit: 2,
                 note: '进位制0.01KG，暂停收货',
+                status: '暂停收货',
                 priceRanges: [
                     { min: 0, max: 2, perKg: 310, handling: 28 }
                 ]
@@ -1831,7 +2196,7 @@ class LogisticsDatabase {
                 code: 'THZXR',
                 timeframe: '10-15工作日',
                 weightLimit: 5,
-                note: '进位制0.01-0.5KG',
+                note: '进位制0.01KG, 0.5KG',
                 priceRanges: [
                     { min: 0, max: 2, perKg: 105, handling: 46 },
                     { min: 2.001, max: 5, perKg: 104, handling: 46 }
@@ -1901,6 +2266,7 @@ class LogisticsDatabase {
                 timeframe: '8-12工作日',
                 weightLimit: 10,
                 note: '进位制0.01KG，暂停收货',
+                status: '暂停收货',
                 priceRanges: [
                     { min: 0, max: 10, perKg: 91, handling: 40 }
                 ]
@@ -1960,7 +2326,7 @@ class LogisticsDatabase {
                 code: 'THZXR',
                 timeframe: '8-14工作日',
                 weightLimit: 10,
-                note: '进位制0.1-0.5KG，最低计费重0.1KG',
+                note: '进位制0.1KG, 0.5KG，最低计费重0.1KG',
                 priceRanges: [
                     { min: 0, max: 1, perKg: 125, handling: 20 },
                     { min: 1.001, max: 10, perKg: 135, handling: 50 }
@@ -2053,6 +2419,7 @@ class LogisticsDatabase {
                 code: 'THZXR',
                 timeframe: '4-5工作日',
                 weightLimit: 10,
+                note: '首重续重计费方式，进位制0.5KG',
                 calculationType: 'firstContinue',
                 firstWeight: 0.5,
                 firstPrice: 32,
